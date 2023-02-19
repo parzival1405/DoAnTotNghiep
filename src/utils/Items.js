@@ -53,7 +53,6 @@ export const items = [
   },
   { id: "HMB", name: "Khám bệnh", icon: <LocalHospital />, subMenu: [] },
   { id: "DV", name: "Dịch vụ", icon: <MedicalServices />, subMenu: [] },
- 
   {
     id: "SP",
     name: "Sản phẩm",
@@ -104,7 +103,6 @@ export const items = [
         icon: <QueryStats />,
         subMenu: [],
       },
-      
     ],
   },
 ];

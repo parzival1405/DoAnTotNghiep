@@ -1,6 +1,6 @@
 
 import { GLOBALTYPES } from "../actionType";
-import {itemMap} from "../../components/Drawer/Items"
+import {itemMap} from "../../utils/Items"
 const initState = {
   IDSelected: null,
   IDParent: null,

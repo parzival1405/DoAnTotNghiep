@@ -10,9 +10,11 @@ export default function Input(props) {
     error = null,
     onChange,
     InputProps = null,
+    className,
   } = props;
   return (
     <TextField
+      className={className}
       type={type}
       variant="outlined"
       label={label}

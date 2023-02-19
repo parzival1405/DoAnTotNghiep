@@ -9,7 +9,7 @@ import List from "@mui/material/List";
 import { styled, useTheme } from "@mui/material/styles";
 import Collapse from "@mui/material/Collapse";
 import StarBorder from "@mui/icons-material/StarBorder";
-import { items } from "./Items";
+import { items } from "../../utils/Items";
 import { Divider } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { HideParent, SetParent, ShowSide } from "../../redux/actions/sidebar";
@@ -91,6 +91,8 @@ function ItemMenu({ obj, drawerOpen, sub = false }) {
         style={{
           backgroundColor:
             ParentWithSelectedChild == obj.id
+              ? "#4eb0ba"
+              : ParentWithSelectedChild == null && IDSelected == obj.id
               ? "#4eb0ba"
               : IDSelected == obj.id
               ? "#73d5de"

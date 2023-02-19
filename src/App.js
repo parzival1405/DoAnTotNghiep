@@ -7,6 +7,7 @@ import Homepage from "./pages/HomePage";
 import { Paper } from "@mui/material";
 import OTPModal from "./components/Modal/OTPModal";
 import { createTheme, ThemeProvider, styled } from "@mui/material";
+import Checkup from "./pages/Checkup";
 function App() {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
@@ -15,11 +16,16 @@ function App() {
     palette: {
       primary: {
         main: "#4eb0ba",
-        contrastText: '#f0f0f0',
+        contrastText: '#fff',
       },
       secondary: {
         main: "#f83245",
         light: "#f8324526",
+      },
+      healing: {
+        main: "#3ddb77",
+        light: "#f8324526",
+        contrastText: '#fff',
       },
       background: {
         default: "#f4f5fd",
@@ -65,7 +71,11 @@ function App() {
             path="/Homepage"
             element={<Homepage />}
           ></Route>
-          
+          <Route
+            exact
+            path="/Checkup"
+            element={<Checkup />}
+          ></Route>
         </Routes>
       </HashRouter>
     </ThemeProvider>

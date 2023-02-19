@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import { useNavigate } from "react-router-dom";
 import Drawer from "../components/Drawer";
-import Header from "../components/Header";
 import Sidemenu from "../components/Sidemenu";
 import Loading from "../components/Loading";
 import { useSelector } from "react-redux";
