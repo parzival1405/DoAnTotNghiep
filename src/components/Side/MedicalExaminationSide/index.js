@@ -1,6 +1,6 @@
 import { makeStyles } from "@mui/styles";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useTable from "../../../hooks/useTable";
 import Layout from "../Layout";
 import Controls from "../../Form/controls/Controls";
@@ -17,6 +17,9 @@ import {
 import { Search, Add } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
 import TableRow from "../TableRow";
+import { ShowExaminationInformation } from "../../../redux/actions/tab";
+import { setCurrentPatient } from "../../../redux/actions/patient";
+import { useNavigate } from "react-router-dom";
 
 const headCells = [
   { id: "id", numeric: false, label: "Id bệnh nhân" },
@@ -173,7 +176,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   searchInput: {
-    width: "25%",
+    width: "20%",
     paddingRight: "10px",
   },
   selected: {
@@ -183,7 +186,9 @@ const useStyles = makeStyles((theme) => ({
     right: "10px",
   },
   toolBar: {
-    // paddingTop
+    "& .MuiFormControl-root": {
+      paddingRight: "10px",
+    },
   },
 }));
 
@@ -203,7 +208,8 @@ function MedicalExaminationSide() {
     useTable(records, headCells, filterFn);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleSearch = (e) => {
     if (searchValue.startsWith(" ")) {
       return;
@@ -214,6 +220,16 @@ function MedicalExaminationSide() {
 
   const onChangeSelected = (e) => {
     setFiler(e.target.value);
+  };
+
+  const handleClick = (item,setContextMenu) => {
+    try {
+      dispatch(setCurrentPatient(item));
+      dispatch(ShowExaminationInformation());
+      navigate("/Checkup");
+    } catch (error) {
+      alert("Sai mật khẩu");
+    }
   };
 
   return (
@@ -249,7 +265,18 @@ function MedicalExaminationSide() {
           style={{ overflowY: "scroll", height: "420px", display: "block" }}
         >
           {recordsAfterPagingAndSorting().map((item) => {
-            return <TableRow key={item.id} item={item} headCells={headCells} listItemMenu={[{title:"Khám bệnh"},{title:"Chuyển xuống dưới"}]}/>;
+            return (
+              <TableRow
+                handleClick={handleClick}
+                key={item.id}
+                item={item}
+                headCells={headCells}
+                listItemMenu={[
+                  { title: "Khám bệnh" },
+                  { title: "Chuyển xuống dưới" },
+                ]}
+              />
+            );
           })}
         </TableBody>
       </TblContainer>

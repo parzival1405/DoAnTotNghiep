@@ -1,6 +1,7 @@
 import { Box, Grid, TextField, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React from "react";
+import Label from "./Label";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -19,9 +20,6 @@ const useStyles = makeStyles((theme) => ({
   },
 
   input: {
-    "& .MuiInputBase-input": {
-      padding: "8px",
-    },
     width: "100%",
   },
 }));
@@ -39,26 +37,17 @@ function InputLabel(props) {
     className,
     require = false,
     size,
+    sizeInput
   } = props;
   return (
     <>
       <Grid item xs={size[0]}>
-        <Typography variant="h6" component="div" className={classes.title}>
-          {label}
-          <p
-            style={
-              require
-                ? { margin: "0 0 0 2px", color: "red" }
-                : { margin: "0 0 0 2px", color: "transparent" }
-            }
-          >
-            *
-          </p>
-        </Typography>
+        <Label label={label} require={require} className={classes.title}/>
       </Grid>
       <Grid item xs={size[1]}>
         <TextField
           className={classes.input}
+          size={sizeInput || "small"}
           type={type}
           name={name}
           value={value}

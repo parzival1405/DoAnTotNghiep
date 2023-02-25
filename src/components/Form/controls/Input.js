@@ -11,6 +11,7 @@ export default function Input(props) {
     onChange,
     InputProps = null,
     className,
+    size
   } = props;
   return (
     <TextField
@@ -18,6 +19,7 @@ export default function Input(props) {
       type={type}
       variant="outlined"
       label={label}
+      size={size || "small"}
       name={name}
       value={value}
       onChange={onChange}

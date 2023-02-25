@@ -52,7 +52,25 @@ export const items = [
     ],
   },
   { id: "HMB", name: "Khám bệnh", icon: <LocalHospital />, subMenu: [] },
-  { id: "DV", name: "Dịch vụ", icon: <MedicalServices />, subMenu: [] },
+  {
+    id: "DV",
+    name: "Dịch vụ",
+    icon: <MedicalServices />,
+    subMenu: [
+      {
+        id: "DSDV",
+        name: "Danh sách dịch vụ",
+        icon: <EventAvailable />,
+        subMenu: [],
+      },
+      {
+        id: "QLTT",
+        name: "Quản lý tập tin",
+        icon: <EventAvailable />,
+        subMenu: [],
+      },
+    ],
+  },
   {
     id: "SP",
     name: "Sản phẩm",
@@ -118,6 +136,9 @@ export const itemMap = new Map([
   ["TNK", "SP"],
   ["NSP", "SP"],
   ["DNT", "SP"],
+
+  ["QLTT","DV"],
+  ["DSDV","DV"],
 
   ["CTLK", "BC"],
   ["THLK", "BC"],

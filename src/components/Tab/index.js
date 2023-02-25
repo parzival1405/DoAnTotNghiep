@@ -4,11 +4,10 @@ import ExaminationInformation from "./ExaminationInformation";
 import ClinicalService from "./ClinicalService";
 import ExaminationHistory from "./ExaminationHistory";
 import Prescription from "./Prescription";
-import { Box, Tab as MUITab,Button } from "@mui/material";
+import { Box, Tab as MUITab, Button } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Clear, Healing, Save } from "@mui/icons-material";
 import Controls from "../Form/controls/Controls";
-
 
 function Tab() {
   const tabState = useSelector((state) => state.tab);
@@ -30,7 +29,7 @@ function Tab() {
             <MUITab label="Đơn thuốc" value="Prescription" />
           </TabList>
         </Box>
-        <div style={{height:"600px"}}>
+        <div style={{ height: "600px" }}>
           <TabPanel value="ExaminationInformation">
             <ExaminationInformation />
           </TabPanel>
@@ -44,13 +43,26 @@ function Tab() {
             <Prescription />
           </TabPanel>
         </div>
-        <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between",padding:'0 24px' }}>
+        <Box
+          sx={{
+            mt: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "0 24px",
+          }}
+        >
           <Controls.Checkbox label="Khám xong" />
           <div>
-            <Button variant="contained" sx={{ mr: 2 }} startIcon={<Save />}>
+            <Button
+              variant="contained"
+              disableElevation
+              sx={{ mr: 2 }}
+              startIcon={<Save />}
+            >
               Lưu
             </Button>
             <Button
+              disableElevation
               variant="contained"
               sx={{ mr: 2 }}
               color="healing"
@@ -58,7 +70,12 @@ function Tab() {
             >
               Đơn thuốc
             </Button>
-            <Button variant="contained" color="error" startIcon={<Clear />}>
+            <Button
+              variant="contained"
+              disableElevation
+              color="error"
+              startIcon={<Clear />}
+            >
               Hủy
             </Button>
           </div>

@@ -106,11 +106,13 @@ function Login() {
                   label="Nhập Id nhân viên"
                   value={values.idNhanVien}
                   onChange={handleChange}
+                  size="larger"
                   error={touched.idNhanVien ? errors.idNhanVien : undefined}
                 />
                 <Controls.Input
                   name="password"
                   label="Nhập mật khẩu"
+                  size="larger"
                   value={values.password}
                   onChange={handleChange}
                   error={touched.password ? errors.password : undefined}

@@ -60,17 +60,19 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
   searchInput: {
-    width: "25%",
+    width: "20%",
     paddingRight: "10px",
   },
   selected: {
-    width: "20%",
+    width: "15%",
   },
   newButton: {
     right: "10px",
   },
   toolBar: {
-    // paddingTop
+    "& .MuiFormControl-root": {
+      paddingRight: "10px",
+    },
   },
 }));
 function ClinicalService() {

@@ -22,6 +22,7 @@ export default function Button(props) {
             size={size || "large"}
             color={color || "primary"}
             onClick={onClick}
+            disableElevation
             {...other}
             classes={{ root: classes.root, label: classes.label }}>
             {text}

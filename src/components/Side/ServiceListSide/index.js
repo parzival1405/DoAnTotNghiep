@@ -18,16 +18,27 @@ import {
 import { Search, Add } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
 import TableRow from "../TableRow";
-import { ShowPatientReception } from "../../../redux/actions/modal";
+import { ShowAddScheduleModal } from "../../../redux/actions/modal";
 
 const headCells = [
-  { id: "id", numeric: false, label: "Id bệnh nhân" },
-  { id: "fullName", numeric: false, label: "Tên bệnh nhân" },
-  { id: "age", numeric: true, label: "Tuổi" },
-  { id: "category", numeric: false, label: "Loại khám" },
-  { id: "detail", numeric: false, label: "CĐ Lâm sàng" },
-  { id: "result", numeric: false, label: "Kết luận" },
-  { id: "state", numeric: false, label: "Trạng thái" },
+  { id: "date", numeric: false, label: "Ngày làm DV" },
+  { id: "id", numeric: false, sizeCellWidth: 80, label: "Mã BN" },
+  {
+    id: "fullName",
+    numeric: false,
+    sizeCellWidth: 140,
+    label: "Tên bệnh nhân",
+  },
+  {
+    id: "age",
+    numeric: true,
+    sizeCellWidth: 80,
+    label: "Tuổi",
+  },
+  { id: "category", numeric: false, sizeCellWidth: 140, label: "Tên Dịch vụ" },
+  { id: "quantity", numeric: false,sizeCellWidth: 95, label: "Số lượng" },
+  { id: "result", numeric: false, label: "Chuẩn đoán" },
+  { id: "state", numeric: false, sizeCellWidth: 140, label: "Trạng thái" },
 ];
 
 const records = [
@@ -44,96 +55,6 @@ const records = [
     id: 2,
     fullName: "bui quang huu",
     age: 453,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 3,
-    fullName: "bui quang huu",
-    age: 435,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 4,
-    fullName: "bui quang huu",
-    age: 365,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 5,
-    fullName: "bui quang huu",
-    age: 20,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 6,
-    fullName: "bui quang huu",
-    age: 13,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 7,
-    fullName: "bui quang huu",
-    age: 4564,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 8,
-    fullName: "bui quang huu",
-    age: 453,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 9,
-    fullName: "bui quang huu",
-    age: 435,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 10,
-    fullName: "bui quang huu",
-    age: 365,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 11,
-    fullName: "bui quang huu",
-    age: 20,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 12,
-    fullName: "bui quang huu",
-    age: 13,
     category: "kham bth",
     detail: "chi tiet kham",
     result: "ket qua",
@@ -166,22 +87,6 @@ const options = [
   {
     id: "state",
     title: "Trạng thái",
-  },
-];
-
-const optionsRoom = [
-  { id: "", title: "Tất cả" },
-  {
-    id: "1",
-    title: "Phòng 1",
-  },
-  {
-    id: "2",
-    title: "Phòng 2",
-  },
-  {
-    id: "3",
-    title: "Phòng 3",
   },
 ];
 
@@ -229,13 +134,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function PatientReceptionSide({ item }) {
+function ServiceListSide({ item }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [filter, setFiler] = useState({
     category: "",
     department: "",
-    room: "",
   });
   const [recordForEdit, setRecordForEdit] = useState(null);
 
@@ -273,9 +177,6 @@ function PatientReceptionSide({ item }) {
     }
   };
 
-  const handleClickShowModal = () => {
-    dispatch(ShowPatientReception())
-  }
   return (
     <>
       <Toolbar className={classes.toolBar} sx={{ pt: 2 }}>
@@ -309,20 +210,6 @@ function PatientReceptionSide({ item }) {
           className={classes.selectedD}
           options={optionsDepartment}
         />
-        <Controls.Select
-          label="Phòng"
-          name="room"
-          size="small"
-          variant="outlined"
-          onChange={onChangeSelected}
-          value={filter.room}
-          className={classes.selectedR}
-          options={optionsRoom}
-        />
-        <div style={{flex:"1"}}></div>
-        <Button variant="contained" onClick={handleClickShowModal} color="healing" disableElevation startIcon={<Add />}>
-          Thêm
-        </Button>
       </Toolbar>
 
       <TblContainer>
@@ -338,7 +225,7 @@ function PatientReceptionSide({ item }) {
                 item={item}
                 headCells={headCells}
                 listItemMenu={[
-                  { title: "Sửa" },
+                  { title: "Cập nhật kết quả CLS" },
                   { title: "Thanh toán" },
                   { title: "Xem" },
                 ]}
@@ -352,4 +239,4 @@ function PatientReceptionSide({ item }) {
   );
 }
 
-export default PatientReceptionSide;
+export default ServiceListSide;

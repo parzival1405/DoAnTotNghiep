@@ -1,13 +1,14 @@
 import { Box, Button, Grid, Ite } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
-import InputLabel from "../../Form/controls/InputLabel";
+import InputLabel from "../../Form/ControlsLabel/InputLabel";
 import { makeStyles } from "@mui/styles";
 
 
 const useStyles = makeStyles((theme) => ({
   box: {},
 }));
+
 
 function ExaminationInformation() {
   const patient = useSelector((state) => state.patient);

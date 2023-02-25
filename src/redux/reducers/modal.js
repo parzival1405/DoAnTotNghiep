@@ -3,6 +3,8 @@ import { GLOBALTYPES } from "../actionType";
 export default function modalReducers(
   state = {
     isShowOTP: false,
+    isShowPatientReceptionModal: false,
+    isShowAddScheduleModal: false,
   },
   action
 ) {
@@ -11,6 +13,16 @@ export default function modalReducers(
       return {
         ...state,
         isShowOTP: true,
+      };
+    case GLOBALTYPES.SHOW_PATIENT_RECEPTION_MODAL:
+      return {
+        ...state,
+        isShowPatientReceptionModal: true,
+      };
+    case GLOBALTYPES.SHOW_ADD_SCHEDULE_MODAL:
+      return {
+        ...state,
+        isShowAddScheduleModal: true,
       };
     default:
       return state;

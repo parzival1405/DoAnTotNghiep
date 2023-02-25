@@ -1,6 +1,9 @@
 import {
+  FormControlLabel,
   Menu,
   MenuItem,
+  Radio,
+  RadioGroup,
   TableCell as MUITableCell,
   TableRow as MUITableRow,
 } from "@mui/material";
@@ -22,12 +25,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TableRow({ item, headCells, listItemMenu }) {
-  const [contextMenu, setContextMenu] = useState(null);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+function TableRow({ item, headCells, listItemMenu = [], handleClick }) {
   const classes = useStyles();
-
+  const [contextMenu, setContextMenu] = useState(null);
   const handleRightClick = (event) => {
     event.preventDefault();
     setContextMenu(
@@ -40,47 +40,61 @@ function TableRow({ item, headCells, listItemMenu }) {
     );
   };
 
-  const handleClick= () => {
-    try {
-      dispatch(setCurrentPatient(item));
-      dispatch(ShowExaminationInformation());
-      navigate("/Checkup");
-    } catch (error) {
-      alert("Sai mật khẩu");
-    }
+  const handleClose = () => {
     setContextMenu(null);
   };
 
-  const handleClose = () =>{
+  const handleClickItem = (event, item) => {
+    handleClick(item);
     setContextMenu(null);
-  }
+  };
+
   return (
     item && (
       <>
         <MUITableRow
           className={classes.tableRow}
-          onContextMenu={(e) => handleRightClick(e)}
-          onDoubleClick = {() => handleClick()}
+          onContextMenu={handleClick ? handleRightClick : null}
+          onDoubleClick={handleClick ? handleClickItem : null}
         >
           {headCells.map((itemhead) =>
-            itemhead.editable ? (
-              <TableCellEditable key={itemhead.id} itemhead={itemhead} item={item}/>
+            itemhead.id == "radio" ? (
+              <MUITableCell
+                style={{
+                  width: `${headCells[0].sizeCellWidth}px`,
+                }}
+              >
+                <FormControlLabel value={item.id} control={<Radio />} />
+              </MUITableCell>
+            ) : itemhead.editable ? (
+              <TableCellEditable
+                sizeCellWidth={itemhead.sizeCellWidth}
+                key={itemhead.id}
+                itemhead={itemhead}
+                item={item}
+              />
             ) : (
               <MUITableCell
                 key={itemhead.id}
-                align={itemhead.numeric == true ? "right" : "left"}
+                style={{
+                  width: `${itemhead.sizeCellWidth}px`,
+                }}
+                align={itemhead.numeric ? "right" : "left"}
               >
-                
-                { itemhead.calc ? itemhead.calc.fun(item["quantity"],item["price"]) : item[itemhead.id]}
+                {itemhead.calc
+                  ? itemhead.calc.fun(item["quantity"], item["price"])
+                  : item[itemhead.id]}
               </MUITableCell>
             )
           )}
-          {listItemMenu.length > 0 && <ContextMenu
-            contextMenu={contextMenu}
-            handleClose={handleClose}
-            handleClick={handleClick}
-            listItemMenu={listItemMenu}
-          />}
+          {listItemMenu.length > 0 && (
+            <ContextMenu
+              contextMenu={contextMenu}
+              handleClose={handleClose}
+              handleClick={handleClick}
+              listItemMenu={listItemMenu}
+            />
+          )}
         </MUITableRow>
       </>
     )

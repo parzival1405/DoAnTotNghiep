@@ -6,10 +6,11 @@ function createWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      //   preload: path.join(__dirname, 'preload.js')
-      nodeIntegration: false,
-      contextIsolation:true,
-
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation:false,
+      enableRemoteModule: true,
+      webSecurity: false,
     },
   });
   win.maximize();
@@ -29,6 +30,10 @@ app.whenReady().then(() => {
     }
   });
 });
+
+app.on('browser-window-created', (_, window) => {
+  require("@electron/remote/main").enable(window.webContents)
+})
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

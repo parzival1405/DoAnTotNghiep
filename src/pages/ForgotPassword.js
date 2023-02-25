@@ -79,6 +79,7 @@ function ForgotPassword() {
                   label="Nhập Id nhân viên"
                   value={values.idNhanVien}
                   onChange={handleChange}
+                  size="larger"
                   error={touched.idNhanVien ? errors.idNhanVien : undefined}
                 />
 

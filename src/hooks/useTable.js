@@ -75,7 +75,7 @@ export default function useTable(records, headCells, filterFn) {
   }
 
   const TblContainer = (props) => (
-    <TableContainer className={classes.tableContainer} style={props.styles}>
+    <TableContainer className={[classes.tableContainer,props.className].join(" ")} style={props.styles}>
       <Table className={classes.table}>{props.children}</Table>
     </TableContainer>
   );
@@ -89,14 +89,20 @@ export default function useTable(records, headCells, filterFn) {
 
     return (
       <TableHead
-        style={{ tableLayout: "fixed", display: "table", width: "calc(100% - 5px)" }}
+        style={{
+          tableLayout: "fixed",
+          display: "table",
+          width: "calc(100% - 5px)",
+        }}
       >
         <TableRow>
           {headCells.map((headCell) => (
             <TableCell
+              // size={headCell.size}
+              style={{width:`${headCell.sizeCellWidth}px`}}
               key={headCell.id}
               sortDirection={orderBy === headCell.id ? order : false}
-              align={headCell.numeric ? "right" : "left"}
+              align={headCell.numeric ? "right" : "left" }
             >
               {headCell.disableSorting ? (
                 headCell.label

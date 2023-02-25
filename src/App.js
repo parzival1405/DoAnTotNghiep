@@ -8,6 +8,8 @@ import { Paper } from "@mui/material";
 import OTPModal from "./components/Modal/OTPModal";
 import { createTheme, ThemeProvider, styled } from "@mui/material";
 import Checkup from "./pages/Checkup";
+import PatientReceptionModal from "./components/Modal/PatientReceptionModal";
+import AddScheduleModal from "./components/Modal/AddScheduleModal";
 function App() {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
@@ -23,8 +25,7 @@ function App() {
         light: "#f8324526",
       },
       healing: {
-        main: "#3ddb77",
-        light: "#f8324526",
+        main: "#42f593",
         contrastText: '#fff',
       },
       background: {
@@ -47,6 +48,9 @@ function App() {
       h6: {
         color: "#4eb0ba"
       },
+      h5: {
+        color: "#4eb0ba"
+      },
     },
     spacing:8
   });
@@ -54,6 +58,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <HashRouter>
         <OTPModal />
+        <PatientReceptionModal />
+        <AddScheduleModal />
         <Routes>
           <Route
             exact
