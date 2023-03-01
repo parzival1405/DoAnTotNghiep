@@ -1,11 +1,11 @@
 import { TableCell } from "@mui/material";
 import React, { useState } from "react";
 
-function TableCellEditable({ itemhead, item, sizeCellWidth }) {
-  const [value, setState] = useState(item.quantity);
+function TableCellEditable({ itemhead, value, sizeCellWidth }) {
+  const [valueInput, setValueInput] = useState(value);
 
   const onChange = (e) => {
-    setState(e.target.value);
+    setValueInput(e.target.value);
   };
 
   return (
@@ -14,10 +14,9 @@ function TableCellEditable({ itemhead, item, sizeCellWidth }) {
       align={itemhead.numeric ? "right" : "left" }
     >
       <input
-        style={{ maxWidth: "50px" }}
         min="1"
         type="number"
-        value={value}
+        value={valueInput}
         onChange={onChange}
       />
     </TableCell>

@@ -43,10 +43,11 @@ function Side() {
         {item?.id == "TDBN" && <PatientReceptionSide item={item} />}
         {item?.id == "HMB" && <MedicalExaminationSide item={item} />}
         {item?.id == "DSDV" && <ServiceListSide item={item} />}
+        {item?.id == "NSP" && <AddProductSide item={item} />}
+        {item?.id == "TNK" && <InventorySide item={item} />}
         {/* 
         {item?.id == "CHGB" && <ConfigSellingPriceSide item={item} />}
-        {item?.id == "NSP" && <AddProductSide item={item} />}
-        {item?.id == "TNK" && <InventorySide item={item} />} */}
+         */}
       </Layout>
     )
   );

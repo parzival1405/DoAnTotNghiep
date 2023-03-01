@@ -19,7 +19,7 @@ import { makeStyles } from "@mui/styles";
 import ModalHeader from "../ModalHeader";
 import Controls from "../../Form/controls/Controls";
 import useTable from "../../../hooks/useTable";
-import TableRow from "../../Side/TableRow";
+import TableRow from "../../TableRow/TableContextMenu";
 import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
 
@@ -66,6 +66,14 @@ const optionsAppointment = [
     title: "Tái khám",
   },
   { id: "newExamination", title: "Khám mới" },
+];
+
+const optionsTimeSlot = [
+  {
+    id: "1",
+    title: "9h - 10h",
+  },
+  { id: "2", title: "10h - 11h", },
 ];
 
 
@@ -130,7 +138,7 @@ function AddScheduleModal() {
                 <InputLabel label="Địa chỉ" size={[2, 10]} />
                 <DateLabel currentDate={true} label="Ngày Khám" require={true} size={[2, 3]} />
                 <Grid item xs={3} />
-                <InputLabel label="Khung giờ" size={[2, 2]} />
+                <SelectedLabel options={optionsTimeSlot} label="Khung giờ" size={[2, 2]} />
                 <InputLabel label="Bác sĩ" size={[2, 10]} />
                 <SelectedLabel options={optionsAppointment} label="Kiểu hẹn khám" size={[2, 3]} />
               </Grid>

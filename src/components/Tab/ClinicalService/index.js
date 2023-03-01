@@ -1,12 +1,13 @@
 import { Search } from "@mui/icons-material";
-import { InputAdornment, TableBody, Toolbar } from "@mui/material";
+import { Autocomplete, InputAdornment, TableBody, TextField, Toolbar } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import useDebounce from "../../../hooks/useDebounce";
 import useTable from "../../../hooks/useTable";
 import Controls from "../../Form/controls/Controls";
-import TableRow from "../../Side/TableRow";
+import TableRow from "../../TableRow/TableContextMenu";
 import { TotalPrice } from "../../../utils/Calc";
+import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 const headCells = [
   { id: "id", numeric: false, label: "Id dịch vụ" },
   { id: "nameService", numeric: false, label: "Tên dịch vụ" },
@@ -53,7 +54,10 @@ const records = [
 ];
 
 const options = [{ id: "", title: "Không" }];
-
+const optionsService = [
+  { id: "1", title: "Xét nghiệm máu" },
+  { id: "2", title: "Siêu âm" },
+];
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -104,8 +108,7 @@ function ClinicalService() {
   return (
     <>
       <Toolbar className={classes.toolBar} sx={{ pt: 2 }}>
-        <Controls.Input
-          label="Tìm kiếm dịch vụ"
+        {/* <Controls.Input
           className={classes.searchInput}
           InputProps={{
             startAdornment: (
@@ -115,6 +118,25 @@ function ClinicalService() {
             ),
           }}
           onChange={handleSearch}
+        /> */}
+        {/* <SelectedLabel
+          
+          options={optionsService}
+          // require={true}
+          size={[2, 6]}
+        /> */}
+        <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          size="small"
+          className={classes.searchInput}
+          options={optionsService}
+          // value={valueOption}
+          // onChange={(event, newValue) => handleChangeValue(event, newValue)}
+          getOptionLabel={(option) => option.title}
+          renderInput={(params) => (
+            <TextField {...params} label="Tìm kiếm dịch vụ" />
+          )}
         />
         <Controls.Select
           label="Nhóm dịch vụ"

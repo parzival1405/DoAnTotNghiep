@@ -5,6 +5,9 @@ export default function modalReducers(
     isShowOTP: false,
     isShowPatientReceptionModal: false,
     isShowAddScheduleModal: false,
+    isShowAddProductModal: false,
+    isShowAddSupplierModal: false,
+    isShowAddDrugModal: false,
   },
   action
 ) {
@@ -13,6 +16,16 @@ export default function modalReducers(
       return {
         ...state,
         isShowOTP: true,
+      };
+    case GLOBALTYPES.SHOW_ADD_SUPPLIER_MODAL:
+      return {
+        ...state,
+        isShowAddSupplierModal: true,
+      };
+      case GLOBALTYPES.SHOW_ADD_DRUG_MODAL:
+      return {
+        ...state,
+        isShowAddDrugModal: true,
       };
     case GLOBALTYPES.SHOW_PATIENT_RECEPTION_MODAL:
       return {
@@ -23,6 +36,11 @@ export default function modalReducers(
       return {
         ...state,
         isShowAddScheduleModal: true,
+      };
+    case GLOBALTYPES.SHOW_ADD_PRODUCT_MODAL:
+      return {
+        ...state,
+        isShowAddProductModal: true,
       };
     default:
       return state;

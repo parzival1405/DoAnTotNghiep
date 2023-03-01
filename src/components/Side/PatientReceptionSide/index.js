@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { Search, Add } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
-import TableRow from "../TableRow";
+import TableRow from "../../TableRow/TableContextMenu";
 import { ShowPatientReception } from "../../../redux/actions/modal";
 
 const headCells = [

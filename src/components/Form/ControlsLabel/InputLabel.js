@@ -37,7 +37,8 @@ function InputLabel(props) {
     className,
     require = false,
     size,
-    sizeInput
+    sizeInput,
+    disable
   } = props;
   return (
     <>
@@ -46,6 +47,7 @@ function InputLabel(props) {
       </Grid>
       <Grid item xs={size[1]}>
         <TextField
+          disabled={disable}
           className={classes.input}
           size={sizeInput || "small"}
           type={type}

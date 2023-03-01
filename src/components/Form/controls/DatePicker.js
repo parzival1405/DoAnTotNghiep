@@ -1,28 +1,39 @@
-import React from 'react'
-import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@mui/material";
-import DateFnsUtils from "@date-io/date-fns";
+import React, { useState } from "react";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker as MuiDatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TextField } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles((theme) => ({
+  "& .MuiFormControl-root": {
+    width: "75% !important",
+  },
+  dateSelected: {
+    width:"20%",
+    "& .MuiFormControl-root": {},
+  },
+}));
 
 export default function DatePicker(props) {
-
-    const { name, label, value, onChange } = props
-
-
-    const convertToDefEventPara = (name, value) => ({
-        target: {
-            name, value
-        }
-    })
-
-    return (
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker disableToolbar variant="inline" inputVariant="outlined"
-                label={label}
-                format="MMM/dd/yyyy"
-                name={name}
-                value={value}
-                onChange={date =>onChange(convertToDefEventPara(name,date))}
-
-            />
-        </MuiPickersUtilsProvider>
-    )
+  const classes = useStyles();
+  const { name, label, value, size, onChange, disable, currentDate } = props;
+  const [valueDate, setValueDate] = useState(currentDate ? new Date() : null);
+  return (
+    <div className={classes.dateSelected}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <MuiDatePicker
+          disabled={disable}
+          label={label}
+          value={valueDate}
+          onChange={(newValue) => {
+            setValueDate(newValue);
+          }}
+          renderInput={(params) => (
+            <TextField size={size || "small"} {...params} />
+          )}
+        />
+      </LocalizationProvider>
+    </div>
+  );
 }

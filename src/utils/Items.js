@@ -19,6 +19,8 @@ import {
   AddBusiness,
   Healing,
   QueryStats,
+  LockPerson,
+  Functions,
 } from "@mui/icons-material";
 import { ListItemAvatar } from "@mui/material";
 
@@ -32,6 +34,18 @@ export const items = [
         id: "TKNV",
         name: "Tài khoản/nhân viên",
         icon: <PersonAdd />,
+        subMenu: [],
+      },
+      {
+        id: "NQ",
+        name: "Nhóm quyền",
+        icon: <LockPerson />,
+        subMenu: [],
+      },
+      {
+        id: "FCN",
+        name: "Chức năng",
+        icon: <Functions />,
         subMenu: [],
       },
       { id: "CDT", name: "Cài đặt", icon: <Settings />, subMenu: [] },
@@ -128,6 +142,8 @@ export const items = [
 export const itemMap = new Map([
   ["TKNV", "ADM"],
   ["CDT", "ADM"],
+  ["FCN", "ADM"],
+  ["NQ", "ADM"],
 
   ["TDBN", "LTN"],
   ["LHK", "LTN"],

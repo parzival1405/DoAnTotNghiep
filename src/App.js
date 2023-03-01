@@ -10,6 +10,10 @@ import { createTheme, ThemeProvider, styled } from "@mui/material";
 import Checkup from "./pages/Checkup";
 import PatientReceptionModal from "./components/Modal/PatientReceptionModal";
 import AddScheduleModal from "./components/Modal/AddScheduleModal";
+import AddProductModal from "./components/Modal/AddProductModal";
+import AddSupplierModal from "./components/Modal/AddSupplierModal";
+import AddDrugModal from "./components/Modal/AddDrugModal";
+
 function App() {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
@@ -19,6 +23,7 @@ function App() {
       primary: {
         main: "#4eb0ba",
         contrastText: '#fff',
+        light: "#4eb0ba50 ",
       },
       secondary: {
         main: "#f83245",
@@ -60,6 +65,9 @@ function App() {
         <OTPModal />
         <PatientReceptionModal />
         <AddScheduleModal />
+        <AddProductModal/>
+        <AddSupplierModal/>
+        <AddDrugModal/>
         <Routes>
           <Route
             exact

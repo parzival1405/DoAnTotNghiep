@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { Search, Add } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
-import TableRow from "../TableRow";
+import TableRow from "../../TableRow/TableContextMenu";
 import { ShowExaminationInformation } from "../../../redux/actions/tab";
 import { setCurrentPatient } from "../../../redux/actions/patient";
 import { useNavigate } from "react-router-dom";

@@ -71,7 +71,7 @@ function TableRow({ item, headCells, listItemMenu = [], handleClick }) {
                 sizeCellWidth={itemhead.sizeCellWidth}
                 key={itemhead.id}
                 itemhead={itemhead}
-                item={item}
+                value={item[itemhead.id]}
               />
             ) : (
               <MUITableCell
@@ -91,7 +91,7 @@ function TableRow({ item, headCells, listItemMenu = [], handleClick }) {
             <ContextMenu
               contextMenu={contextMenu}
               handleClose={handleClose}
-              handleClick={handleClick}
+              handleClick={() => handleClick(item)}
               listItemMenu={listItemMenu}
             />
           )}

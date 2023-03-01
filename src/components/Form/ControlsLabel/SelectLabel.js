@@ -45,7 +45,7 @@ function SelectedLabel(props) {
     name,
     label,
     error = null,
-    onChange,
+    onChange = null,
     InputProps = null,
     className,
     require = false,
@@ -54,6 +54,21 @@ function SelectedLabel(props) {
     options,
   } = props;
   const [valueOption, setValueOption] = useState(options[0]);
+  const handleChangeValue = (event, newValue) => {
+    if (newValue.id == options[0]) {
+      return;
+    }
+
+    if (onChange) {
+      onChange(newValue);
+    } else {
+      if (newValue == null) {
+        setValueOption(options[0]);
+      } else {
+        setValueOption(newValue);
+      }
+    }
+  };
   return (
     <>
       <Grid item xs={size[0]}>
@@ -67,16 +82,10 @@ function SelectedLabel(props) {
           className={classes.selected}
           options={options}
           value={valueOption}
-          onChange={(event, newValue) => {
-            if (newValue == null) {
-              setValueOption(options[0]);
-            } else {
-              setValueOption(newValue);
-            }
-          }}
+          onChange={(event, newValue) => handleChangeValue(event, newValue)}
           getOptionLabel={(option) => option.title}
           renderInput={(params) => (
-            <TextField {...params} onChange={() => console.log("asdads")} />
+            <TextField {...params}  />
           )}
         />
         {/* <FormControl

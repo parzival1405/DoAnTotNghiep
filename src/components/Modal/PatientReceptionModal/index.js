@@ -19,7 +19,7 @@ import { makeStyles } from "@mui/styles";
 import ModalHeader from "../ModalHeader";
 import Controls from "../../Form/controls/Controls";
 import useTable from "../../../hooks/useTable";
-import TableRow from "../../Side/TableRow";
+import TableRow from "../../TableRow/TableContextMenu";
 import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
 

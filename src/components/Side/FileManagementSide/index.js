@@ -29,9 +29,8 @@ function FileManagementSide() {
   const path = pathModule.join(app.getAppPath(), "..", "anh");
 
   const [currentPath, setCurrentPath] = useState(path);
-  const [currentFolderName,setCurrentFolderName] = useState("anh");
+  const [currentFolderName, setCurrentFolderName] = useState("anh");
   const classes = useStyles();
-  const [searchString, setSearchString] = useState("");
 
   const files = useMemo(
     () =>
@@ -69,8 +68,8 @@ function FileManagementSide() {
   const onBack = () => {
     if (canMove) {
       setCurrentPath(pathModule.dirname(currentPath));
-      const splitArr = pathModule.dirname(currentPath).split("\\")
-      setCurrentFolderName(splitArr[splitArr.length-1]);
+      const splitArr = pathModule.dirname(currentPath).split("\\");
+      setCurrentFolderName(splitArr[splitArr.length - 1]);
     }
   };
 
@@ -79,15 +78,25 @@ function FileManagementSide() {
     setCurrentFolderName(folder);
   };
 
-  const filteredFiles = files.filter((s) => s.name.startsWith(searchString));
-
   return (
-    <Grid container className={classes.gridCustom}>
-      <Grid item xs={3}>
-        <FolderViewer files={filteredFiles} currentFolderName={currentFolderName} onBack={onBack} onOpen={onOpen} />
+    <Grid container columnSpacing={1} className={classes.gridCustom}>
+      <Grid
+        item
+        xs={3}
+        sx={{ borderRight: 1 }}
+        style={{
+            borderRight: "1px solid #c4c4c4",
+        }}
+      >
+        <FolderViewer
+          files={files}
+          currentFolderName={currentFolderName}
+          onBack={onBack}
+          onOpen={onOpen}
+        />
       </Grid>
       <Grid item xs={9}>
-        <FilesViewer path={currentPath} files={files}/>
+        <FilesViewer path={currentPath} files={files} />
       </Grid>
     </Grid>
   );

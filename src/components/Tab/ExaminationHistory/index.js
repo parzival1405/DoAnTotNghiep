@@ -1,7 +1,7 @@
 import { TableBody } from "@mui/material";
 import React, { useState } from "react";
 import useTable from "../../../hooks/useTable";
-import TableRow from "../../Side/TableRow";
+import TableRow from "../../TableRow/TableContextMenu";
 
 const headCells = [
   { id: "date", numeric: false, label: "Ngày khám" },
