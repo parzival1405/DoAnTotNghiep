@@ -18,7 +18,7 @@ function ContextMenu({ contextMenu, handleClose,handleClick, listItemMenu }) {
       }}
     >
       {listItemMenu.map((item) => (
-        <MenuItem key={item.title} onClick={handleClick}>{item.title}</MenuItem>
+        <MenuItem key={item.title} onClick={item.onClick}>{item.title}</MenuItem>
       ))}
     </Menu>
   );

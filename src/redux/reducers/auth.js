@@ -1,17 +1,18 @@
 import { GLOBALTYPES } from "../actionType";
 
 const initState = {
-  user: null,
-  token: null,
-  notification: 0,
+  user:null
 };
 
 export default (state = initState, action) => {
   switch (action.type) {
     case GLOBALTYPES.AUTH:
-      return action.payload;
+      return {
+        ...state,
+        user:action.payload,
+      };
     case GLOBALTYPES.LOGOUT:
-      return action.payload;
+      return initState;
     default:
       return state;
   }

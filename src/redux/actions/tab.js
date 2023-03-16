@@ -1,7 +1,8 @@
 import { GLOBALTYPES } from "../actionType";
-
+import * as api from "../../api"
 export const ShowExaminationInformation = () => async (dispatch) => {
   try {
+    
     dispatch({
       type:GLOBALTYPES.EXAMINATION_INFORMATION,
     });

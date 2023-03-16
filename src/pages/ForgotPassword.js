@@ -13,6 +13,7 @@ import { Grid } from "@mui/material";
 import Controls from "../components/Form/controls/Controls";
 import AuthLayout from "../components/Layout/AuthLayout";
 import { ShowOTP } from "../redux/actions/modal";
+import { firebase} from "../utils/Firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,15 +33,53 @@ function ForgotPassword() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmitForm = async (values) => {
-    dispatch(ShowOTP())
+  const configureCaptcha = () => {
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+      "recaptcha",
+      {
+        size: "invisible",
+        callback: (response) => {
+          handleSendSms();
+        },
+        defaultCountry: "IN",
+      }
+    );
   };
+
+  const handleSendSms = (values) => {
+    console.log(values);
+    configureCaptcha();
+    const phone_number = "+84" + values.phone_number.slice(1);
+    const appVerifier = window.recaptchaVerifier;
+    firebase
+      .auth()
+      .signInWithPhoneNumber(phone_number, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+      })
+      .catch((error) => {
+        console.log("SMS not sent", error);
+      });
+  };
+
+  const handleSubmitForm = async (values) => {
+    window.dataUser = values
+    window.isForgotPass = true
+    handleSendSms(values);
+    dispatch(ShowOTP());
+  };
+
+  const handleEnter = (e,values) => {
+    if (e.key === 'Enter') {
+      handleSubmitForm(values)
+    }
+  }
 
   return (
     <AuthLayout>
       <Formik
         initialValues={{
-          idNhanVien: ""
+          phone_number: ""
         }}
         validationSchema={validationForgotPass}
         onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -75,12 +114,13 @@ function ForgotPassword() {
                 alignItems="center"
               >
                 <Controls.Input
-                  name="idNhanVien"
-                  label="Nhập Id nhân viên"
-                  value={values.idNhanVien}
-                  onChange={handleChange}
+                  name="phone_number"
+                  label="Nhập số điện thoại"
+                  value={values.phone_number}
+                  onChange = {handleChange}
+                  onKeyDown = {(e) => handleEnter(e,values)}
                   size="larger"
-                  error={touched.idNhanVien ? errors.idNhanVien : undefined}
+                  error={touched.phone_number ? errors.phone_number : undefined}
                 />
 
                 <Box width="100%" textAlign="right">
@@ -94,8 +134,9 @@ function ForgotPassword() {
                 </Box>
 
                 <Box textAlign="center">
-                  <Controls.Button type="submit" text="Lấy lại mật khẩu" />
+                  <Controls.Button disabled={isSubmitting} type="submit" text="Lấy lại mật khẩu" />
                 </Box>
+                <div id="recaptcha"></div>
               </Grid>
             </Grid>
           </Form>

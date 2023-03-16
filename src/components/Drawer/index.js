@@ -25,8 +25,8 @@ function Drawer() {
       <AppBarHeader handleDrawerClick={handleDrawerClick} />
       <div style={{ display: "flex", flexDirection: "row" }}>
         <MiniDrawer open={open} />
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }} style={{padding:"10px"}}>
-          {IDSelected ? <Side/> :<Controls.Button type="button" text="login" onClick={() => navigate("/login")} />}
+        <Box component="main" sx={{ flexGrow: 1, p: 3,height:"700px" }} style={{padding:"10px"}}>
+          {IDSelected && <Side/> }
         </Box>
       </div>
     </Box>

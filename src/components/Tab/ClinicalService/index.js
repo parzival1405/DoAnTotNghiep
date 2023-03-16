@@ -1,63 +1,25 @@
 import { Search } from "@mui/icons-material";
-import { Autocomplete, InputAdornment, TableBody, TextField, Toolbar } from "@mui/material";
+import {
+  Autocomplete,
+  InputAdornment,
+  TableBody,
+  TextField,
+  Toolbar,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import useDebounce from "../../../hooks/useDebounce";
 import useTable from "../../../hooks/useTable";
 import Controls from "../../Form/controls/Controls";
 import TableRow from "../../TableRow/TableContextMenu";
-import { TotalPrice } from "../../../utils/Calc";
+import { resolve, TotalPrice } from "../../../utils/Calc";
 import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
-const headCells = [
-  { id: "id", numeric: false, label: "Id dịch vụ" },
-  { id: "nameService", numeric: false, label: "Tên dịch vụ" },
-  { id: "department", numeric: false, label: "Phòng ban" },
-  { id: "quantity", numeric: true, editable: true, label: "Số lượng" },
-  { id: "price", numeric: true, label: "Giá" },
-  {
-    id: "totalPrice",
-    numeric: true,
-    calc: { fun: (quantity, price) => TotalPrice(quantity, price) },
-    label: "Thành tiền",
-  },
-  { id: "state", numeric: false, label: "Trạng thái" },
-];
-
-const records = [
-  {
-    id: 1,
-    nameService: "bui quang huu",
-    quantity: 2,
-    department: "kham bth",
-    price: 100000,
-    totalPrice: 100000,
-    state: "trang thai",
-  },
-  {
-    id: 2,
-    nameService: "bui quang huu",
-    quantity: 1,
-    department: "kham bth",
-    price: 100000,
-    totalPrice: 100000,
-    state: "trang thai",
-  },
-  {
-    id: 3,
-    nameService: "bui quang huu",
-    quantity: 1,
-    department: "kham bth",
-    price: 100000,
-    totalPrice: 100000,
-    state: "trang thai",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { headCellsClinicalServiceCurrentPatient } from "../../../utils/HeadCells";
+import { addClinicalService, removeClinicalService } from "../../../redux/actions/currentPatient";
 
 const options = [{ id: "", title: "Không" }];
-const optionsService = [
-  { id: "1", title: "Xét nghiệm máu" },
-  { id: "2", title: "Siêu âm" },
-];
+
 const useStyles = makeStyles((theme) => ({
   pageContent: {
     margin: theme.spacing(5),
@@ -82,60 +44,49 @@ const useStyles = makeStyles((theme) => ({
 function ClinicalService() {
   const classes = useStyles();
   const [filter, setFiler] = useState("");
-  const [searchValue, setSearchValue] = useState("");
-  const debouncedValue = useDebounce(searchValue, 500);
-
+  const { clinicalService } = useSelector((state) => state.currentPatient);
+  const { services } = useSelector((state) => state.service);
+  const dispatch = useDispatch();
+  const [value,setValue] = useState("");
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
     },
   });
-  const handleSearch = (e) => {
-    if (searchValue.startsWith(" ")) {
-      return;
-    }
-
-    setSearchValue(e.target.value);
-  };
-
+  
   const onChangeSelected = (e) => {
     setFiler(e.target.value);
   };
 
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(clinicalService, headCellsClinicalServiceCurrentPatient, filterFn);
+  const handleAddClinicalService = (event, service) => {
+    setValue(null)
+    if(service){
+      service["quantity"] = 1
+      dispatch(addClinicalService(service))
+    }
+  };
 
+  const handleRemoveClinicalService = (service) => {
+    dispatch(removeClinicalService(service))
+  }
   return (
     <>
       <Toolbar className={classes.toolBar} sx={{ pt: 2 }}>
-        {/* <Controls.Input
-          className={classes.searchInput}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search />
-              </InputAdornment>
-            ),
-          }}
-          onChange={handleSearch}
-        /> */}
-        {/* <SelectedLabel
-          
-          options={optionsService}
-          // require={true}
-          size={[2, 6]}
-        /> */}
         <Autocomplete
-          disablePortal
+          
           id="combo-box-demo"
           size="small"
           className={classes.searchInput}
-          options={optionsService}
-          // value={valueOption}
-          // onChange={(event, newValue) => handleChangeValue(event, newValue)}
-          getOptionLabel={(option) => option.title}
+          name="name"
+          options={services}
+          onChange={(event, newValue) =>
+            handleAddClinicalService(event, newValue)
+          }
+          getOptionLabel={(option) => resolve(option, "name")}
           renderInput={(params) => (
-            <TextField {...params} label="Tìm kiếm dịch vụ" />
+            <TextField value={value} {...params} label="Tìm kiếm dịch vụ" />
           )}
         />
         <Controls.Select
@@ -145,7 +96,6 @@ function ClinicalService() {
           value={filter}
           className={classes.selected}
           options={options}
-          // className={classes.newButton}
           onClick={() => {}}
         />
       </Toolbar>
@@ -157,10 +107,13 @@ function ClinicalService() {
           {recordsAfterPagingAndSorting().map((item) => {
             return (
               <TableRow
+                handleDoubleClick={() => {
+                  console.log("click");
+                }}
                 key={item.id}
                 item={item}
-                headCells={headCells}
-                listItemMenu={[{ title: "Xóa" }]}
+                headCells={headCellsClinicalServiceCurrentPatient}
+                listItemMenu={[{ title: "Xóa" ,onClick: () => handleRemoveClinicalService(item)}]}
               />
             );
           })}

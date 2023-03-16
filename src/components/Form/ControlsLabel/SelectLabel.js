@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
+import { resolve } from "../../../utils/Calc";
 import Label from "./Label";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,32 +44,37 @@ function SelectedLabel(props) {
   const {
     value,
     name,
+    accessField,
     label,
     error = null,
     onChange = null,
     InputProps = null,
     className,
+    disable,
+    filterSelectedOptions = false,
+    setFieldValue,
     require = false,
     size,
     sizeInput,
     options,
   } = props;
-  const [valueOption, setValueOption] = useState(options[0]);
-  const handleChangeValue = (event, newValue) => {
-    if (newValue.id == options[0]) {
-      return;
-    }
+  
+  // const [valueOption, setValueOption] = useState(options[0]);
 
-    if (onChange) {
-      onChange(newValue);
-    } else {
-      if (newValue == null) {
-        setValueOption(options[0]);
-      } else {
-        setValueOption(newValue);
-      }
-    }
-  };
+  // const handleChangeValue = (event, newValue) => {
+
+  //   if (onChange) {
+  //     onChange(newValue);
+  //     setValueOption(newValue);
+  //   } else {
+  //     if (newValue == null) {
+  //       setValueOption(options[0]);
+  //     } else {
+  //       setValueOption(newValue);
+  //     }
+  //   }
+  // };
+
   return (
     <>
       <Grid item xs={size[0]}>
@@ -77,35 +83,19 @@ function SelectedLabel(props) {
       <Grid item xs={size[1]}>
         <Autocomplete
           disablePortal
+          disabled={disable}
           id="combo-box-demo"
           size={sizeInput || "small"}
           className={classes.selected}
           options={options}
-          value={valueOption}
-          onChange={(event, newValue) => handleChangeValue(event, newValue)}
-          getOptionLabel={(option) => option.title}
+          value={value}
+          name={name}
+          onChange={(e,option) => setFieldValue(name,option)}
+          getOptionLabel={(option) => resolve(option,accessField)}
           renderInput={(params) => (
             <TextField {...params}  />
           )}
         />
-        {/* <FormControl
-          variant="outlined"
-          className={classes.selected}
-          size={size || "small"}
-          {...(error && { error: true })}
-        >
-          <Select
-            value={value}
-            onChange={onChange}
-          >
-            {options.map((item) => (
-              <MenuItem key={item.id} value={item.id}>
-                {item.title}
-              </MenuItem>
-            ))}
-          </Select>
-          {error && <FormHelperText>{error}</FormHelperText>}
-        </FormControl> */}
       </Grid>
     </>
   );

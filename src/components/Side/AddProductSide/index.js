@@ -22,7 +22,8 @@ import { ShowExaminationInformation } from "../../../redux/actions/tab";
 import { setCurrentPatient } from "../../../redux/actions/patient";
 import { useNavigate } from "react-router-dom";
 import { ShowAddProductModal } from "../../../redux/actions/modal";
-
+import useStyles from "../styles"
+import { GLOBALTYPES } from "../../../redux/actionType";
 const headCells = [
   { id: "id", numeric: false, label: "Số phiếu" },
   { id: "date", numeric: false, label: "Ngày nhập" },
@@ -92,28 +93,6 @@ const options = [
   },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  pageContent: {
-    margin: theme.spacing(5),
-    padding: theme.spacing(3),
-  },
-  searchInput: {
-    width: "20%",
-    paddingRight: "10px",
-  },
-  selected: {
-    width: "20%",
-  },
-  newButton: {
-    right: "10px",
-  },
-  toolBar: {
-    "& .MuiFormControl-root": {
-      paddingRight: "10px",
-    },
-  },
-}));
-
 function AddProductSide({ item }) {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -125,8 +104,8 @@ function AddProductSide({ item }) {
     },
   });
 
-  const handleClickShowModal = () => {
-    dispatch(ShowAddProductModal())
+  const handleClickShowAddModal = () => {
+    dispatch(ShowAddProductModal(GLOBALTYPES.ADD))
   }
 
   const [openPopup, setOpenPopup] = useState(false);
@@ -180,13 +159,13 @@ function AddProductSide({ item }) {
           variant="outlined"
           onChange={onChangeSelected}
           value={filter}
-          className={classes.selected}
+          className={classes.selected20}
           options={options}
           // className={classes.newButton}
           onClick={() => {}}
         />
         <div style={{flex:"1"}}></div>
-        <Button variant="contained" onClick={handleClickShowModal} color="healing" disableElevation startIcon={<Add />}>
+        <Button variant="contained" onClick={handleClickShowAddModal} color="healing" disableElevation startIcon={<Add />}>
           Thêm
         </Button>
       </Toolbar>

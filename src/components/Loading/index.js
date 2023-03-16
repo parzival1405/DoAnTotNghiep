@@ -21,10 +21,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Loading() {
+function Loading({className}) {
   const classes = useStyles();
   return (
-    <div className={classes.root}>
+    <div className={[classes.root,className].join(" ")}>
       <CircularProgress />
       <Typography variant="h6">Loading</Typography>
     </div>

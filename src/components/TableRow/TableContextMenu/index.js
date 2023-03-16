@@ -12,10 +12,11 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { ShowExaminationInformation } from "../../../redux/actions/tab";
 import { setCurrentPatient } from "../../../redux/actions/patient";
-
+import { resolve } from "../../../utils/Calc";
 import ContextMenu from "./ContextMenu";
 import { useNavigate } from "react-router-dom";
 import TableCellEditable from "./TableCellEditable";
+import State from "../../State";
 
 const useStyles = makeStyles((theme) => ({
   tableRow: {
@@ -23,9 +24,15 @@ const useStyles = makeStyles((theme) => ({
     display: "table !important",
     width: "100% !important",
   },
+  textContainer: {
+    display: "block",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
 }));
 
-function TableRow({ item, headCells, listItemMenu = [], handleClick }) {
+function TableRow({ item, headCells, listItemMenu = [], handleDoubleClick }) {
   const classes = useStyles();
   const [contextMenu, setContextMenu] = useState(null);
   const handleRightClick = (event) => {
@@ -45,7 +52,7 @@ function TableRow({ item, headCells, listItemMenu = [], handleClick }) {
   };
 
   const handleClickItem = (event, item) => {
-    handleClick(item);
+    handleDoubleClick(item);
     setContextMenu(null);
   };
 
@@ -54,8 +61,8 @@ function TableRow({ item, headCells, listItemMenu = [], handleClick }) {
       <>
         <MUITableRow
           className={classes.tableRow}
-          onContextMenu={handleClick ? handleRightClick : null}
-          onDoubleClick={handleClick ? handleClickItem : null}
+          onContextMenu={handleDoubleClick ? handleRightClick : null}
+          onDoubleClick={handleDoubleClick ? handleClickItem : null}
         >
           {headCells.map((itemhead) =>
             itemhead.id == "radio" ? (
@@ -71,9 +78,9 @@ function TableRow({ item, headCells, listItemMenu = [], handleClick }) {
                 sizeCellWidth={itemhead.sizeCellWidth}
                 key={itemhead.id}
                 itemhead={itemhead}
-                value={item[itemhead.id]}
+                value={resolve(item, itemhead.id)}
               />
-            ) : (
+            ) : itemhead.id == "status" ? (
               <MUITableCell
                 key={itemhead.id}
                 style={{
@@ -81,9 +88,23 @@ function TableRow({ item, headCells, listItemMenu = [], handleClick }) {
                 }}
                 align={itemhead.numeric ? "right" : "left"}
               >
-                {itemhead.calc
-                  ? itemhead.calc.fun(item["quantity"], item["price"])
-                  : item[itemhead.id]}
+                <State type={resolve(item, itemhead.id)} color="primary" />
+              </MUITableCell>
+            ) : (
+              <MUITableCell
+                key={itemhead.id}
+                style={{
+                  width: `${itemhead.sizeCellWidth}px`,
+                }}
+                component="th"
+                scope="row"
+                align={itemhead.numeric ? "right" : "left"}
+              >
+                <div className={classes.textContainer}>
+                  {itemhead.calc
+                    ? itemhead.calc.fun(item["quantity"], item["price"])
+                    : resolve(item, itemhead.id)}
+                </div>
               </MUITableCell>
             )
           )}
@@ -91,7 +112,6 @@ function TableRow({ item, headCells, listItemMenu = [], handleClick }) {
             <ContextMenu
               contextMenu={contextMenu}
               handleClose={handleClose}
-              handleClick={() => handleClick(item)}
               listItemMenu={listItemMenu}
             />
           )}

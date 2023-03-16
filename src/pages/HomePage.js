@@ -15,8 +15,6 @@ const useStyles = makeStyles({
 
 function Main() {
   const {isLoading} = useSelector((state) => state.loading)
-  const classes = useStyles();
-  const navigate = useNavigate();
   return (
     isLoading ? <Loading /> : <Drawer/> 
   );

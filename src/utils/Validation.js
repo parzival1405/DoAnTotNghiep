@@ -2,22 +2,22 @@ import * as Yup from "yup";
 import { ErrorOutline } from "@mui/material";
 
 export const validationLoginClinic = Yup.object().shape({
-  idNhanVien: Yup.string()
+  phone_number: Yup.string()
     .matches(
-      /^[0-9]{8}$/,
-      "Id không hợp lệ!"
+      /^(032|033|034|035|036|037|038|039|086|096|097|098|070|079|077|076|078|089|090|093|083|084|085|081|082|088|091|094|052|056|058|092|059|099|087)[0-9]{7}$/,
+      "  Số điện thoại không hợp lệ!"
     )
-    .required("Bạn phải điền id đã được cấp!"),
+    .required("Bạn phải điền số điện thoại!"),
   password: Yup.string().required("Bạn phải nhập mật khẩu!"),
 });
 
 export const validationForgotPass = Yup.object().shape({
-  idNhanVien: Yup.string()
-  .matches(
-    /^[0-9]{8}$/,
-    "Id không hợp lệ!"
-  )
-  .required("Bạn phải điền id đã được cấp!"),
+  phone_number: Yup.string()
+    .matches(
+      /^(032|033|034|035|036|037|038|039|086|096|097|098|070|079|077|076|078|089|090|093|083|084|085|081|082|088|091|094|052|056|058|092|059|099|087)[0-9]{7}$/,
+      "  Số điện thoại không hợp lệ!"
+    )
+    .required("Bạn phải điền số điện thoại!"),
 });
 
 export const validateionOTP = Yup.object().shape({
@@ -26,19 +26,6 @@ export const validateionOTP = Yup.object().shape({
     .max(6, "OTP không hợp lệ")
     .required("Không được để trống"),
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 export const validationRegister = Yup.object().shape({
   username: Yup.string().required("  Bạn phải điền tên hiển thị!"),
@@ -116,7 +103,6 @@ export const validateionChangePassword = Yup.object().shape({
       ),
     }),
 });
-
 
 export const validationForgotPassword = Yup.object().shape({
   phoneNumber: Yup.string()

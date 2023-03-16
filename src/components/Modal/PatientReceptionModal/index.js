@@ -1,12 +1,8 @@
-import { Close, LabelOutlined, Save } from "@mui/icons-material";
+import { Close, Save } from "@mui/icons-material";
 import {
   Fade,
   Grid,
-  InputAdornment,
   Paper,
-  RadioGroup,
-  TableBody,
-  TextField,
 } from "@mui/material";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
@@ -14,15 +10,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { hideModal } from "../../../redux/actions/modal";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
 import BaseModal from "../BaseModal";
-
+import * as api from "../../../api";
 import { makeStyles } from "@mui/styles";
 import ModalHeader from "../ModalHeader";
 import Controls from "../../Form/controls/Controls";
-import useTable from "../../../hooks/useTable";
-import TableRow from "../../TableRow/TableContextMenu";
 import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
-
+import { saveExamination } from "../../../redux/actions/medicalExamination";
+import { GLOBALTYPES } from "../../../redux/actionType";
+import {type} from "../../../utils/TypeOpen"
 const useStyle = makeStyles((theme) => ({
   paper: {
     width: "70%",
@@ -52,68 +48,89 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-const headCells = [
-  { id: "radio", sizeCellWidth: 60, label: "Chọn" },
-  { id: "room", numeric: false, label: "Phòng khám" },
-  { id: "waiting", sizeCellWidth: 100, numeric: true, label: "Chờ khám" },
-  { id: "examined", sizeCellWidth: 100, numeric: true, label: "Đã khám" },
-];
-const records = [
-  {
+const initialValues = {
+  patient: {
+    phoneNumber: null,
+    fullName: null,
+  },
+  doctor: null,
+  diagnose: "",
+  status: "WAIT",
+  reception: {
     id: 1,
-    room: "Phòng 1",
-    waiting: 1,
-    examined: 5,
+    fullName: "reception",
   },
-  {
-    id: 3,
-    room: "Phòng 2",
-    waiting: 1,
-    examined: 5,
-  },
+  service: null,
+};
+
+const optionsDoctor = [
+  { id: 1, fullName: "BS 1" },
   {
     id: 2,
-    room: "Phòng 3",
-    waiting: 1,
-    examined: 5,
+    fullName: "BS 2",
   },
-];
-
-const optionsTypeOfExamination = [
-  { id: "newExamination", title: "Khám tổng quát" },
-  {
-    id: "reExamination",
-    title: "khám mắt",
-  },
-  { id: "newExamination2", title: "Khám da liễu" },
+  { id: 3, fullName: "BS 3" },
 ];
 
 function PatientReceptionModal() {
   const { isShowPatientReceptionModal } = useSelector((state) => state.modal);
+  const { open, typeOpenModal, data } = isShowPatientReceptionModal;
+  const { services } = useSelector((state) => state.service);
+  const { user } = useSelector((state) => state.auth);
   const classes = useStyle();
   const dispatch = useDispatch();
-
-  const [filterFn, setFilterFn] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
-
-  const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
 
   const handleHideModal = () => {
     dispatch(hideModal("isShowPatientReceptionModal"));
   };
 
-  const handleSubmitForm = (values) => {};
+  const handleSubmitForm = (values) => {
+    const data = {
+      patient: {
+        phone_number: values.patient.phoneNumber,
+        full_name: values.patient.fullName,
+      },
+      doctor_id: values.doctor.id,
+      diagnose: values.diagnose,
+      status: values.status,
+      reception_id: values.reception.id,
+    };
+    if (typeOpenModal == GLOBALTYPES.ADD) {
+      dispatch(saveExamination(data));
+    } else if (typeOpenModal == GLOBALTYPES.EDIT) {
+      // dispatch(updateExamination(data))
+    }
+    handleHideModal();
+  };
+
+  const changeSdt = async (e, handleChange, setFieldValue) => {
+    handleChange(e);
+    const callApiGetInfoPatient = async (e) => {
+      const patientResponse = await api.findPatientByPhonenumber(
+        e.currentTarget.value
+      );
+      if (patientResponse) {
+        setFieldValue("patient", patientResponse.data);
+      }
+    };
+    if (e.currentTarget.value.length == 10) {
+      callApiGetInfoPatient(e);
+    } else {
+      setFieldValue("patient", {
+        phoneNumber: null,
+        fullName: null,
+      });
+    }
+  };
 
   const body = (
-    <Fade in={isShowPatientReceptionModal}>
+    <Fade in={isShowPatientReceptionModal.open}>
       <Paper className={classes.paper} id="modal-patient-reception">
         <ModalHeader title="Tiếp đón bệnh nhân" onClose={handleHideModal} />
         <Formik
-          initialValues={{}}
+          initialValues={
+            typeOpenModal == GLOBALTYPES.ADD ? initialValues : data
+          }
           //   validationSchema={validateionChangeGroupName}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
@@ -130,6 +147,7 @@ function PatientReceptionModal() {
             handleChange,
             handleSubmit,
             isSubmitting,
+            setFieldValue,
           }) => (
             <Form
               action=""
@@ -143,88 +161,117 @@ function PatientReceptionModal() {
                 rowSpacing={1}
                 className={classes.gridCustomInput}
               >
-                <InputLabel label="Bệnh nhân" require={true} size={[3, 3]} />
-                {/* <Grid item xs={2} /> */}
-                <DateLabel label="Tuổi" size={[3, 3]} />
                 <InputLabel
-                  label="Nhân viên tiếp đón"
+                  disable={type(typeOpenModal)}
+                  label="Điện thoại"
+                  size={[3, 3]}
+                  name="patient.phoneNumber"
+                  value={values["patient"]?.phoneNumber}
+                  onChange={(e) => changeSdt(e, handleChange, setFieldValue)}
+                />
+                <InputLabel
+                  disable={type(typeOpenModal)}
+                  label="Tên bệnh nhân"
+                  name="patient.fullName"
+                  value={values["patient"]?.fullName}
+                  onChange={handleChange}
                   require={true}
                   size={[3, 3]}
                 />
-                {/* <Grid item xs={2} /> */}
-                <InputLabel label="Điện thoại" size={[3, 3]} />
+                <DateLabel
+                  label="Tuổi"
+                  onChange={handleChange}
+                  size={[3, 3]}
+                  disable={type(typeOpenModal)}
+                />
+                <InputLabel
+                  disable={type(typeOpenModal)}
+                  label="Nhân viên tiếp đón"
+                  require={true}
+                  size={[3, 3]}
+                  value={user.fullName}
+                />
+
                 <SelectedLabel
-                  options={optionsTypeOfExamination}
+                  disable={type(typeOpenModal)}
+                  options={services}
+                  accessField={"name"}
+                  setFieldValue={setFieldValue}
+                  name="service"
+                  value={values.service}
                   label="Loại khám"
                   require={true}
                   size={[3, 3]}
                 />
-                {/* <Grid item xs={2} /> */}
-                <DateLabel disable={true} currentDate={true} label="Ngày lập" require={true} size={[3, 3]} />
-                <InputLabel label="Bác sĩ khám" require={true} size={[3, 3]} />
-                {/* <Grid item xs={2} /> */}
-                <InputLabel label="Tổng tiền" size={[3, 3]} />
-                <InputLabel label="Ghi chú" size={[3, 9]} />
-                <InputLabel label="Dấu hiệu lâm sàng" size={[3, 9]} />
+                <DateLabel
+                  disable={true}
+                  currentDate={true}
+                  label="Ngày lập"
+                  require={true}
+                  size={[3, 3]}
+                />
+                <SelectedLabel
+                  disable={type(typeOpenModal)}
+                  value={values.doctor}
+                  options={optionsDoctor}
+                  accessField={"fullName"}
+                  setFieldValue={setFieldValue}
+                  name="doctor"
+                  label="Bác sĩ khám"
+                  require={true}
+                  size={[3, 3]}
+                />
+                <InputLabel
+                  disable={true}
+                  value={values.service?.price}
+                  label="Tổng tiền"
+                  size={[3, 3]}
+                />
+                <InputLabel
+                  disable={type(typeOpenModal)}
+                  label="Ghi chú"
+                  onChange={handleChange}
+                  size={[3, 9]}
+                />
+                <InputLabel
+                  disable={type(typeOpenModal)}
+                  label="Dấu hiệu lâm sàng"
+                  name="diagnose"
+                  value={values.diagnose}
+                  onChange={handleChange}
+                  size={[3, 9]}
+                />
               </Grid>
 
-              <>
-                <TblContainer className={classes.table}>
-                  <TblHead />
-                  <TableBody
-                    style={{
-                      overflowY: "scroll",
-                      height: "150px",
-                      display: "block",
-                    }}
-                  >
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      defaultValue="female"
-                      name="radio-buttons-group"
-                    >
-                      {recordsAfterPagingAndSorting().map((item) => {
-                        return (
-                          <TableRow
-                            key={item.id}
-                            item={item}
-                            headCells={headCells}
-                          />
-                        );
-                      })}
-                    </RadioGroup>
-                  </TableBody>
-                </TblContainer>
-                <TblPagination />
-              </>
-
               {/* button -------------------- */}
-              <div className={classes.action}>
-                <Controls.Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  isSubmitting={isSubmitting}
-                  text="Lưu"
-                  startIcon={<Save />}
-                  sx={{ mr: 1 }}
-                />
+              {typeOpenModal !== GLOBALTYPES.VIEW && (
+                <div className={classes.action}>
+                  <Controls.Button
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    isSubmitting={isSubmitting}
+                    text="Lưu"
+                    startIcon={<Save />}
+                    sx={{ mr: 1 }}
+                  />
 
-                <Controls.Button
-                  variant="contained"
-                  text="Hủy"
-                  color="error"
-                  startIcon={<Close />}
-                  onClick={handleHideModal}
-                />
-              </div>
+                  <Controls.Button
+                    variant="contained"
+                    text="Hủy"
+                    color="error"
+                    startIcon={<Close />}
+                    onClick={handleHideModal}
+                  />
+                </div>
+              )}
             </Form>
           )}
         </Formik>
       </Paper>
     </Fade>
   );
-  return <BaseModal body={body} isShow={isShowPatientReceptionModal} />;
+  return <BaseModal body={body} isShow={isShowPatientReceptionModal.open} />;
 }
 
 export default PatientReceptionModal;

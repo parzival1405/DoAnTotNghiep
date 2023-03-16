@@ -1,6 +1,8 @@
 import React from "react";
 import {
   Avatar,
+  List,
+  ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
@@ -11,12 +13,15 @@ import { ExpandMore } from "@mui/icons-material";
 import AvatarIcon from "../../../assets/img/avt_doctor.png";
 
 import useStyles from "./styles";
-
+import { logout } from "../../../redux/actions/auth";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 function DoctorPopover() {
   const classes = useStyles();
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth)
   const [anchorEl, setAnchorEl] = React.useState(null);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -25,16 +30,25 @@ function DoctorPopover() {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    dispatch(logout(navigate));
+  };
+
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? "simple-popover" : undefined;
 
   return (
     <>
-      <ListItemButton aria-describedby={id} onClick={handleClick} color="secondary" className={classes.buttonAvt}>
+      <ListItemButton
+        aria-describedby={id}
+        onClick={handleClick}
+        color="secondary"
+        className={classes.buttonAvt}
+      >
         <ListItemIcon>
           <Avatar alt="avt" src={AvatarIcon}></Avatar>
         </ListItemIcon>
-        <ListItemText className={classes.text} primary="Bac Si" />
+        <ListItemText className={classes.text} primary={user.fullName} />
         <ExpandMore />
       </ListItemButton>
       <Popover
@@ -47,7 +61,11 @@ function DoctorPopover() {
           horizontal: "left",
         }}
       >
-        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+        <List>
+          <ListItem onClick={handleLogout}>
+            <ListItemText primary={"Đăng xuất"} />
+          </ListItem>
+        </List>
       </Popover>
     </>
   );

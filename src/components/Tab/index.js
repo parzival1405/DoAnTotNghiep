@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ExaminationInformation from "./ExaminationInformation";
 import ClinicalService from "./ClinicalService";
@@ -10,13 +10,16 @@ import { Clear, Healing, Save } from "@mui/icons-material";
 import Controls from "../Form/controls/Controls";
 
 function Tab() {
-  const tabState = useSelector((state) => state.tab);
   const dispatch = useDispatch();
   const [value, setValue] = React.useState("ExaminationInformation");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    // dispatch(historyMedicalExamination())
+  })
 
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>

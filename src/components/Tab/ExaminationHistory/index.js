@@ -1,41 +1,10 @@
 import { TableBody } from "@mui/material";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import useTable from "../../../hooks/useTable";
 import TableRow from "../../TableRow/TableContextMenu";
+import {headCellsMedicalExaminationHistory} from "../../../utils/HeadCells"
 
-const headCells = [
-  { id: "date", numeric: false, label: "Ngày khám" },
-  { id: "doctorExamines", numeric: false, label: "Bác sĩ khám" },
-  { id: "note", numeric: false, label: "Ghi chú" },
-  { id: "diagnostic", numeric: false, label: "Chuẩn đoán" },
-  { id: "conclude", numeric: false, label: "Kết luận" },
-];
-const records = [
-  {
-    id:1,
-    date: new Date().toDateString(),
-    doctorExamines: "bui quang huu",
-    note: "kham bth",
-    conclude: "trang thai",
-    diagnostic: "trang thai",
-  },
-  {
-    id:2,
-    date: new Date().toDateString(),
-    doctorExamines: "bui quang huu",
-    note: "kham bth",
-    diagnostic: "trang thai",
-    conclude: "trang thai",
-  },
-  {
-    id:3,
-    date: new Date().toDateString(),
-    doctorExamines: "bui quang huu",
-    note: "kham bth",
-    conclude: "trang thai",
-    diagnostic: "trang thai",
-  },
-];
 function ExaminationHistory() {
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
@@ -43,8 +12,10 @@ function ExaminationHistory() {
     },
   });
 
+  const {historyMedicalExamination} = useSelector((state) => state.currentPatient);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(historyMedicalExamination, headCellsMedicalExaminationHistory, filterFn);
+
   return (
     <>
       <TblContainer>
@@ -57,7 +28,7 @@ function ExaminationHistory() {
               <TableRow
                 key={item.id}
                 item={item}
-                headCells={headCells}
+                headCells={headCellsMedicalExaminationHistory}
                 listItemMenu={[{ title: "Xóa" }]}
               />
             );

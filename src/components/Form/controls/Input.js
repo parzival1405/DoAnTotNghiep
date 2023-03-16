@@ -9,6 +9,7 @@ export default function Input(props) {
     value,
     error = null,
     onChange,
+    onKeyDown,
     InputProps = null,
     className,
     size
@@ -21,6 +22,7 @@ export default function Input(props) {
       label={label}
       size={size || "small"}
       name={name}
+      onKeyDown={onKeyDown}
       value={value}
       onChange={onChange}
       InputProps={InputProps}

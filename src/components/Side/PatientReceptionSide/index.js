@@ -19,127 +19,9 @@ import { Search, Add } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
 import TableRow from "../../TableRow/TableContextMenu";
 import { ShowPatientReception } from "../../../redux/actions/modal";
-
-const headCells = [
-  { id: "id", numeric: false, label: "Id bệnh nhân" },
-  { id: "fullName", numeric: false, label: "Tên bệnh nhân" },
-  { id: "age", numeric: true, label: "Tuổi" },
-  { id: "category", numeric: false, label: "Loại khám" },
-  { id: "detail", numeric: false, label: "CĐ Lâm sàng" },
-  { id: "result", numeric: false, label: "Kết luận" },
-  { id: "state", numeric: false, label: "Trạng thái" },
-];
-
-const records = [
-  {
-    id: 1,
-    fullName: "bui quang huu",
-    age: 4564,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 2,
-    fullName: "bui quang huu",
-    age: 453,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 3,
-    fullName: "bui quang huu",
-    age: 435,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 4,
-    fullName: "bui quang huu",
-    age: 365,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 5,
-    fullName: "bui quang huu",
-    age: 20,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 6,
-    fullName: "bui quang huu",
-    age: 13,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 7,
-    fullName: "bui quang huu",
-    age: 4564,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 8,
-    fullName: "bui quang huu",
-    age: 453,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 9,
-    fullName: "bui quang huu",
-    age: 435,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 10,
-    fullName: "bui quang huu",
-    age: 365,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 11,
-    fullName: "bui quang huu",
-    age: 20,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 12,
-    fullName: "bui quang huu",
-    age: 13,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-];
+import useStyles from "../styles";
+import { GLOBALTYPES } from "../../../redux/actionType";
+import { headCellsPatientReceptionSide } from "../../../utils/HeadCells";
 
 const options = [
   { id: "", title: "Không" },
@@ -201,37 +83,12 @@ const optionsDepartment = [
   },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  pageContent: {
-    margin: theme.spacing(5),
-    padding: theme.spacing(3),
-  },
-  searchInput: {
-    width: "20%",
-    paddingRight: "10px",
-  },
-  selected: {
-    width: "15%",
-  },
-  selectedD: {
-    width: "15%",
-  },
-  selectedR: {
-    width: "10%",
-  },
-  newButton: {
-    right: "10px",
-  },
-  toolBar: {
-    "& .MuiFormControl-root": {
-      paddingRight: "10px",
-    },
-  },
-}));
-
 function PatientReceptionSide({ item }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { medicalExaminations } = useSelector(
+    (state) => state.medicalExamination
+  );
   const [filter, setFiler] = useState({
     category: "",
     department: "",
@@ -247,7 +104,7 @@ function PatientReceptionSide({ item }) {
 
   const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(medicalExaminations, headCellsPatientReceptionSide, filterFn);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
 
@@ -273,9 +130,17 @@ function PatientReceptionSide({ item }) {
     }
   };
 
-  const handleClickShowModal = () => {
-    dispatch(ShowPatientReception())
-  }
+  const handleClickShowAddModal = () => {
+    dispatch(ShowPatientReception(GLOBALTYPES.ADD));
+  };
+
+  const handleClickShowEditModal = (item) => {
+    dispatch(ShowPatientReception(GLOBALTYPES.EDIT, item));
+  };
+
+  const handleClickShowViewModal = (item) => {
+    dispatch(ShowPatientReception(GLOBALTYPES.VIEW, item));
+  };
   return (
     <>
       <Toolbar className={classes.toolBar} sx={{ pt: 2 }}>
@@ -319,8 +184,14 @@ function PatientReceptionSide({ item }) {
           className={classes.selectedR}
           options={optionsRoom}
         />
-        <div style={{flex:"1"}}></div>
-        <Button variant="contained" onClick={handleClickShowModal} color="healing" disableElevation startIcon={<Add />}>
+        <div style={{ flex: "1" }}></div>
+        <Button
+          variant="contained"
+          onClick={handleClickShowAddModal}
+          color="healing"
+          disableElevation
+          startIcon={<Add />}
+        >
           Thêm
         </Button>
       </Toolbar>
@@ -333,14 +204,20 @@ function PatientReceptionSide({ item }) {
           {recordsAfterPagingAndSorting().map((item) => {
             return (
               <TableRow
-                handleClick={handleClick}
+                handleDoubleClick={handleClick}
                 key={item.id}
                 item={item}
-                headCells={headCells}
+                headCells={headCellsPatientReceptionSide}
                 listItemMenu={[
-                  { title: "Sửa" },
+                  {
+                    title: "Sửa",
+                    onClick: () => handleClickShowEditModal(item),
+                  },
                   { title: "Thanh toán" },
-                  { title: "Xem" },
+                  {
+                    title: "Xem",
+                    onClick: () => handleClickShowViewModal(item),
+                  },
                 ]}
               />
             );

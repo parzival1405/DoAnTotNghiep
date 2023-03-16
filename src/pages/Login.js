@@ -48,11 +48,10 @@ function Login() {
   };
 
   const handleSubmitForm = async (values) => {
-    const data = {
-      idNhanVien: values.idNhanVien,
-      password: values.password,
-    };
-
+    // const data = {
+    //   phone_number: values.phone_number,
+    //   password: values.password,
+    // };
     try {
       dispatch(login(values, navigate));
     } catch (error) {
@@ -66,7 +65,7 @@ function Login() {
     <AuthLayout>
       <Formik
         initialValues={{
-          idNhanVien: "",
+          phone_number: "",
           password: "",
         }}
         validationSchema={validationLoginClinic}
@@ -102,12 +101,12 @@ function Login() {
                 alignItems="center"
               >
                 <Controls.Input
-                  name="idNhanVien"
-                  label="Nhập Id nhân viên"
-                  value={values.idNhanVien}
+                  name="phone_number"
+                  label="Số điện thoại"
+                  value={values.phone_number}
                   onChange={handleChange}
                   size="larger"
-                  error={touched.idNhanVien ? errors.idNhanVien : undefined}
+                  error={touched.phone_number ? errors.phone_number : undefined}
                 />
                 <Controls.Input
                   name="password"
@@ -143,7 +142,7 @@ function Login() {
                 </Box>
 
                 <Box textAlign="center">
-                  <Controls.Button type="submit" text="Đăng nhập" />
+                  <Controls.Button type="submit" disabled={isSubmitting} text="Đăng nhập" />
                 </Box>
               </Grid>
             </Grid>

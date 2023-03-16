@@ -21,6 +21,12 @@ import {
   QueryStats,
   LockPerson,
   Functions,
+  Category,
+  Portrait,
+  MeetingRoom,
+  MonetizationOn,
+  MedicalInformation,
+  Store,
 } from "@mui/icons-material";
 import { ListItemAvatar } from "@mui/material";
 
@@ -49,6 +55,47 @@ export const items = [
         subMenu: [],
       },
       { id: "CDT", name: "Cài đặt", icon: <Settings />, subMenu: [] },
+    ],
+  },
+  {
+    id: "DMC",
+    name: "Danh mục",
+    icon: <Category />,
+    subMenu: [
+      {
+        id: "BNN",
+        name: "Bệnh nhân",
+        icon: <Portrait />,
+        subMenu: [],
+      },
+      {
+        id: "PGB",
+        name: "Phòng ban",
+        icon: <MeetingRoom />,
+        subMenu: [],
+      },
+      {
+        id: "NMSP",
+        name: "Nhóm sản phẩm",
+        icon: <Vaccines />,
+        subMenu: [],
+      },
+      {
+        id: "PRD",
+        name: "Sản phẩm",
+        icon: <Vaccines />,
+        subMenu: [],
+      },{
+        id: "DVKM",
+        name: "Dịch vụ khám",
+        icon: <MedicalInformation />,
+        subMenu: [],
+      },{
+        id: "NCCDV",
+        name: "Nhà cung cấp",
+        icon: <Store />,
+        subMenu: [],
+      },
     ],
   },
   {
@@ -107,6 +154,37 @@ export const items = [
     ],
   },
   {
+    id: "TCI",
+    name: "Thu chi",
+    icon: <MonetizationOn />,
+    subMenu: [
+      // {
+      //   id: "CTLK",
+      //   name: "Chi tiết loại Khám",
+      //   icon: <SignalCellularAlt />,
+      //   subMenu: [],
+      // },
+      // {
+      //   id: "THLK",
+      //   name: "Tổng hợp loại khám",
+      //   icon: <SignalCellularAlt />,
+      //   subMenu: [],
+      // },
+      // {
+      //   id: "THDV",
+      //   name: "Tổng hợp dịch vụ",
+      //   icon: <SignalCellularAlt />,
+      //   subMenu: [],
+      // },
+      // {
+      //   id: "THDT",
+      //   name: "Tổng hợp doanh thu",
+      //   icon: <QueryStats />,
+      //   subMenu: [],
+      // },
+    ],
+  },
+  {
     id: "BC",
     name: "Báo cáo",
     icon: <StackedBarChart />,
@@ -145,6 +223,13 @@ export const itemMap = new Map([
   ["FCN", "ADM"],
   ["NQ", "ADM"],
 
+  ["BNN", "DMC"],
+  ["PGB", "DMC"],
+  ["NMSP", "DMC"],
+  ["PRD", "DMC"],
+  ["DVKM", "DMC"],
+  ["NCCDV", "DMC"],
+  
   ["TDBN", "LTN"],
   ["LHK", "LTN"],
 
@@ -153,8 +238,8 @@ export const itemMap = new Map([
   ["NSP", "SP"],
   ["DNT", "SP"],
 
-  ["QLTT","DV"],
-  ["DSDV","DV"],
+  ["QLTT", "DV"],
+  ["DSDV", "DV"],
 
   ["CTLK", "BC"],
   ["THLK", "BC"],

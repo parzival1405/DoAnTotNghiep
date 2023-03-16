@@ -1,16 +1,18 @@
 import { GLOBALTYPES } from "../actionType";
-import { itemMap } from "../../utils/Items";
 const initState = {
-  currentPatient : null
+  patients: null,
 };
 
 export default (state = initState, action) => {
   switch (action.type) {
-    case GLOBALTYPES.CURRENT_PATIENT:
+    case GLOBALTYPES.GET_ALL_PATIENT:
       return {
         ...state,
-        currentPatient: action.payload,
+        patients: action.payload,
       };
+    case GLOBALTYPES.CLEAR:
+      return initState;
+
     default:
       return state;
   }

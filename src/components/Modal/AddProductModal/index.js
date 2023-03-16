@@ -24,6 +24,7 @@ import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
 import useTable from "../../../hooks/useTable";
 import TableRow from "../../TableRow/TableContextMenu";
+import { GLOBALTYPES } from "../../../redux/actionType";
 
 const useStyle = makeStyles((theme) => ({
   paper: {
@@ -119,11 +120,11 @@ function AddProductModal() {
   });
 
   const handleClickShowModalAddSupplier = () => {
-    dispatch(ShowAddSupplierModal())
+    dispatch(ShowAddSupplierModal(GLOBALTYPES.ADD))
   }
 
   const handleClickShowModalAddDrug = () => {
-    dispatch(ShowAddDrugModal())
+    dispatch(ShowAddDrugModal(GLOBALTYPES.ADD))
   }
 
   
@@ -150,7 +151,7 @@ function AddProductModal() {
 
 
   const body = (
-    <Fade in={isShowAddProductModal}>
+    <Fade in={isShowAddProductModal.open}>
       <Paper className={classes.paper} id="modal-patient-reception">
         <ModalHeader title="Phiếu nhập" onClose={handleHideModal} />
         <Formik
@@ -235,6 +236,7 @@ function AddProductModal() {
                   options={optionsDrug}
                   require={true}
                   size={[2, 5]}
+                  accessField="title"
                   onChange={onSelectedDrug}
                 />
                 <Grid item xs={1} className={classes.button}>
@@ -312,7 +314,7 @@ function AddProductModal() {
       </Paper>
     </Fade>
   );
-  return <BaseModal body={body} isShow={isShowAddProductModal} />;
+  return <BaseModal body={body} isShow={isShowAddProductModal.open} />;
 }
 
 export default AddProductModal;

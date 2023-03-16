@@ -61,7 +61,7 @@ function AddSupplierModal() {
   
     const handleSubmitForm = (values) => {};
     const body = (
-      <Fade in={isShowAddSupplierModal}>
+      <Fade in={isShowAddSupplierModal.open}>
         <Paper className={classes.paper} id="modal-patient-reception">
           <ModalHeader title="Thêm nhà cung cấp mới" onClose={handleHideModal} />
           <Formik
@@ -127,7 +127,7 @@ function AddSupplierModal() {
         </Paper>
       </Fade>
     );
-    return <BaseModal body={body} isShow={isShowAddSupplierModal} />;
+    return <BaseModal body={body} isShow={isShowAddSupplierModal.open} />;
 }
 
 export default AddSupplierModal

@@ -1,18 +1,21 @@
+import * as api from "../../api";
 import { GLOBALTYPES } from "../actionType";
+const qs = require('qs');
 
-export const setCurrentPatient = (patient) => async (dispatch) => {
+export const getAllPatient = () => async (dispatch) => {
   try {
     dispatch({
-      type:GLOBALTYPES.CURRENT_PATIENT,
-      payload:patient
+      type: GLOBALTYPES.START_LOADING_CALL_API,
     });
-  } catch (err) {}
+    const {data} = await api.getAllPatient();
+    dispatch({
+      type:GLOBALTYPES.GET_ALL_PATIENT,
+      payload:data
+    });
+    dispatch({
+      type: GLOBALTYPES.END_LOADING_CALL_API,
+    });
+  } catch (err) {
+    console.log(err)
+  }
 };
-
-// export const re = () => async (dispatch) => {
-//     try {
-//       dispatch({
-//         type:GLOBALTYPES.CURRENT_PATIENT,
-//       });
-//     } catch (err) {}
-//   };

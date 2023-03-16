@@ -11,6 +11,7 @@ function createWindow() {
       contextIsolation:false,
       enableRemoteModule: true,
       webSecurity: false,
+      allowRunningInsecureContent:true, 
     },
   });
   win.maximize();

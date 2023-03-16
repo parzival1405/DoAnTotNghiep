@@ -1,147 +1,16 @@
-import { makeStyles } from "@mui/styles";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useTable from "../../../hooks/useTable";
-import Layout from "../Layout";
+
 import Controls from "../../Form/controls/Controls";
-import {
-  Button,
-  InputAdornment,
-  Menu,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  Toolbar,
-} from "@mui/material";
+import { Button, InputAdornment, TableBody, Toolbar } from "@mui/material";
 import { Search, Add } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
 import TableRow from "../../TableRow/TableContextMenu";
 import { ShowAddScheduleModal } from "../../../redux/actions/modal";
-
-const headCells = [
-  { id: "id", numeric: false,sizeCellWidth: 100, label: "Mã phiếu" },
-  { id: "fullName", numeric: false, label: "Tên bệnh nhân" },
-  { id: "female", numeric: false,sizeCellWidth: 100, label: "Giới tính" },
-  { id: "date", numeric: false, label: "Ngày hẹn khám" },
-  { id: "category", numeric: false,sizeCellWidth: 140, label: "Kiểu khám" },
-  // { id: "cause", numeric: false, label: "Lý do" },
-  // { id: "note", numeric: false, label: "Ghi chú" },
-  { id: "state", numeric: false,sizeCellWidth: 140, label: "Trạng thái" },
-];
-
-const records = [
-  {
-    id: 1,
-    fullName: "bui quang huu",
-    age: 4564,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 2,
-    fullName: "bui quang huu",
-    age: 453,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 3,
-    fullName: "bui quang huu",
-    age: 435,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 4,
-    fullName: "bui quang huu",
-    age: 365,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 5,
-    fullName: "bui quang huu",
-    age: 20,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 6,
-    fullName: "bui quang huu",
-    age: 13,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 7,
-    fullName: "bui quang huu",
-    age: 4564,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 8,
-    fullName: "bui quang huu",
-    age: 453,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 9,
-    fullName: "bui quang huu",
-    age: 435,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 10,
-    fullName: "bui quang huu",
-    age: 365,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 11,
-    fullName: "bui quang huu",
-    age: 20,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 12,
-    fullName: "bui quang huu",
-    age: 13,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-];
-
+import useStyles from "../styles";
+import { GLOBALTYPES } from "../../../redux/actionType";
+import { headCellsScheduleSide } from "../../../utils/HeadCells";
 const options = [
   { id: "", title: "Không" },
   {
@@ -186,34 +55,6 @@ const optionsDepartment = [
   },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  pageContent: {
-    margin: theme.spacing(5),
-    padding: theme.spacing(3),
-  },
-  searchInput: {
-    width: "20%",
-    paddingRight: "10px",
-  },
-  selected: {
-    width: "15%",
-  },
-  selectedD: {
-    width: "15%",
-  },
-  selectedR: {
-    width: "10%",
-  },
-  newButton: {
-    right: "10px",
-  },
-  toolBar: {
-    "& .MuiFormControl-root": {
-      paddingRight: "10px",
-    },
-  },
-}));
-
 function ScheduleSide({ item }) {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -221,8 +62,9 @@ function ScheduleSide({ item }) {
     category: "",
     department: "",
   });
-  const [recordForEdit, setRecordForEdit] = useState(null);
 
+  const { medicalLetters } = useSelector((state) => state.medicalLetter);
+  console.log(medicalLetters);
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
@@ -231,7 +73,7 @@ function ScheduleSide({ item }) {
 
   const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(medicalLetters, headCellsScheduleSide, filterFn);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
 
@@ -257,10 +99,17 @@ function ScheduleSide({ item }) {
     }
   };
 
-  const handleClickShowModal = () => {
-    dispatch(ShowAddScheduleModal())
-    console.log("sasdfd")
-  }
+  const handleClickShowAddModal = () => {
+    dispatch(ShowAddScheduleModal(GLOBALTYPES.ADD));
+  };
+
+  const handleClickShowEditModal = (item) => {
+    dispatch(ShowAddScheduleModal(GLOBALTYPES.EDIT, item));
+  };
+
+  const handleClickShowViewModal = (item) => {
+    dispatch(ShowAddScheduleModal(GLOBALTYPES.VIEW, item));
+  };
   return (
     <>
       <Toolbar className={classes.toolBar} sx={{ pt: 2 }}>
@@ -294,8 +143,14 @@ function ScheduleSide({ item }) {
           className={classes.selectedD}
           options={optionsDepartment}
         />
-        <div style={{flex:"1"}}></div>
-        <Button variant="contained" onClick={handleClickShowModal} color="healing" disableElevation startIcon={<Add />}>
+        <div style={{ flex: "1" }}></div>
+        <Button
+          variant="contained"
+          onClick={handleClickShowAddModal}
+          color="healing"
+          disableElevation
+          startIcon={<Add />}
+        >
           Thêm
         </Button>
       </Toolbar>
@@ -308,14 +163,20 @@ function ScheduleSide({ item }) {
           {recordsAfterPagingAndSorting().map((item) => {
             return (
               <TableRow
-                handleClick={handleClick}
+                handleDoubleClick={handleClick}
                 key={item.id}
                 item={item}
-                headCells={headCells}
+                headCells={headCellsScheduleSide}
                 listItemMenu={[
-                  { title: "Sửa" },
+                  {
+                    title: "Sửa",
+                    onClick: () => handleClickShowEditModal(item),
+                  },
                   { title: "Thanh toán" },
-                  { title: "Xem" },
+                  {
+                    title: "Xem",
+                    onClick: () => handleClickShowViewModal(item),
+                  },
                 ]}
               />
             );

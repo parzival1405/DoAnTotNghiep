@@ -2,24 +2,16 @@ import { makeStyles } from "@mui/styles";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useTable from "../../../hooks/useTable";
-import Layout from "../Layout";
 import Controls from "../../Form/controls/Controls";
 import {
-  Button,
   InputAdornment,
-  Menu,
-  MenuItem,
-  Table,
   TableBody,
-  TableCell,
-  TableContainer,
   Toolbar,
 } from "@mui/material";
-import { Search, Add } from "@mui/icons-material";
+import { Search } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
 import TableRow from "../../TableRow/TableContextMenu";
-import { ShowAddScheduleModal } from "../../../redux/actions/modal";
-
+import useStyles from "../styles"
 const headCells = [
   { id: "date", numeric: false, label: "Ngày làm DV" },
   { id: "id", numeric: false, sizeCellWidth: 80, label: "Mã BN" },
@@ -106,33 +98,6 @@ const optionsDepartment = [
   },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  pageContent: {
-    margin: theme.spacing(5),
-    padding: theme.spacing(3),
-  },
-  searchInput: {
-    width: "20%",
-    paddingRight: "10px",
-  },
-  selected: {
-    width: "15%",
-  },
-  selectedD: {
-    width: "15%",
-  },
-  selectedR: {
-    width: "10%",
-  },
-  newButton: {
-    right: "10px",
-  },
-  toolBar: {
-    "& .MuiFormControl-root": {
-      paddingRight: "10px",
-    },
-  },
-}));
 
 function ServiceListSide({ item }) {
   const classes = useStyles();

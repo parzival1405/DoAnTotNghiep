@@ -1,10 +1,9 @@
-
 import { GLOBALTYPES } from "../actionType";
-import {itemMap} from "../../utils/Items"
+import { itemMap } from "../../utils/Items";
 const initState = {
   IDSelected: null,
   IDParent: null,
-  ParentWithSelectedChild : null
+  ParentWithSelectedChild: null,
 };
 
 export default (state = initState, action) => {
@@ -15,12 +14,11 @@ export default (state = initState, action) => {
         IDParent: action.payload,
       };
     case GLOBALTYPES.CHILD:
-      const IDParent = itemMap.get(action.payload)
-
+      const IDParent = itemMap.get(action.payload);
       return {
         ...state,
         IDSelected: action.payload,
-        ParentWithSelectedChild : IDParent
+        ParentWithSelectedChild: IDParent,
       };
     case GLOBALTYPES.HIDE_PARENT:
       return {

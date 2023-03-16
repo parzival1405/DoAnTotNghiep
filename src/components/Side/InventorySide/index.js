@@ -20,6 +20,7 @@ import TableRow from "../../TableRow/TableContextMenu";
 import { ShowExaminationInformation } from "../../../redux/actions/tab";
 import { setCurrentPatient } from "../../../redux/actions/patient";
 import { useNavigate } from "react-router-dom";
+import useStyles from "../styles"
 
 const headCells = [
   { id: "id", numeric: false, label: "Id bệnh nhân" },
@@ -170,28 +171,6 @@ const options = [
   },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  pageContent: {
-    margin: theme.spacing(5),
-    padding: theme.spacing(3),
-  },
-  searchInput: {
-    width: "20%",
-    paddingRight: "10px",
-  },
-  selected: {
-    width: "20%",
-  },
-  newButton: {
-    right: "10px",
-  },
-  toolBar: {
-    "& .MuiFormControl-root": {
-      paddingRight: "10px",
-    },
-  },
-}));
-
 function InventorySide() {
   const classes = useStyles();
   const [filter, setFiler] = useState("");
@@ -249,7 +228,7 @@ function InventorySide() {
           variant="outlined"
           onChange={onChangeSelected}
           value={filter}
-          className={classes.selected}
+          className={classes.selected20}
           options={options}
           // className={classes.newButton}
           onClick={() => {}}

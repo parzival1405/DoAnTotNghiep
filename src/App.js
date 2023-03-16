@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
@@ -13,11 +13,19 @@ import AddScheduleModal from "./components/Modal/AddScheduleModal";
 import AddProductModal from "./components/Modal/AddProductModal";
 import AddSupplierModal from "./components/Modal/AddSupplierModal";
 import AddDrugModal from "./components/Modal/AddDrugModal";
+import AddAccountStaffModal from "./components/Modal/AddAccountStaffModal";
+import AddPermissionModal from "./components/Modal/AddPermissionModal";
+import PatientModal from "./components/Modal/PatientModal";
+import AddProductGroupsModal from "./components/Modal/AddProductGroupsModal";
+import AddServiceGroupsModal from "./components/Modal/AddServiceGroupsModal";
+import AddTypeServiceGroupsModal from "./components/Modal/AddServiceGroupsModal/AddTypeServiceGroupsModal";
 
 function App() {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
-
+  useEffect(() => {
+    // dispatch();
+  }, [dispatch]);
   const theme = createTheme({
     palette: {
       primary: {
@@ -68,6 +76,12 @@ function App() {
         <AddProductModal/>
         <AddSupplierModal/>
         <AddDrugModal/>
+        <AddAccountStaffModal/>
+        <AddPermissionModal/>
+        <PatientModal/>
+        <AddProductGroupsModal/>
+        <AddServiceGroupsModal/>
+        <AddTypeServiceGroupsModal/>
         <Routes>
           <Route
             exact
@@ -83,7 +97,7 @@ function App() {
           <Route
             exact
             path="/Homepage"
-            element={<Homepage />}
+            element={user ? <Homepage /> : <Navigate to="/login" replace />}
           ></Route>
           <Route
             exact
