@@ -24,20 +24,20 @@ function Main() {
     if (user) {
       if (user.role != "NEWMEM") {
         client = new Client({
-          brokerURL: "ws://192.168.1.5:61613/ws",
+          brokerURL: "ws://192.168.1.5:61614/ws",
           connectHeaders: {
             login: "admin",
             passcode: "admin",
           },
           onConnect: () => {
-            client.subscribe(`/queue/${user.role}`, (message) =>
+            client.subscribe(`/queue/bn`, (message) =>
               console.log(`Received: ${message}`)
             );
           },
         });
       } else {
         client = new Client({
-          brokerURL: "ws://192.168.1.5:61613/ws",
+          brokerURL: "ws://192.168.1.5:61614/ws",
           connectHeaders: {
             login: "admin",
             passcode: "admin",
