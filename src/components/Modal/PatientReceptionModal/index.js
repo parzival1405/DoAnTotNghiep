@@ -77,6 +77,7 @@ function PatientReceptionModal() {
   const { open, typeOpenModal, data } = isShowPatientReceptionModal;
   const { services } = useSelector((state) => state.service);
   const { user } = useSelector((state) => state.auth);
+  const { client } = useSelector((state) => state.stomp)
   const classes = useStyle();
   const dispatch = useDispatch();
 
@@ -96,7 +97,8 @@ function PatientReceptionModal() {
       reception_id: values.reception.id,
     };
     if (typeOpenModal == GLOBALTYPES.ADD) {
-      dispatch(saveExamination(data));
+      dispatch(saveExamination(data,client));
+      
     } else if (typeOpenModal == GLOBALTYPES.EDIT) {
       // dispatch(updateExamination(data))
     }

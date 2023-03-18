@@ -11,8 +11,10 @@ import medicalLetter from "./medicalLetter";
 import medicalExamination from "./medicalExamination";
 import service from "./service";
 import product from "./product";
+import stomp from "./stomp";
 export default combineReducers({
   product,
+  stomp,
   auth,
   modal,
   loading,

@@ -19,6 +19,8 @@ import PatientModal from "./components/Modal/PatientModal";
 import AddProductGroupsModal from "./components/Modal/AddProductGroupsModal";
 import AddServiceGroupsModal from "./components/Modal/AddServiceGroupsModal";
 import AddTypeServiceGroupsModal from "./components/Modal/AddServiceGroupsModal/AddTypeServiceGroupsModal";
+import { initStomp } from "./redux/actions/stomp";
+import { Client } from "@stomp/stompjs";
 
 function App() {
   const dispatch = useDispatch();
@@ -30,7 +32,7 @@ function App() {
     palette: {
       primary: {
         main: "#4eb0ba",
-        contrastText: '#fff',
+        contrastText: "#fff",
         light: "#4eb0ba50 ",
       },
       secondary: {
@@ -39,7 +41,7 @@ function App() {
       },
       healing: {
         main: "#42f593",
-        contrastText: '#fff',
+        contrastText: "#fff",
       },
       background: {
         default: "#f4f5fd",
@@ -59,29 +61,51 @@ function App() {
     },
     typography: {
       h6: {
-        color: "#4eb0ba"
+        color: "#4eb0ba",
       },
       h5: {
-        color: "#4eb0ba"
+        color: "#4eb0ba",
       },
     },
-    spacing:8
+    spacing: 8,
   });
+
+  useEffect(() => {
+    if (user) {
+      var client = null
+      if (user.role != "NEWMEM") {
+        client = new Client({
+          brokerURL: "ws://192.168.1.5/61613",
+          onConnect: () => {
+            client.subscribe(`/queue/${user.role}`, (message) =>
+              console.log(`Received: ${message}`)
+            );
+          },
+        });
+      }else{
+        client = new Client({
+          brokerURL: "ws://192.168.1.5/61613",
+        });
+      }
+      dispatch(initStomp(client));
+    }
+  }, [dispatch]);
+
   return (
     <ThemeProvider theme={theme}>
       <HashRouter>
         <OTPModal />
         <PatientReceptionModal />
         <AddScheduleModal />
-        <AddProductModal/>
-        <AddSupplierModal/>
-        <AddDrugModal/>
-        <AddAccountStaffModal/>
-        <AddPermissionModal/>
-        <PatientModal/>
-        <AddProductGroupsModal/>
-        <AddServiceGroupsModal/>
-        <AddTypeServiceGroupsModal/>
+        <AddProductModal />
+        <AddSupplierModal />
+        <AddDrugModal />
+        <AddAccountStaffModal />
+        <AddPermissionModal />
+        <PatientModal />
+        <AddProductGroupsModal />
+        <AddServiceGroupsModal />
+        <AddTypeServiceGroupsModal />
         <Routes>
           <Route
             exact
@@ -99,11 +123,7 @@ function App() {
             path="/Homepage"
             element={user ? <Homepage /> : <Navigate to="/login" replace />}
           ></Route>
-          <Route
-            exact
-            path="/Checkup"
-            element={<Checkup />}
-          ></Route>
+          <Route exact path="/Checkup" element={<Checkup />}></Route>
         </Routes>
       </HashRouter>
     </ThemeProvider>

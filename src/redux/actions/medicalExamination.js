@@ -12,15 +12,17 @@ export const getAllExamination = () => async (dispatch) => {
     }
   };
 
-  export const saveExamination = (formData) => async (dispatch) => {
+  export const saveExamination = (formData,client) => async (dispatch) => {
     try {
-      console.log(formData);
-      const {data} = await api.saveExamination(formData);
-      console.log(data);
-      dispatch({
-        type:GLOBALTYPES.ADD_EXAMINATION,
-        payload:data
-      });
+      // const {data} = await api.saveExamination(formData);
+
+      // dispatch({
+      //   type:GLOBALTYPES.ADD_EXAMINATION,
+      //   payload:data
+      // });
+
+      client.publish("/queue/NEWMEM",JSON.stringify( formData ))
+
     } catch (err) {
       console.log(err)
     }
