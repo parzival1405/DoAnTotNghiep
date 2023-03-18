@@ -22,7 +22,7 @@ function Main() {
     var client = null;
     // cons mySocketFactory = () => new SockJS('http://127.0.0.1:15674/stomp');
     if (user) {
-      if (user.role != "NEWMEM") {
+      if (user.role == "NEWMEM") {
         client = new Client({
           brokerURL: "ws://192.168.1.5:61614/ws",
           connectHeaders: {

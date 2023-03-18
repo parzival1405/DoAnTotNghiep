@@ -21,7 +21,7 @@ export const getAllExamination = () => async (dispatch) => {
       //   payload:data
       // });
 
-      client.publish("/queue/NEWMEM",JSON.stringify( formData ))
+      client.publish({ destination: '/queue/bn', body: JSON.stringify( formData ) })
 
     } catch (err) {
       console.log(err)
