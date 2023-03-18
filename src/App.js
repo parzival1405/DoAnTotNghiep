@@ -19,8 +19,7 @@ import PatientModal from "./components/Modal/PatientModal";
 import AddProductGroupsModal from "./components/Modal/AddProductGroupsModal";
 import AddServiceGroupsModal from "./components/Modal/AddServiceGroupsModal";
 import AddTypeServiceGroupsModal from "./components/Modal/AddServiceGroupsModal/AddTypeServiceGroupsModal";
-import { initStomp } from "./redux/actions/stomp";
-import { Client } from "@stomp/stompjs";
+
 
 function App() {
   const dispatch = useDispatch();
@@ -69,27 +68,6 @@ function App() {
     },
     spacing: 8,
   });
-
-  useEffect(() => {
-    if (user) {
-      var client = null
-      if (user.role != "NEWMEM") {
-        client = new Client({
-          brokerURL: "ws://192.168.1.5/61613",
-          onConnect: () => {
-            client.subscribe(`/queue/${user.role}`, (message) =>
-              console.log(`Received: ${message}`)
-            );
-          },
-        });
-      }else{
-        client = new Client({
-          brokerURL: "ws://192.168.1.5/61613",
-        });
-      }
-      dispatch(initStomp(client));
-    }
-  }, [dispatch]);
 
   return (
     <ThemeProvider theme={theme}>
