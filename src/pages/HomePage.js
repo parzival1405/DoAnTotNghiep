@@ -22,22 +22,23 @@ function Main() {
     var client = null;
     // cons mySocketFactory = () => new SockJS('http://127.0.0.1:15674/stomp');
     if (user) {
+      console.log(user);
       if (user.role == "NEWMEM") {
         client = new Client({
-          brokerURL: "ws://192.168.1.5:61614/ws",
+          brokerURL: "ws://192.168.1.13:61614/ws",
           connectHeaders: {
             login: "admin",
             passcode: "admin",
           },
           onConnect: () => {
             client.subscribe(`/queue/bn`, (message) =>
-              console.log(`Received: ${message}`)
+              console.log(`Received: ${message.body}`)
             );
           },
         });
       } else {
         client = new Client({
-          brokerURL: "ws://192.168.1.5:61614/ws",
+          brokerURL: "ws://192.168.1.13:61614/ws",
           connectHeaders: {
             login: "admin",
             passcode: "admin",
