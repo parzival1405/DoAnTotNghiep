@@ -21,25 +21,25 @@ function Main() {
   const { user } = useSelector((state) => state.auth);
   useEffect(() => {
     var client = null;
-    // cons mySocketFactory = () => new SockJS('http://127.0.0.1:15674/stomp');
+
     if (user) {
       console.log(user);
       if (user.role == "NEWMEM") {
         client = new Client({
-          brokerURL: "ws://192.168.1.13:61614/ws",
+          brokerURL: "ws://192.168.1.2:61614/ws",
           connectHeaders: {
             login: "admin",
             passcode: "admin",
           },
           onConnect: () => {
-            client.subscribe(`/queue/bn`, (message) =>
+            client.subscribe(`/queue/${user.department.codeDepartment}`, (message) =>
               dispatch(addExamination(message.body))
             );
           },
         });
       } else {
         client = new Client({
-          brokerURL: "ws://192.168.1.13:61614/ws",
+          brokerURL: "ws://192.168.1.2:61614/ws",
           connectHeaders: {
             login: "admin",
             passcode: "admin",

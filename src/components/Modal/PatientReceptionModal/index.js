@@ -1,9 +1,5 @@
 import { Close, Save } from "@mui/icons-material";
-import {
-  Fade,
-  Grid,
-  Paper,
-} from "@mui/material";
+import { Fade, Grid, Paper } from "@mui/material";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +14,7 @@ import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
 import { saveExamination } from "../../../redux/actions/medicalExamination";
 import { GLOBALTYPES } from "../../../redux/actionType";
-import {type} from "../../../utils/TypeOpen"
+import { type } from "../../../utils/TypeOpen";
 const useStyle = makeStyles((theme) => ({
   paper: {
     width: "70%",
@@ -49,18 +45,13 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const initialValues = {
-  patient: {
-    phoneNumber: null,
-    fullName: null,
-  },
+  patient: null,
   doctor: null,
   diagnose: "",
   status: "WAIT",
-  reception: {
-    id: 1,
-    fullName: "reception",
-  },
-  service: null,
+  reception: null,
+  description: "",
+  note: "",
 };
 
 const optionsDoctor = [
@@ -77,7 +68,7 @@ function PatientReceptionModal() {
   const { open, typeOpenModal, data } = isShowPatientReceptionModal;
   const { services } = useSelector((state) => state.service);
   const { user } = useSelector((state) => state.auth);
-  const { client } = useSelector((state) => state.stomp)
+  const { client } = useSelector((state) => state.stomp);
   const classes = useStyle();
   const dispatch = useDispatch();
 
@@ -86,19 +77,9 @@ function PatientReceptionModal() {
   };
 
   const handleSubmitForm = (values) => {
-    const data = {
-      patient: {
-        phone_number: values.patient.phoneNumber,
-        full_name: values.patient.fullName,
-      },
-      doctor_id: values.doctor.id,
-      diagnose: values.diagnose,
-      status: values.status,
-      reception_id: values.reception.id,
-    };
+    values.reception = user
     if (typeOpenModal == GLOBALTYPES.ADD) {
-      dispatch(saveExamination(data,client));
-      
+      dispatch(saveExamination(values, client));
     } else if (typeOpenModal == GLOBALTYPES.EDIT) {
       // dispatch(updateExamination(data))
     }
@@ -214,11 +195,11 @@ function PatientReceptionModal() {
                 />
                 <SelectedLabel
                   disable={type(typeOpenModal)}
-                  value={values.doctor}
                   options={optionsDoctor}
                   accessField={"fullName"}
                   setFieldValue={setFieldValue}
                   name="doctor"
+                  value={values.doctor}
                   label="Bác sĩ khám"
                   require={true}
                   size={[3, 3]}
@@ -232,7 +213,9 @@ function PatientReceptionModal() {
                 <InputLabel
                   disable={type(typeOpenModal)}
                   label="Ghi chú"
+                  name="note"
                   onChange={handleChange}
+                  value={values.note}
                   size={[3, 9]}
                 />
                 <InputLabel

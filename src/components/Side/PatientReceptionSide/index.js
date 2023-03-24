@@ -122,11 +122,7 @@ function PatientReceptionSide({ item }) {
 
   const handleClick = (item) => {
     try {
-      // dispatch(setCurrentPatient(item));
-      // dispatch(ShowExaminationInformation());
-      // navigate("/Checkup");
     } catch (error) {
-      alert("Sai mật khẩu");
     }
   };
 
