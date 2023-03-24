@@ -14,14 +14,18 @@ export const getAllExamination = () => async (dispatch) => {
 
   export const saveExamination = (formData,client) => async (dispatch) => {
     try {
-      // const {data} = await api.saveExamination(formData);
-
-      // dispatch({
-      //   type:GLOBALTYPES.ADD_EXAMINATION,
-      //   payload:data
-      // });
-
       client.publish({ destination: '/queue/bn', body: JSON.stringify( formData ) })
+    } catch (err) {
+      console.log(err)
+    }
+  };
+
+  export const addExamination = (data) => async (dispatch) => {
+    try {
+      dispatch({
+        type:GLOBALTYPES.ADD_EXAMINATION,
+        payload:data
+      });
 
     } catch (err) {
       console.log(err)

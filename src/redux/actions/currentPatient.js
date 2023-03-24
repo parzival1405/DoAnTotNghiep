@@ -4,15 +4,12 @@ const qs = require('qs');
 
 export const setCurrentPatient = (examinationInformation) => async (dispatch) => {
   try {
-
-    console.log(examinationInformation);
     dispatch({
       type:GLOBALTYPES.CURRENT_PATIENT,
       payload:examinationInformation
     });
 
-    const historyMedicalExaminationResponse = await api.getHistoryMedicalExaminationByIdPatient(examinationInformation.patient.id)
-    
+    const historyMedicalExaminationResponse = await api.getHistoryMedicalExaminationByIdPatient(examinationInformation.patient.id) 
     dispatch({
       type:GLOBALTYPES.HISTORY_MEDICAL_EXAMINATION,
       payload: historyMedicalExaminationResponse.data
@@ -23,6 +20,13 @@ export const setCurrentPatient = (examinationInformation) => async (dispatch) =>
     dispatch({
       type: GLOBALTYPES.GET_ALL_SERVICE,
       payload: serviceResponse.data,
+    });
+
+    const historyMedicineResponse = await api.getMedicineByPatientId(examinationInformation.patient.id);
+    console.log(historyMedicineResponse)
+    dispatch({
+      type:GLOBALTYPES.HISTORY_MEDICINE_OF_SERVICE,
+      payload: historyMedicineResponse.data
     });
 
 

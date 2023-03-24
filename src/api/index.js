@@ -49,3 +49,23 @@ export const getAllSupplier = () => API.get("api/suppliers");
 // product
 export const getAllProduct = () => API.get("/api/drugs");
 
+// batch_drugs
+export const saveBatchDrugs = (formData) =>
+  API.post(`api/batch_drugs`, formData);
+export const getAllBatchDrugs = () => API.get(`api/batch_drugs`);
+// category drug
+export const saveCategoryDrugs = (formData) =>
+  API.post(`api/category_drugs`, formData);
+export const getAllCategoryDrugs = () => API.get(`api/category_drugs`);
+export const getCategoryDrugById = (id) => API.get(`api/category_drugs/${id}`);
+// medical department
+export const saveMedicalDepartment = (formData) =>
+  API.post(`api/medical_departments`, formData);
+export const getAllMedicalDepartment = () => API.get(`api/medical_departments`);
+export const getMedicalDepartmentById = (id) =>
+  API.get(`api/medical_departments/${id}`);
+// medicines
+export const saveMedicine = (formData) => API.post(`api/medicines`, formData);
+export const getMedicineByPatientId = (id) =>
+  API.get(`api/medicines/patients/${id}`);
+export const getMedicineById = (id) => API.get(`api/medicines/${id}`);

@@ -4,7 +4,8 @@ import { getHistoryMedicalExaminationByIdPatient } from "../../api";
 const initState = {
   currentPatient: null,
   historyMedicalExamination: [],
-  clinicalService : []
+  clinicalService : [],
+  historyMedicine : [],
 };
 
 export default (state = initState, action) => {
@@ -13,6 +14,11 @@ export default (state = initState, action) => {
       return {
         ...state,
         currentPatient: action.payload,
+      };
+      case GLOBALTYPES.HISTORY_MEDICINE_OF_SERVICE:
+      return {
+        ...state,
+        historyMedicine: action.payload,
       };
     case GLOBALTYPES.HISTORY_MEDICAL_EXAMINATION:
       return {
