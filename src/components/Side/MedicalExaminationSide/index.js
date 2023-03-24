@@ -48,7 +48,7 @@ const options = [
 function MedicalExaminationSide() {
   const classes = useStyles();
   const [filter, setFiler] = useState("");
-  const { medicalExaminations } = useSelector((state) => state.medicalExamination);
+  const { medicalExaminationsDoctorData } = useSelector((state) => state.medicalExamination);
   const [recordForEdit, setRecordForEdit] = useState(null);
 
   const [filterFn, setFilterFn] = useState({
@@ -59,7 +59,7 @@ function MedicalExaminationSide() {
 
   const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(medicalExaminations, headCellsMedicalExaminationSide, filterFn);
+    useTable(medicalExaminationsDoctorData, headCellsMedicalExaminationSide, filterFn);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
   const navigate = useNavigate();

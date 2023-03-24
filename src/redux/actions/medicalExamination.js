@@ -24,20 +24,25 @@ export const saveExamination = (formData, client) => async (dispatch) => {
   };
   try {
     const { data } = await api.saveExamination(sendData);
-    
+    console.log(formData);
     client.publish({
       destination: `/queue/${formData.service.medicalDepartment.codeDepartment}`,
       body: JSON.stringify(data),
+    });
+
+    dispatch({
+      type: GLOBALTYPES.ADD_EXAMINATION,
+      payload: data,
     });
   } catch (err) {
     console.log(err);
   }
 };
 
-export const addExamination = (data) => async (dispatch) => {
+export const addExaminationRoleDoctor = (data) => async (dispatch) => {
   try {
     dispatch({
-      type: GLOBALTYPES.ADD_EXAMINATION,
+      type: GLOBALTYPES.DOCTOR_RECEIVE_EXAMINATION,
       payload: data,
     });
   } catch (err) {

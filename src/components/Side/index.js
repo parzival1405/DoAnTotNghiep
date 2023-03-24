@@ -70,7 +70,7 @@ function Side() {
       case "DSDV":
       // dispatch(getAllPatient());
       case "HMB":
-        dispatch(callAPIForMedicalExaminationSide());
+        // dispatch(callAPIForMedicalExaminationSide());
         break;
       case "NSP":
       // dispatch(getAllPatient());

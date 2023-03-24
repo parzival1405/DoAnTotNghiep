@@ -7,7 +7,7 @@ import Loading from "../components/Loading";
 import { useDispatch, useSelector } from "react-redux";
 import { initStomp } from "../redux/actions/stomp";
 import { Client } from "@stomp/stompjs";
-import { addExamination } from "../redux/actions/medicalExamination";
+import {addExaminationRoleDoctor } from "../redux/actions/medicalExamination";
 const useStyles = makeStyles({
   appMain: {
     paddingLeft: "320px",
@@ -23,7 +23,6 @@ function Main() {
     var client = null;
 
     if (user) {
-      console.log(user);
       if (user.role == "NEWMEM") {
         client = new Client({
           brokerURL: "ws://192.168.1.2:61614/ws",
@@ -33,7 +32,7 @@ function Main() {
           },
           onConnect: () => {
             client.subscribe(`/queue/${user.department.codeDepartment}`, (message) =>
-              dispatch(addExamination(message.body))
+              dispatch(addExaminationRoleDoctor(JSON.parse(message.body)))
             );
           },
         });
