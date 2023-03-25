@@ -22,13 +22,9 @@ export default (state = initState, action) => {
       return {
         ...state,
         medicalExaminationsDoctorData:
-          // state.medicalExaminationsDoctorData.length == 0
-          //   ? [action.payload]
-          //   : [action.payload, ...state.medicalExaminationsDoctorData],
-          // test
           state.medicalExaminationsDoctorData.length == 0
-            ? [...action.payload]
-            : [...action.payload, ...state.medicalExaminationsDoctorData],
+            ? [action.payload]
+            : [action.payload, ...state.medicalExaminationsDoctorData],
       };
     case GLOBALTYPES.CLEAR:
       return initState;
