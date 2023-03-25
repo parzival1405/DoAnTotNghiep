@@ -16,9 +16,12 @@ export const forgotPassword = (phone_number) =>
   API.post(`api/auth/forgot/password/${phone_number}`);
 // medical_examination
 export const getAllExamination = () => API.get("api/medical_examinations");
+export const getExaminationsCurrentDayAndRoom = (formData) =>
+  API.get("api/medical_examinations/dateAndRoom", formData);
 export const saveExamination = (formData) =>
   API.post("api/medical_examinations", formData);
-
+export const updateMedicalExamination = (formData) =>
+  API.post(`api/medical_examinations/${formData.id}`, formData);
 // service
 export const getAllService = () => API.get("api/services");
 export const getServiceById = (id) => API.get(`api/services/${id}`);

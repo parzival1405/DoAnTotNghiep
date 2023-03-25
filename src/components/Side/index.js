@@ -63,31 +63,38 @@ function Side() {
         dispatch(callAPIForScheduleSide(formData));
         break;
       case "QLTT":
-      // dispatch(getAllPatient());
+        // dispatch(getAllPatient());
+        break;
       case "TDBN":
         dispatch(callAPIForPatientReceptionSide());
         break;
       case "DSDV":
-      // dispatch(getAllPatient());
+        // dispatch(getAllPatient());
+        break;
       case "HMB":
-        // dispatch(callAPIForMedicalExaminationSide());
+        dispatch(callAPIForMedicalExaminationSide());
         break;
       case "NSP":
-      // dispatch(getAllPatient());
+        // dispatch(getAllPatient());
+        break;
       case "NQ":
-      // dispatch(getAllExamination());
+        // dispatch(getAllExamination());
+        break;
       case "BNN":
         dispatch(callAPIForPatientSide());
         break;
       case "NMSP":
-      // dispatch(getAllExamination());
+        // dispatch(getAllExamination());
+        break;
       case "PRD":
         dispatch(callAPIForProductSide());
         break;
       case "DVKM":
-      // dispatch(getAllExamination());
+        // dispatch(getAllExamination());
+        break;
       case "NCCDV":
-      // dispatch(getAllExamination());
+        // dispatch(getAllExamination());
+        break;
     }
 
     setItem(item);

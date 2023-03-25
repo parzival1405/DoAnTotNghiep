@@ -1,7 +1,7 @@
 import { GLOBALTYPES } from "../actionType";
 const initState = {
-  medicalExaminations: null,
-  medicalExaminationsDoctorData: null,
+  medicalExaminations: [],
+  medicalExaminationsDoctorData: [],
 };
 
 export default (state = initState, action) => {
@@ -18,12 +18,17 @@ export default (state = initState, action) => {
       };
 
     case GLOBALTYPES.DOCTOR_RECEIVE_EXAMINATION:
+      console.log(state.medicalExaminationsDoctorData);
       return {
         ...state,
         medicalExaminationsDoctorData:
-          state.medicalExaminationsDoctorData == null
-            ? [action.payload]
-            : [action.payload, ...state.medicalExaminationsDoctorData],
+          // state.medicalExaminationsDoctorData.length == 0
+          //   ? [action.payload]
+          //   : [action.payload, ...state.medicalExaminationsDoctorData],
+          // test
+          state.medicalExaminationsDoctorData.length == 0
+            ? [...action.payload]
+            : [...action.payload, ...state.medicalExaminationsDoctorData],
       };
     case GLOBALTYPES.CLEAR:
       return initState;

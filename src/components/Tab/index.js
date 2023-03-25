@@ -8,6 +8,7 @@ import { Box, Tab as MUITab, Button } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Clear, Healing, Save } from "@mui/icons-material";
 import Controls from "../Form/controls/Controls";
+import { updateMedicalExamination } from "../../redux/actions/medicalExamination";
 
 function Tab() {
   const dispatch = useDispatch();
@@ -20,6 +21,10 @@ function Tab() {
   useEffect(() => {
     // dispatch(historyMedicalExamination())
   })
+
+  const handleSubmit = () => {
+    dispatch(updateMedicalExamination())
+  }
 
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
@@ -61,6 +66,7 @@ function Tab() {
               disableElevation
               sx={{ mr: 2 }}
               startIcon={<Save />}
+              onClick={handleSubmit}
             >
               Lưu
             </Button>

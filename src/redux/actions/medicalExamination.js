@@ -49,3 +49,15 @@ export const addExaminationRoleDoctor = (data) => async (dispatch) => {
     console.log(err);
   }
 };
+
+export const updateMedicalExamination = (formData) => async (dispatch) => {
+  try {
+    console.log(formData);
+    // await api.updateMedicalExamination(formData);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
+
