@@ -87,12 +87,12 @@ export const callAPIForMedicalExaminationSide = (room) => async (dispatch) => {
 
     // const examinationResponse = await api.getExaminationsCurrentDayAndRoom(data);
     // fake
-    const examinationResponse = await api.getAllExamination();
-    // 
-    dispatch({
-      type: GLOBALTYPES.DOCTOR_RECEIVE_EXAMINATION,
-      payload: examinationResponse.data,
-    });
+    // const examinationResponse = await api.getAllExamination();
+    // // 
+    // dispatch({
+    //   type: GLOBALTYPES.DOCTOR_RECEIVE_EXAMINATION,
+    //   payload: examinationResponse.data,
+    // });
 
     dispatch({
       type: GLOBALTYPES.END_LOADING_CALL_API,

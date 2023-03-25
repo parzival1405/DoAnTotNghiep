@@ -25,7 +25,7 @@ function Main() {
     if (user) {
       if (user.role == "DOCTOR") {
         client = new Client({
-          brokerURL: "ws://172.31.98.189/ws",
+          brokerURL: "ws://172.20.10.2:61614/ws",
           connectHeaders: {
             login: "admin",
             passcode: "admin",
@@ -38,7 +38,7 @@ function Main() {
         });
       } else {
         client = new Client({
-          brokerURL: "ws://172.31.98.189/ws",
+          brokerURL: "ws://172.20.10.2:61614/ws",
           connectHeaders: {
             login: "admin",
             passcode: "admin",
