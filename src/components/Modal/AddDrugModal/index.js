@@ -25,6 +25,7 @@ import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
 import { titleModal, type } from "../../../utils/TypeOpen";
 import Label from "../../Form/ControlsLabel/Label";
+import { addProduct } from "../../../redux/actions/product";
 
 const useStyle = makeStyles((theme) => ({
   paper: {
@@ -46,12 +47,12 @@ const useStyle = makeStyles((theme) => ({
   red: {
     color: "red !important",
   },
-  button:{
-    "& .MuiButtonBase-root":{
-      width:"calc(100% - 10px)",
-      height:"100%",
-      marginLeft:"10px"
-    }
+  button: {
+    "& .MuiButtonBase-root": {
+      width: "calc(100% - 10px)",
+      height: "100%",
+      marginLeft: "10px",
+    },
   },
   title: {
     display: "flex",
@@ -91,9 +92,13 @@ const optionsUnit = [
   },
 ];
 
+const initialValues = {};
+
 function AddDrugModal() {
   const { isShowAddDrugModal } = useSelector((state) => state.modal);
+  const { category } = useSelector((state) => state.product);
   const { open, typeOpenModal } = isShowAddDrugModal;
+
   const classes = useStyle();
   const dispatch = useDispatch();
   const [imageFile, setImageFile] = useState(null);
@@ -113,16 +118,19 @@ function AddDrugModal() {
     setImageFile(file);
   };
 
-  const handleSubmitForm = (values) => {};
+  const handleSubmitForm = (values) => {
+    dispatch(addProduct(values))
+    handleHideModal()
+  };
   const body = (
     <Fade in={isShowAddDrugModal.open}>
       <Paper className={classes.paper} id="modal-patient-reception">
         <ModalHeader
-          title={titleModal(typeOpenModal,"sản phẩm")}
+          title={titleModal(typeOpenModal, "sản phẩm")}
           onClose={handleHideModal}
         />
         <Formik
-          initialValues={{}}
+          initialValues={initialValues}
           //   validationSchema={validateionChangeGroupName}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
@@ -139,10 +147,10 @@ function AddDrugModal() {
             handleChange,
             handleSubmit,
             isSubmitting,
+            setFieldValue,
           }) => (
             <Form
               action=""
-              //   className={classes.form}
               noValidate
               autoComplete="off"
               onSubmit={handleSubmit}
@@ -152,21 +160,47 @@ function AddDrugModal() {
                 rowSpacing={1}
                 className={classes.gridCustomInput}
               >
-                <InputLabel label="Tên sản phẩm" size={[3, 9]} />
+                <InputLabel
+                  name="name"
+                  label="Tên sản phẩm"
+                  size={[3, 9]}
+                  onChange={handleChange}
+                />
                 <SelectedLabel
                   label="Loại sản phẩm"
-                  options={optionsTypeDrug}
+                  disable={type(typeOpenModal)}
+                  options={category}
+                  accessField={"name"}
+                  setFieldValue={setFieldValue}
+                  name="category"
+                  value={values.category}
+                  require={true}
                   size={[3, 3]}
                 />
-                <InputLabel label="Giá bán" size={[3, 3]} />
-                <InputLabel label="Mô tả" size={[3, 9]} />
-                <InputLabel label="Ghi chú" size={[3, 9]} />
+                <InputLabel
+                  name="price"
+                  label="Giá bán"
+                  size={[3, 3]}
+                  onChange={handleChange}
+                />
+                <InputLabel
+                  label="Mô tả"
+                  name="description"
+                  size={[3, 9]}
+                  onChange={handleChange}
+                />
+                <InputLabel
+                  label="Ghi chú"
+                  name="note"
+                  size={[3, 9]}
+                  onChange={handleChange}
+                />
                 <SelectedLabel
                   label="Đơn vị đo"
                   options={optionsUnit}
                   size={[3, 3]}
                 />
-                <Grid item xs={6}/>
+                <Grid item xs={6} />
                 <Grid item xs={3}>
                   <Label label={"Hình ảnh"} className={classes.title} />
                 </Grid>
@@ -175,7 +209,6 @@ function AddDrugModal() {
                     variant="contained"
                     component="label"
                     disabled={type(typeOpenModal)}
-                    
                   >
                     Chọn
                     <input

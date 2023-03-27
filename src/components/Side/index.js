@@ -26,6 +26,8 @@ import {
   callAPIForScheduleSide,
   callAPIForMedicalExaminationSide,
   callAPIForProductSide,
+  getCategoryProductExamination,
+  callAPIForServiceListSide,
 } from "../../redux/actions/callAPI";
 import { getCurrentDateString } from "../../utils/Calc";
 
@@ -69,7 +71,7 @@ function Side() {
         dispatch(callAPIForPatientReceptionSide());
         break;
       case "DSDV":
-        // dispatch(getAllPatient());
+        dispatch(callAPIForServiceListSide());
         break;
       case "HMB":
         dispatch(callAPIForMedicalExaminationSide());
@@ -78,19 +80,19 @@ function Side() {
         // dispatch(getAllPatient());
         break;
       case "NQ":
-        // dispatch(getAllExamination());
+       
         break;
       case "BNN":
         dispatch(callAPIForPatientSide());
         break;
       case "NMSP":
-        // dispatch(getAllExamination());
+        dispatch(getCategoryProductExamination());
         break;
       case "PRD":
         dispatch(callAPIForProductSide());
         break;
       case "DVKM":
-        // dispatch(getAllExamination());
+        dispatch(callAPIForServiceListSide());
         break;
       case "NCCDV":
         // dispatch(getAllExamination());

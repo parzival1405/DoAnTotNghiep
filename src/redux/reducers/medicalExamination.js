@@ -18,13 +18,20 @@ export default (state = initState, action) => {
       };
 
     case GLOBALTYPES.DOCTOR_RECEIVE_EXAMINATION:
-      console.log(state.medicalExaminationsDoctorData);
       return {
         ...state,
-        medicalExaminationsDoctorData:
-          state.medicalExaminationsDoctorData.length == 0
-            ? [action.payload]
-            : [action.payload, ...state.medicalExaminationsDoctorData],
+        medicalExaminationsDoctorData: action.payload,
+        // state.medicalExaminationsDoctorData.length == 0
+        //   ? [action.payload]
+        //   : [action.payload, ...state.medicalExaminationsDoctorData],
+      };
+    case GLOBALTYPES.UPDATE_DATA_CURRENT_EXAMINATION:
+      const newDataExamination = action.payload;
+      return {
+        ...state,
+        medicalExaminationsDoctorData: state.medicalExaminationsDoctorData.map((ex) =>
+          ex.id == newDataExamination.id ? newDataExamination : ex
+        ),
       };
     case GLOBALTYPES.CLEAR:
       return initState;

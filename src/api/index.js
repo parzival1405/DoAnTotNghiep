@@ -20,8 +20,8 @@ export const getExaminationsCurrentDayAndRoom = (formData) =>
   API.get("api/medical_examinations/dateAndRoom", formData);
 export const saveExamination = (formData) =>
   API.post("api/medical_examinations", formData);
-export const updateMedicalExamination = (formData) =>
-  API.post(`api/medical_examinations/${formData.id}`, formData);
+export const updateMedicalExamination = (formData,id) =>
+  API.put(`api/medical_examinations/${id}`, formData);
 // service
 export const getAllService = () => API.get("api/services");
 export const getServiceById = (id) => API.get(`api/services/${id}`);
@@ -72,3 +72,5 @@ export const saveMedicine = (formData) => API.post(`api/medicines`, formData);
 export const getMedicineByPatientId = (id) =>
   API.get(`api/medicines/patients/${id}`);
 export const getMedicineById = (id) => API.get(`api/medicines/${id}`);
+// drug
+export const saveDrug = (formData) => API.post(`api/drugs`, formData);

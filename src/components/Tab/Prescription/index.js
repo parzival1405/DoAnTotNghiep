@@ -1,85 +1,12 @@
-import { TableBody } from '@mui/material';
-import React, { useState } from 'react'
-import useTable from '../../../hooks/useTable';
-import TableCollapsible from '../../TableRow/TableCollapsible';
-const headCells = [
-  { id : "",numeric:false,label:""},
-  { id: "id", numeric: false, label: "Mã đơn thuốc" },
-  { id: "date", numeric: false, label: "Ngày khám" },
-  { id: "note", numeric: false, label: "Ghi chú" },
-  { id: "diagnostic", numeric: false, label: "Chuẩn đoán" },
-];
-
-const headCollapseCells = [
-  { id: "nameDrug", numeric: false, label: "Tên thuốc" },
-  { id: "quantity", numeric: false, label: "Số lượng" },
-  { id: "designate", numeric: false, label: "Chỉ định" },
-];
-const records = [
-  {
-    id:1,
-    date: new Date().toDateString(),
-    doctorExamines: "bui quang huu",
-    note: "kham bth",
-    conclude: "trang thai",
-    diagnostic: "trang thai",
-    sub:[
-      {
-        nameDrug: 'ten Thuoc ',
-        designate: 'chi dinh ngay bao nhieu lan',
-        quantity: 20,
-      },
-      {
-        nameDrug: 'ten Thuoc ',
-        designate: 'chi dinh ngay bao nhieu lan',
-        quantity: 20,
-      },
-    ]
-  },
-  {
-    id:2,
-    date: new Date().toDateString(),
-    doctorExamines: "bui quang huu",
-    note: "kham bth",
-    diagnostic: "trang thai",
-    conclude: "trang thai",
-    sub:[
-      {
-        nameDrug: 'ten Thuoc ',
-        designate: 'chi dinh ngay bao nhieu lan',
-        quantity: 20,
-      },
-      {
-        nameDrug: 'ten Thuoc ',
-        designate: 'chi dinh ngay bao nhieu lan',
-        quantity: 20,
-      },
-    ]
-  },
-  {
-    id:3,
-    date: new Date().toDateString(),
-    doctorExamines: "bui quang huu",
-    note: "kham bth",
-    conclude: "trang thai",
-    diagnostic: "trang thai",
-    sub:[
-      {
-        nameDrug: 'ten Thuoc ',
-        designate: 'chi dinh ngay bao nhieu lan',
-        quantity: 20,
-      },
-      {
-        nameDrug: 'ten Thuoc ',
-        designate: 'chi dinh ngay bao nhieu lan',
-        quantity: 20,
-      },
-    ]
-  },
-];
-
-
-
+import { TableBody } from "@mui/material";
+import React, { useState } from "react";
+import useTable from "../../../hooks/useTable";
+import TableCollapsible from "../../TableRow/TableCollapsible";
+import {
+  headCellsPrescription,
+  headCollapseCellsPrescription,
+} from "../../../utils/HeadCells";
+import { useSelector } from "react-redux";
 
 function Prescription() {
   const [filterFn, setFilterFn] = useState({
@@ -87,8 +14,10 @@ function Prescription() {
       return items;
     },
   });
+  const { historyMedicine } = useSelector((state) => state.currentPatient);
+  console.log(historyMedicine);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(historyMedicine, headCellsPrescription, filterFn);
   return (
     <>
       <TblContainer>
@@ -101,8 +30,8 @@ function Prescription() {
               <TableCollapsible
                 key={item.id}
                 item={item}
-                headCells={headCells}
-                headCollapseCells={headCollapseCells}
+                headCells={headCellsPrescription}
+                headCollapseCells={headCollapseCellsPrescription}
               />
             );
           })}
@@ -113,4 +42,4 @@ function Prescription() {
   );
 }
 
-export default Prescription
+export default Prescription;

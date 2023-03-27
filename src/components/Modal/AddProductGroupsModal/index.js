@@ -5,6 +5,7 @@ import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { hideModal } from "../../../redux/actions/modal";
+import { addCategory } from "../../../redux/actions/product";
 import { titleModal, type } from "../../../utils/TypeOpen";
 import Controls from "../../Form/controls/Controls";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
@@ -46,6 +47,11 @@ const useStyle = makeStyles((theme) => ({
     color: "red !important",
   },
 }));
+
+const initialValues = {
+  name:""
+}
+
 function AddProductGroupsModal() {
   const { isShowAddProductGroupsModal } = useSelector((state) => state.modal);
   const { open, typeOpenModal } = isShowAddProductGroupsModal;
@@ -58,7 +64,10 @@ function AddProductGroupsModal() {
     dispatch(hideModal("isShowAddProductGroupsModal"));
   };
 
-  const handleSubmitForm = (values) => {};
+  const handleSubmitForm = (values) => {
+    dispatch(addCategory(values))
+    handleHideModal()
+  };
 
   useEffect(() => {
     // return () => setAvatarFile(null);
@@ -76,7 +85,7 @@ function AddProductGroupsModal() {
           onClose={handleHideModal}
         />
         <Formik
-          initialValues={{}}
+          initialValues={initialValues}
           //   validationSchema={validateionChangeGroupName}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
@@ -107,9 +116,11 @@ function AddProductGroupsModal() {
                 className={classes.gridCustomInput}
               >
                 <InputLabel
+                  name="name"
                   disable={type(typeOpenModal)}
                   require={true}
                   label="Tên nhóm Sản phẩm"
+                  onChange={handleChange}
                   size={[4, 8]}
                 />
                 <Grid item xs={4}>

@@ -46,8 +46,10 @@ function ClinicalService() {
   const [filter, setFiler] = useState("");
   const { clinicalService } = useSelector((state) => state.currentPatient);
   const { services } = useSelector((state) => state.service);
+  
   const dispatch = useDispatch();
   const [value,setValue] = useState("");
+
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;

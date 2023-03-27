@@ -60,6 +60,7 @@ function MedicalExaminationSide() {
   const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(medicalExaminationsDoctorData, headCellsMedicalExaminationSide, filterFn);
+    console.log(medicalExaminationsDoctorData);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
   const navigate = useNavigate();

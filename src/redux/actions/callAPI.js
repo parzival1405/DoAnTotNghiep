@@ -87,12 +87,12 @@ export const callAPIForMedicalExaminationSide = (room) => async (dispatch) => {
 
     // const examinationResponse = await api.getExaminationsCurrentDayAndRoom(data);
     // fake
-    // const examinationResponse = await api.getAllExamination();
-    // // 
-    // dispatch({
-    //   type: GLOBALTYPES.DOCTOR_RECEIVE_EXAMINATION,
-    //   payload: examinationResponse.data,
-    // });
+    const examinationResponse = await api.getAllExamination();
+    //
+    dispatch({
+      type: GLOBALTYPES.DOCTOR_RECEIVE_EXAMINATION,
+      payload: examinationResponse.data,
+    });
 
     dispatch({
       type: GLOBALTYPES.END_LOADING_CALL_API,
@@ -116,6 +116,13 @@ export const callAPIForProductSide = () => async (dispatch) => {
       payload: productResponse.data,
     });
 
+    const categoryResponse = await api.getAllCategoryDrugs();
+
+    dispatch({
+      type: GLOBALTYPES.ALL_CATEGORY,
+      payload: categoryResponse.data,
+    });
+
     dispatch({
       type: GLOBALTYPES.END_LOADING_CALL_API,
     });
@@ -126,3 +133,47 @@ export const callAPIForProductSide = () => async (dispatch) => {
   }
 };
 
+export const getCategoryProductExamination = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.START_LOADING_CALL_API,
+    });
+
+    const categoryResponse = await api.getAllCategoryDrugs();
+
+    dispatch({
+      type: GLOBALTYPES.ALL_CATEGORY,
+      payload: categoryResponse.data,
+    });
+
+    dispatch({
+      type: GLOBALTYPES.END_LOADING_CALL_API,
+    });
+  } catch (error) {
+    dispatch({
+      type: GLOBALTYPES.END_LOADING_CALL_API,
+    });
+  }
+};
+
+export const callAPIForServiceListSide = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.START_LOADING_CALL_API,
+    });
+
+    const serviceResponse = await api.getAllService();
+    dispatch({
+      type: GLOBALTYPES.GET_ALL_SERVICE,
+      payload: serviceResponse.data,
+    });
+
+    dispatch({
+      type: GLOBALTYPES.END_LOADING_CALL_API,
+    });
+  } catch (error) {
+    dispatch({
+      type: GLOBALTYPES.END_LOADING_CALL_API,
+    });
+  }
+};

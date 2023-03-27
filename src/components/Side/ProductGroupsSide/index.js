@@ -18,79 +18,10 @@ import { GLOBALTYPES } from "../../../redux/actionType";
 
 const headCells = [
   { id: "id", numeric: false, label: "Mã nhóm" },
-  { id: "fullName", numeric: false, label: "Tên nhóm" },
+  { id: "name", numeric: false, label: "Tên nhóm" },
   { id: "age", numeric: false, label: "Ghi chú" },
   { id: "state", numeric: false, label: "Trạng thái" },
 ];
-
-const records = [
-  {
-    id: "1",
-    fullName: "Huuwx",
-    age: new Date().toLocaleDateString(),
-    state: "0975247624",
-  },
-];
-
-// const options = [
-//   { id: "", title: "Không" },
-//   {
-//     id: "fullName",
-//     title: "Họ & Tên",
-//   },
-//   {
-//     id: "age",
-//     title: "Tuổi",
-//   },
-//   {
-//     id: "category",
-//     title: "Loại Khám",
-//   },
-//   {
-//     id: "detail",
-//     title: "CĐ Lâm sàng",
-//   },
-//   {
-//     id: "result",
-//     title: "Kết luận",
-//   },
-//   {
-//     id: "state",
-//     title: "Trạng thái",
-//   },
-// ];
-
-// const optionsRoom = [
-//   { id: "", title: "Tất cả" },
-//   {
-//     id: "1",
-//     title: "Phòng 1",
-//   },
-//   {
-//     id: "2",
-//     title: "Phòng 2",
-//   },
-//   {
-//     id: "3",
-//     title: "Phòng 3",
-//   },
-// ];
-
-// const optionsDepartment = [
-//   { id: "", title: "Tất cả" },
-//   {
-//     id: "dp1",
-//     title: "Răng hàm mặt",
-//   },
-//   {
-//     id: "dp2",
-//     title: "Khám Mắt",
-//   },
-//   {
-//     id: "dp3",
-//     title: "Khám Nhi",
-//   },
-// ];
 
 function ProductGroupsSide({ item }) {
   const classes = useStyles();
@@ -106,10 +37,9 @@ function ProductGroupsSide({ item }) {
       return items;
     },
   });
-
-  const [openPopup, setOpenPopup] = useState(false);
+  const {category} = useSelector((state) => state.product)
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(category, headCells, filterFn);
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);

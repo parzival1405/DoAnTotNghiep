@@ -1,11 +1,12 @@
 import { GLOBALTYPES } from "../actionType";
 import { itemMap } from "../../utils/Items";
 import { getHistoryMedicalExaminationByIdPatient } from "../../api";
+import { setField } from "../../utils/Calc";
 const initState = {
   currentPatient: null,
   historyMedicalExamination: [],
-  clinicalService : [],
-  historyMedicine : [],
+  clinicalService: [],
+  historyMedicine: [],
 };
 
 export default (state = initState, action) => {
@@ -15,7 +16,14 @@ export default (state = initState, action) => {
         ...state,
         currentPatient: action.payload,
       };
-      case GLOBALTYPES.HISTORY_MEDICINE_OF_SERVICE:
+    case GLOBALTYPES.UPDATE_CURRENT_PATIENT:
+      const inf = state.currentPatient;
+      setField(action.payload.fieldName, action.payload.fieldData, inf);
+      return {
+        ...state,
+        currentPatient: inf,
+      };
+    case GLOBALTYPES.HISTORY_MEDICINE_OF_SERVICE:
       return {
         ...state,
         historyMedicine: action.payload,
@@ -26,16 +34,24 @@ export default (state = initState, action) => {
         historyMedicalExamination: action.payload,
       };
 
-     case GLOBALTYPES.ADD_PATIENT_CLINICAL_SERVICE:
+    case GLOBALTYPES.ADD_PATIENT_CLINICAL_SERVICE:
       return {
         ...state,
-        clinicalService:[action.payload,...state.clinicalService]
-      }
-      case GLOBALTYPES.REMOVE_PATIENT_CLINICAL_SERVICE:
+        clinicalService: [action.payload, ...state.clinicalService],
+      };
+    case GLOBALTYPES.REMOVE_PATIENT_CLINICAL_SERVICE:
       return {
         ...state,
-        clinicalService:state.clinicalService.filter((service) => service.id !== action.payload.id)
-      }
+        clinicalService: state.clinicalService.filter(
+          (service) => service.id !== action.payload.id
+        ),
+      };
+    case GLOBALTYPES.UPDATE_DATA_CURRENT_EXAMINATION:
+      const newDataExamination = action.payload;
+      return {
+        ...state,
+        currentPatient: newDataExamination
+      };
 
     default:
       return state;

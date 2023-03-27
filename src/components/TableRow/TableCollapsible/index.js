@@ -13,6 +13,7 @@ import React, { Fragment, useState } from "react";
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import useTable from "../../../hooks/useTable";
+import { resolve } from "../../../utils/Calc";
 
 const useStyles = makeStyles((theme) => ({
   tableRow: {
@@ -29,15 +30,18 @@ const useStyles = makeStyles((theme) => ({
 function TableCollapsible({ item, headCells, headCollapseCells }) {
   const [open, setOpen] = useState(false);
   const classes = useStyles();
-  const { TblHead } =
-    useTable([], headCollapseCells, null);
+  const { TblHead } = useTable([], headCollapseCells, null);
   return (
     <Fragment>
       <TableRow
         sx={{ "& > *": { borderBottom: "unset" } }}
         className={classes.tableRow}
       >
-        <TableCell>
+        <TableCell
+          style={{
+            width: `${headCells[0].sizeCellWidth}px`,
+          }}
+        >
           <IconButton
             aria-label="expand row"
             size="small"
@@ -58,7 +62,7 @@ function TableCollapsible({ item, headCells, headCollapseCells }) {
               >
                 {itemhead.calc
                   ? itemhead.calc.fun(item["quantity"], item["price"])
-                  : item[itemhead.id]}
+                  : resolve(item, itemhead.id)}
               </TableCell>
             )
         )}
@@ -105,7 +109,7 @@ function TableCollapsible({ item, headCells, headCollapseCells }) {
                           }}
                           align={itemhead.numeric ? "right" : "left"}
                         >
-                          {itemSub[itemhead.id]}
+                          {resolve(itemSub, itemhead.id)}
                         </TableCell>
                       ))}
                     </TableRow>

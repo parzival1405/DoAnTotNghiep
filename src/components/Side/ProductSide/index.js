@@ -27,7 +27,6 @@ function ProductSide({ item }) {
     },
   });
 
-  const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(products, headCellsProductSide, filterFn);
 

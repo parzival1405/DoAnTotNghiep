@@ -13,6 +13,7 @@ function ExaminationHistory() {
   });
 
   const {historyMedicalExamination} = useSelector((state) => state.currentPatient);
+
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(historyMedicalExamination, headCellsMedicalExaminationHistory, filterFn);
 

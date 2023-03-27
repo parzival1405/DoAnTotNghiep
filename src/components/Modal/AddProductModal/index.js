@@ -97,6 +97,8 @@ const optionsSP = [
 
 function AddProductModal() {
   const { isShowAddProductModal } = useSelector((state) => state.modal);
+  const { products } = useSelector((state) => state.product);
+  
   const classes = useStyle();
   const dispatch = useDispatch();
   const [records,setRecords] = useState([{

@@ -13,17 +13,13 @@ import { updateMedicalExamination } from "../../redux/actions/medicalExamination
 function Tab() {
   const dispatch = useDispatch();
   const [value, setValue] = React.useState("ExaminationInformation");
-
+  const {clinicalService,currentPatient} = useSelector((state) => state.currentPatient);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    // dispatch(historyMedicalExamination())
-  })
-
   const handleSubmit = () => {
-    dispatch(updateMedicalExamination())
+    dispatch(updateMedicalExamination({currentPatient,clinicalService}))
   }
 
   return (

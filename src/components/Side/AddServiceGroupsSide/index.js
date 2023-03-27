@@ -10,37 +10,18 @@ import TableRow from "../../TableRow/TableContextMenu";
 import { ShowAddServiceGroupsModal } from "../../../redux/actions/modal";
 import useStyles from "../styles";
 import { GLOBALTYPES } from "../../../redux/actionType";
+import {headCellsListServiceSide} from "../../../utils/HeadCells"
 
-const headCells = [
-  { id: "id", numeric: false, label: "Mã dịch vụ" },
-  { id: "fullName", numeric: false, label: "Tên dịch vụ" },
-  { id: "age", numeric: false, label: "Nhóm dịch vụ" },
-  { id: "price", numeric: false, label: "Giá" },
-  { id: "dosage", numeric: false, label: "Mô tả" },
-  { id: "image", numeric: false, label: "Ghi chú" },
-  { id: "state", numeric: false, label: "Trạng thái" },
-];
-
-const records = [
-  {
-    id: "1",
-    fullName: "Huuwx",
-    age: new Date().toLocaleDateString(),
-    state: "0975247624",
-    dosage: "scasdfsafasdadadsdasdasdadsdadasdasdasdasdasdas",
-    image: "scasdfsafasdadadsdasdasdadsdadasdasdasdasdasdas",
-  },
-];
 
 function AddServiceGroupsSide({ item }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const {services} = useSelector((state) => state.service)
   const [filter, setFiler] = useState({
     category: "",
     department: "",
     room: "",
   });
-  const [recordForEdit, setRecordForEdit] = useState(null);
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
@@ -49,7 +30,7 @@ function AddServiceGroupsSide({ item }) {
 
   const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(services, headCellsListServiceSide, filterFn);
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
@@ -123,7 +104,7 @@ function AddServiceGroupsSide({ item }) {
                 handleDoubleClick={handleDoubleClick}
                 key={item.id}
                 item={item}
-                headCells={headCells}
+                headCells={headCellsListServiceSide}
                 listItemMenu={[
                   { title: "Chỉnh sửa", onClick: handleClickShowEditModal },
                   { title: "Xem", onClick: handleClickShowViewModal },
