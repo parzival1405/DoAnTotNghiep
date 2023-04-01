@@ -11,7 +11,7 @@ API.interceptors.request.use((req) => {
 });
 
 export const login = (formData) => API.post("api/auth/login", formData);
-export const refreshLogin = () => API.post("api/auth/refreshLogin");
+export const refreshLogin = () => API.post("api/auth/refresh_token");
 export const forgotPassword = (phone_number) =>
   API.post(`api/auth/forgot/password/${phone_number}`);
 // medical_examination

@@ -22,6 +22,7 @@ import ModalHeader from "../ModalHeader";
 import Controls from "../../Form/controls/Controls";
 import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
+import { saveSupplier } from "../../../redux/actions/supplier";
 
 const useStyle = makeStyles((theme) => ({
   paper: {
@@ -35,99 +36,140 @@ const useStyle = makeStyles((theme) => ({
     justifyContent: "flex-end",
   },
   gridCustomInput: {
-    paddingBottom:"16px",
+    paddingBottom: "16px",
     "& .MuiInputBase-input": {
       padding: "6px",
     },
   },
-  button:{
-    "& .MuiButtonBase-root":{
-      width:"calc(100% - 10px)",
-      height:"100%",
-      marginLeft:"10px"
-    }
-  }
+  button: {
+    "& .MuiButtonBase-root": {
+      width: "calc(100% - 10px)",
+      height: "100%",
+      marginLeft: "10px",
+    },
+  },
 }));
 
+const initialValues = {
+  name: null,
+  description: null,
+  address: null,
+  email: null,
+  phoneNumber: null,
+};
 
 function AddSupplierModal() {
-    const { isShowAddSupplierModal } = useSelector((state) => state.modal);
-    const classes = useStyle();
-    const dispatch = useDispatch();
-  
-    const handleHideModal = () => {
-      dispatch(hideModal("isShowAddSupplierModal"));
-    };
-  
-    const handleSubmitForm = (values) => {};
-    const body = (
-      <Fade in={isShowAddSupplierModal.open}>
-        <Paper className={classes.paper} id="modal-patient-reception">
-          <ModalHeader title="Thêm nhà cung cấp mới" onClose={handleHideModal} />
-          <Formik
-            initialValues={{}}
-            //   validationSchema={validateionChangeGroupName}
-            onSubmit={(values, { setSubmitting, resetForm }) => {
-              handleSubmitForm(values);
-              setSubmitting(true);
-              resetForm();
-              setSubmitting(false);
-            }}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              resetForm,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
-            }) => (
-              <Form
-                action=""
-                //   className={classes.form}
-                noValidate
-                autoComplete="off"
-                onSubmit={handleSubmit}
+  const { isShowAddSupplierModal } = useSelector((state) => state.modal);
+  const classes = useStyle();
+  const dispatch = useDispatch();
+
+  const handleHideModal = () => {
+    dispatch(hideModal("isShowAddSupplierModal"));
+  };
+
+  const handleSubmitForm = (values) => {
+    console.log(values)
+    // dispatch(saveSupplier(values))
+  };
+  const body = (
+    <Fade in={isShowAddSupplierModal.open}>
+      <Paper className={classes.paper} id="modal-patient-reception">
+        <ModalHeader title="Thêm nhà cung cấp mới" onClose={handleHideModal} />
+        <Formik
+          initialValues={initialValues}
+          //   validationSchema={validateionChangeGroupName}
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            handleSubmitForm(values);
+            setSubmitting(true);
+            resetForm();
+            setSubmitting(false);
+          }}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            resetForm,
+            handleChange,
+            handleSubmit,
+            isSubmitting,
+          }) => (
+            <Form
+              action=""
+              //   className={classes.form}
+              noValidate
+              autoComplete="off"
+              onSubmit={handleSubmit}
+            >
+              <Grid
+                container
+                rowSpacing={1}
+                className={classes.gridCustomInput}
               >
-                <Grid
-                  container
-                  rowSpacing={1}
-                  className={classes.gridCustomInput}
-                >
-                  <InputLabel label="Tên nhà cung cấp" size={[3, 4]} />
-                  <InputLabel label="Email" size={[2, 3]} />
-                  <InputLabel label="Địa chỉ" size={[3, 4]} />
-                  <InputLabel label="Số ĐT" size={[2, 3]} />
-                </Grid>
-  
-                {/* button -------------------- */}
-                <div className={classes.action}>
-                  <Controls.Button
-                    color="primary"
-                    variant="contained"
-                    type="submit"
-                    isSubmitting={isSubmitting}
-                    text="Lưu"
-                    startIcon={<Save />}
-                    sx={{ mr: 1 }}
-                  />
-  
-                  <Controls.Button
-                    variant="contained"
-                    text="Hủy"
-                    color="error"
-                    startIcon={<Close />}
-                    onClick={handleHideModal}
-                  />
-                </div>
-              </Form>
-            )}
-          </Formik>
-        </Paper>
-      </Fade>
-    );
-    return <BaseModal body={body} isShow={isShowAddSupplierModal.open} />;
+                <InputLabel
+                  label="Tên nhà cung cấp"
+                  name="name"
+                  value={values?.name}
+                  onChange={handleChange}
+                  size={[3, 4]}
+                />
+                <InputLabel
+                  label="Email"
+                  name="email"
+                  value={values?.email}
+                  onChange={handleChange}
+                  size={[2, 3]}
+                />
+                <InputLabel
+                  label="Địa chỉ"
+                  name="address"
+                  value={values?.address}
+                  onChange={handleChange}
+                  size={[3, 4]}
+                />
+                <InputLabel
+                  label="Số ĐT"
+                  name="phoneNumber"
+                  value={values?.phoneNumber}
+                  onChange={handleChange}
+                  size={[2, 3]}
+                />
+                <InputLabel
+                  label="Mô tả"
+                  name="description"
+                  value={values?.description}
+                  onChange={handleChange}
+                  size={[3, 9]}
+                />
+              </Grid>
+
+              {/* button -------------------- */}
+              <div className={classes.action}>
+                <Controls.Button
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                  isSubmitting={isSubmitting}
+                  text="Lưu"
+                  startIcon={<Save />}
+                  sx={{ mr: 1 }}
+                />
+
+                <Controls.Button
+                  variant="contained"
+                  text="Hủy"
+                  color="error"
+                  startIcon={<Close />}
+                  onClick={handleHideModal}
+                />
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </Paper>
+    </Fade>
+  );
+  return <BaseModal body={body} isShow={isShowAddSupplierModal.open} />;
 }
 
-export default AddSupplierModal
+export default AddSupplierModal;

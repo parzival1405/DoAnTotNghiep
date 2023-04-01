@@ -11,14 +11,14 @@ export default function modalReducers(
     isShowOTP: initType,
     isShowPatientReceptionModal: initType,
     isShowAddScheduleModal: initType,
-    isShowAddProductModal: initType,
+    isShowAddBatchProductModal: initType,
     isShowAddSupplierModal: initType,
     isShowAddDrugModal: initType,
     isShowAddAccountStaffModal: initType,
     isShowPermissionModal: initType,
     isShowPatientModal: initType,
     isShowAddProductGroupsModal: initType,
-    isShowAddServiceGroupsModal: initType,
+    isShowAddServiceModal: initType,
     isShowAddTypeServiceGroupsModal: initType,
   },
   action
@@ -33,10 +33,10 @@ export default function modalReducers(
           data: action.payload.data,
         },
       };
-    case GLOBALTYPES.SHOW_ADD_SERVICE_GROUPS_MODAL:
+    case GLOBALTYPES.SHOW_ADD_SERVICE_MODAL:
       return {
         ...state,
-        isShowAddServiceGroupsModal: {
+        isShowAddServiceModal: {
           open: true,
           typeOpenModal: action.payload.type,
           data: action.payload.data,
@@ -123,10 +123,10 @@ export default function modalReducers(
           data: action.payload.data,
         },
       };
-    case GLOBALTYPES.SHOW_ADD_PRODUCT_MODAL:
+    case GLOBALTYPES.SHOW_ADD_BATCH_PRODUCT_MODAL:
       return {
         ...state,
-        isShowAddProductModal: {
+        isShowAddBatchProductModal: {
           open: true,
           typeOpenModal: action.payload.type,
           data: action.payload.data,

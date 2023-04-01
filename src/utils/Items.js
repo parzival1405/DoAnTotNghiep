@@ -190,6 +190,12 @@ export const items = [
     icon: <StackedBarChart />,
     subMenu: [
       {
+        id: "THDT",
+        name: "Tổng hợp doanh thu",
+        icon: <QueryStats />,
+        subMenu: [],
+      },
+      {
         id: "CTLK",
         name: "Chi tiết loại Khám",
         icon: <SignalCellularAlt />,
@@ -205,12 +211,6 @@ export const items = [
         id: "THDV",
         name: "Tổng hợp dịch vụ",
         icon: <SignalCellularAlt />,
-        subMenu: [],
-      },
-      {
-        id: "THDT",
-        name: "Tổng hợp doanh thu",
-        icon: <QueryStats />,
         subMenu: [],
       },
     ],

@@ -13,7 +13,11 @@ import {
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { hideModal, ShowAddDrugModal, ShowAddSupplierModal } from "../../../redux/actions/modal";
+import {
+  hideModal,
+  ShowAddDrugModal,
+  ShowAddSupplierModal,
+} from "../../../redux/actions/modal";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
 import BaseModal from "../BaseModal";
 
@@ -25,6 +29,8 @@ import DateLabel from "../../Form/ControlsLabel/DateLabel";
 import useTable from "../../../hooks/useTable";
 import TableRow from "../../TableRow/TableContextMenu";
 import { GLOBALTYPES } from "../../../redux/actionType";
+import { titleModal, type } from "../../../utils/TypeOpen";
+import { headCellsProductAddBatchProduct } from "../../../utils/HeadCells";
 
 const useStyle = makeStyles((theme) => ({
   paper: {
@@ -38,7 +44,7 @@ const useStyle = makeStyles((theme) => ({
     justifyContent: "flex-end",
   },
   table: {
-    margin:"0" ,
+    margin: "0",
     "& th,& td": {
       padding: "10px",
     },
@@ -50,69 +56,39 @@ const useStyle = makeStyles((theme) => ({
     },
   },
   gridCustomInput: {
-    paddingBottom:"16px",
+    paddingBottom: "16px",
     "& .MuiInputBase-input": {
       padding: "6px",
     },
   },
 
-  button:{
-    "& .MuiButtonBase-root":{
-      width:"calc(100% - 10px)",
-      height:"100%",
-      marginLeft:"10px"
-    }
-  }
+  button: {
+    "& .MuiButtonBase-root": {
+      width: "calc(100% - 10px)",
+      height: "100%",
+      marginLeft: "10px",
+    },
+  },
 }));
-
-const headCells = [
-  { id: "stt", sizeCellWidth: 60, label: "STT" },
-  { id: "name", numeric: false, label: "Tên sản phẩm" },
-  { id: "unit", numeric: false, label: "Đơn vị" },
-  { id:"quantity",editable:true,label: "Số lượng" },
-  { id:"price",editable:true,sizeCellWidth: 150,label: "Đơn giá" },
-  { id: "total", numeric: true, label: "Thành tiền" },
-];
-
-const optionsNCC = [
-  { id: "1", title: "NCC1" },
-  { id: "2", title: "NCC2" },
-];
-
-const optionsDrug = [
-  { id: "0", title: "" },
-  { id: "1", title: "NCC1" },
-  { id: "2", title: "NCC2" },
-];
 
 const optionsPay = [
   { id: "1", title: "Tiền mặt" },
   { id: "2", title: "Chuyển khoản" },
 ];
 
-const optionsSP = [
-  { id: "1", title: "aaaaaaaaaaaaaaaaaaaaa" },
-  { id: "2", title: "Chuyển" },
-];
-
-function AddProductModal() {
-  const { isShowAddProductModal } = useSelector((state) => state.modal);
-  const { products } = useSelector((state) => state.product);
-  
+function AddBatchProductModal() {
+  const { isShowAddBatchProductModal } = useSelector((state) => state.modal);
+  const { products, category } = useSelector((state) => state.product);
+  const { suppliers } = useSelector((state) => state.supplier);
+  const [valueProduct, setValueProduct] = useState("");
+  const [newProducts, setNewProducts] = useState([]);
+  const { user } = useSelector((state) => state.auth);
+  const { open, typeOpenModal } = isShowAddBatchProductModal;
   const classes = useStyle();
   const dispatch = useDispatch();
-  const [records,setRecords] = useState([{
-    id:1,
-    stt: 3,
-    name: "bui quang huu",
-    unit: "Vien",
-    quantity: 1,
-    price: 100000,
-    total: 100000,
-  },]);
 
   const handleHideModal = () => {
-    dispatch(hideModal("isShowAddProductModal"));
+    dispatch(hideModal("isShowAddBatchProductModal"));
   };
 
   const [filterFn, setFilterFn] = useState({
@@ -122,40 +98,40 @@ function AddProductModal() {
   });
 
   const handleClickShowModalAddSupplier = () => {
-    dispatch(ShowAddSupplierModal(GLOBALTYPES.ADD))
-  }
+    dispatch(ShowAddSupplierModal(GLOBALTYPES.ADD));
+  };
 
   const handleClickShowModalAddDrug = () => {
-    dispatch(ShowAddDrugModal(GLOBALTYPES.ADD))
-  }
+    dispatch(ShowAddDrugModal(GLOBALTYPES.ADD));
+  };
 
-  
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(newProducts, headCellsProductAddBatchProduct, filterFn);
 
-  const onSelectedDrug = () => {
-    setRecords((prev) => [...prev,{
-      id:2,
-      stt: 4,
-      name: "bui quang huu",
-      unit: "Vien",
-      quantity: 1,
-      price: 100000,
-      total: 100000,
-    }])
-  }
+  const onSelectedDrug = (e, item) => {
+    setValueProduct("");
+    if (item) {
+      setNewProducts((prev) => [...prev, item]);
+    }
+  };
 
   const handleRemoveDrug = (item) => {
-    setRecords((prev) => prev.filter(drug => item.id != drug.id))
-  }
+    // setRecords((prev) => prev.filter(drug => item.id != drug.id))
+  };
 
   const handleSubmitForm = (values) => {};
 
+  const handleRemoveProduct = (item) =>{
+    setNewProducts((prev) => prev.filter((i) => i.id != item.id ));
+  }
 
   const body = (
-    <Fade in={isShowAddProductModal.open}>
+    <Fade in={isShowAddBatchProductModal.open}>
       <Paper className={classes.paper} id="modal-patient-reception">
-        <ModalHeader title="Phiếu nhập" onClose={handleHideModal} />
+        <ModalHeader
+          title={titleModal(typeOpenModal, "phiếu nhập")}
+          onClose={handleHideModal}
+        />
         <Formik
           initialValues={{}}
           //   validationSchema={validateionChangeGroupName}
@@ -174,6 +150,7 @@ function AddProductModal() {
             handleChange,
             handleSubmit,
             isSubmitting,
+            setFieldValue,
           }) => (
             <Form
               action=""
@@ -189,9 +166,13 @@ function AddProductModal() {
               >
                 <SelectedLabel
                   label="Nhà CC"
-                  options={optionsNCC}
+                  options={suppliers}
                   require={true}
                   size={[2, 5]}
+                  accessField={"name"}
+                  setFieldValue={setFieldValue}
+                  name="departmentServices"
+                  value={values?.departmentServices}
                 />
                 <Grid item xs={1} className={classes.button}>
                   <Controls.Button
@@ -209,9 +190,10 @@ function AddProductModal() {
                   currentDate={true}
                   size={[2, 2]}
                 />
-                <SelectedLabel
+                <InputLabel
                   label="Người nhập"
-                  options={optionsNCC}
+                  value={user.fullName}
+                  disable={true}
                   require={true}
                   size={[2, 2]}
                 />
@@ -219,27 +201,45 @@ function AddProductModal() {
                 <SelectedLabel
                   label="Hình thức"
                   options={optionsPay}
+                  name="type"
                   require={true}
+                  accessField={"title"}
+                  setFieldValue={setFieldValue}
                   size={[2, 6]}
                 />
-                <InputLabel label="Đã trả" size={[2, 2]} />
-                <InputLabel label="Ghi chú" disable={true} size={[2, 6]} />
-                <InputLabel label="Công nợ" disable={true} size={[2, 2]} />
+                <InputLabel
+                  label="Đã trả"
+                  name="paid"
+                  onChange={handleChange}
+                  size={[2, 2]}
+                />
+                <InputLabel label="Ghi chú" size={[2, 6]} />
+                <InputLabel
+                  label="Công nợ"
+                  name="paid"
+                  value={parseFloat(values.paid) - 1000 || 0}
+                  disable={true}
+                  size={[2, 2]}
+                />
               </Grid>
-              <Divider/>
+              <Divider />
               <Grid
                 container
                 rowSpacing={1}
                 className={classes.gridCustomInput}
-                sx={{mt:1}}
+                sx={{ mt: 1 }}
               >
                 <SelectedLabel
                   label="Tên thuốc"
-                  options={optionsDrug}
+                  options={products}
                   require={true}
                   size={[2, 5]}
-                  accessField="title"
-                  onChange={onSelectedDrug}
+                  accessField={"name"}
+                  setFieldValue={setFieldValue}
+                  name="products"
+                  onChange={(event, newValue) =>
+                    onSelectedDrug(event, newValue)
+                  }
                 />
                 <Grid item xs={1} className={classes.button}>
                   <Controls.Button
@@ -252,8 +252,15 @@ function AddProductModal() {
                 </Grid>
                 <SelectedLabel
                   // label="Nhóm SP"
-                  options={optionsSP}
+                  options={category}
                   size={[1, 3]}
+                  accessField={"name"}
+                  setFieldValue={setFieldValue}
+                  name="category"
+                  value={values?.category}
+                  // onChange={(event, newValue) =>
+                  //   onChangeCategory(event, newValue)
+                  // }
                 />
               </Grid>
               <>
@@ -274,12 +281,16 @@ function AddProductModal() {
                       {recordsAfterPagingAndSorting().map((item) => {
                         return (
                           <TableRow
-                            handleClick={handleRemoveDrug}
+                            handleDoubleClick={handleRemoveDrug}
                             key={item.id}
                             item={item}
-                            headCells={headCells}
+                            headCells={headCellsProductAddBatchProduct}
                             listItemMenu={[
-                              { title: "Xóa" },
+                              {
+                                title: "Xóa",
+                                onClick: () =>
+                                  handleRemoveProduct(item),
+                              },
                             ]}
                           />
                         );
@@ -316,7 +327,7 @@ function AddProductModal() {
       </Paper>
     </Fade>
   );
-  return <BaseModal body={body} isShow={isShowAddProductModal.open} />;
+  return <BaseModal body={body} isShow={isShowAddBatchProductModal.open} />;
 }
 
-export default AddProductModal;
+export default AddBatchProductModal;

@@ -18,10 +18,10 @@ export const saveExaminationLetter = (formData) => async (dispatch) => {
   try {
     const { data } = await api.saveMedicalLetters(formData);
 
-    // dispatch({
-    //   type: GLOBALTYPES.ADD_EXAMINATION_LETTER,
-    //   payload: data,
-    // });
+    dispatch({
+      type: GLOBALTYPES.ADD_MEDICAL_LETTER,
+      payload: data,
+    });
   } catch (err) {
     console.log(err);
   }

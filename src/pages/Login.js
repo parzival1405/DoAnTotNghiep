@@ -65,8 +65,8 @@ function Login() {
     <AuthLayout>
       <Formik
         initialValues={{
-          phone_number: "",
-          password: "",
+          phone_number: "0975247624",
+          password: "0975247624",
         }}
         validationSchema={validationLoginClinic}
         onSubmit={(values, { setSubmitting, resetForm }) => {

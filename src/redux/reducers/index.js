@@ -12,7 +12,11 @@ import medicalExamination from "./medicalExamination";
 import service from "./service";
 import product from "./product";
 import stomp from "./stomp";
+import supplier from "./supplier";
+import batchProduct from "./batchProduct";
 export default combineReducers({
+  batchProduct,
+  supplier,
   product,
   stomp,
   auth,

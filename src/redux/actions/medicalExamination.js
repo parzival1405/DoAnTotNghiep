@@ -79,13 +79,17 @@ export const updateMedicalExamination = (formData) => async (dispatch) => {
         })
       ),
     };
-    console.log(sendData);
     const {data} = await api.updateMedicalExamination(sendData,currentPatient.id);
-    console.log(data);
+    
     dispatch({
       type: GLOBALTYPES.UPDATE_DATA_CURRENT_EXAMINATION,
       payload: data,
     });
+
+    // client.publish({
+    //   destination: `/queue/Clinical_service`,
+    //   body: JSON.stringify(data),
+    // });
   } catch (err) {
     console.log(err);
   }

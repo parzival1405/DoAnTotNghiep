@@ -1,7 +1,7 @@
 import { GLOBALTYPES } from "../actionType";
 const initState = {
-  products: null,
-  category: null,
+  products: [],
+  category: [],
 };
 
 export default (state = initState, action) => {

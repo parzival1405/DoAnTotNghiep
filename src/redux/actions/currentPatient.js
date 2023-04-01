@@ -59,7 +59,7 @@ export const removeClinicalService = (service) => async (dispatch) => {
 export const updateCurrentPatient = (name, value) => async (dispatch) => {
   try {
     dispatch({
-      type: GLOBALTYPES.UPDATE_CURRENT_PATIENT,
+      type: GLOBALTYPES.UPDATE_FIELD_CURRENT_PATIENT,
       payload: { fieldName: name, fieldData: value },
     });
   } catch (err) {}

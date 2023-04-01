@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  HashRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import Homepage from "./pages/HomePage";
@@ -10,23 +16,26 @@ import { createTheme, ThemeProvider, styled } from "@mui/material";
 import Checkup from "./pages/Checkup";
 import PatientReceptionModal from "./components/Modal/PatientReceptionModal";
 import AddScheduleModal from "./components/Modal/AddScheduleModal";
-import AddProductModal from "./components/Modal/AddProductModal";
+import AddBatchProductModal from "./components/Modal/AddBatchProductModal";
 import AddSupplierModal from "./components/Modal/AddSupplierModal";
 import AddDrugModal from "./components/Modal/AddDrugModal";
 import AddAccountStaffModal from "./components/Modal/AddAccountStaffModal";
 import AddPermissionModal from "./components/Modal/AddPermissionModal";
 import PatientModal from "./components/Modal/PatientModal";
 import AddProductGroupsModal from "./components/Modal/AddProductGroupsModal";
-import AddServiceGroupsModal from "./components/Modal/AddServiceGroupsModal";
-import AddTypeServiceGroupsModal from "./components/Modal/AddServiceGroupsModal/AddTypeServiceGroupsModal";
-
+import AddServiceModal from "./components/Modal/AddServiceModal";
+import AddTypeServiceGroupsModal from "./components/Modal/AddServiceModal/AddTypeServiceGroupsModal";
+import { refreshToken } from "./redux/actions/auth";
 
 function App() {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
   useEffect(() => {
-    // dispatch();
+    if (!user) {
+      dispatch(refreshToken());
+    }
   }, [dispatch]);
+
   const theme = createTheme({
     palette: {
       primary: {
@@ -65,6 +74,10 @@ function App() {
       h5: {
         color: "#4eb0ba",
       },
+      h4: {
+        fontSize: "1rem",
+        fontWeight: 600,
+      },
     },
     spacing: 8,
   });
@@ -75,20 +88,26 @@ function App() {
         <OTPModal />
         <PatientReceptionModal />
         <AddScheduleModal />
-        <AddProductModal />
+        <AddBatchProductModal />
         <AddSupplierModal />
         <AddDrugModal />
         <AddAccountStaffModal />
         <AddPermissionModal />
         <PatientModal />
         <AddProductGroupsModal />
-        <AddServiceGroupsModal />
+        <AddServiceModal />
         <AddTypeServiceGroupsModal />
         <Routes>
           <Route
             exact
             path="*"
-            element={<Navigate to="/login" replace />}
+            element={
+              user ? (
+                <Navigate to="/Homepage" replace />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           ></Route>
           <Route exact path="/login" element={<Login />}></Route>
           <Route

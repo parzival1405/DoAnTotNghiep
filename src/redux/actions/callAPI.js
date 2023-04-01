@@ -168,6 +168,12 @@ export const callAPIForServiceListSide = () => async (dispatch) => {
       payload: serviceResponse.data,
     });
 
+    const serviceDepartmentResponse = await api.getAllMedicalDepartment();
+    dispatch({
+      type: GLOBALTYPES.GET_ALL_DEPARTMENT_SERVICE,
+      payload: serviceDepartmentResponse.data,
+    });
+
     dispatch({
       type: GLOBALTYPES.END_LOADING_CALL_API,
     });
@@ -177,3 +183,70 @@ export const callAPIForServiceListSide = () => async (dispatch) => {
     });
   }
 };
+
+export const callAPIForAddSupplierSide = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.START_LOADING_CALL_API,
+    });
+
+    const supplierResponse = await api.getAllSupplier();
+    dispatch({
+      type: GLOBALTYPES.GET_ALL_SUPPLIER,
+      payload: supplierResponse.data,
+    });
+
+    dispatch({
+      type: GLOBALTYPES.END_LOADING_CALL_API,
+    });
+  } catch (error) {
+    dispatch({
+      type: GLOBALTYPES.END_LOADING_CALL_API,
+    });
+  }
+};
+
+export const callAPIForAddProductSide = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.START_LOADING_CALL_API,
+    });
+
+    const supplierResponse = await api.getAllSupplier();
+    dispatch({
+      type: GLOBALTYPES.GET_ALL_SUPPLIER,
+      payload: supplierResponse.data,
+    });
+
+    const productResponse = await api.getAllProduct();
+    dispatch({
+      type: GLOBALTYPES.GET_ALL_PRODUCT,
+      payload: productResponse.data,
+    });
+
+    const categoryResponse = await api.getAllCategoryDrugs();
+
+    dispatch({
+      type: GLOBALTYPES.ALL_CATEGORY,
+      payload: categoryResponse.data,
+    });
+
+    const batchDrugsResponse = await api.getAllBatchDrugs();
+
+    dispatch({
+      type: GLOBALTYPES.GET_ALL_BATCH_DRUG,
+      payload: batchDrugsResponse.data,
+    });
+
+    dispatch({
+      type: GLOBALTYPES.END_LOADING_CALL_API,
+    });
+  } catch (error) {
+    dispatch({
+      type: GLOBALTYPES.END_LOADING_CALL_API,
+    });
+  }
+};
+
+
+

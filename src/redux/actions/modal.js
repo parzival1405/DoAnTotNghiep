@@ -8,11 +8,11 @@ export const ShowOTP = () => async (dispatch) => {
   } catch (err) {}
 };
 
-export const ShowPermissionModal = (typeOpen) => async (dispatch) => {
+export const ShowPermissionModal = (typeOpen,item) => async (dispatch) => {
   try {
     dispatch({
       type: GLOBALTYPES.SHOW_PERMISSION_MODAL,
-      payload: typeOpen,
+      payload: { type: typeOpen, data: item },
     });
   } catch (err) {}
 };
@@ -26,11 +26,11 @@ export const ShowPatientModal = (typeOpen, item) => async (dispatch) => {
   } catch (err) {}
 };
 
-export const ShowAddProductGroupsModal = (typeOpen) => async (dispatch) => {
+export const ShowAddProductGroupsModal = (typeOpen,item) => async (dispatch) => {
   try {
     dispatch({
       type: GLOBALTYPES.SHOW_ADD_PRODUCT_GROUPS_MODAL,
-      payload: typeOpen,
+      payload: { type: typeOpen, data: item },
     });
   } catch (err) {}
 };
@@ -58,37 +58,37 @@ export const ShowAddScheduleModal = (typeOpen, item) => async (dispatch) => {
   } catch (err) {}
 };
 
-export const ShowAddProductModal = (typeOpen) => async (dispatch) => {
+export const ShowAddBatchProductModal = (typeOpen,item) => async (dispatch) => {
   try {
     dispatch({
-      type: GLOBALTYPES.SHOW_ADD_PRODUCT_MODAL,
-      payload: typeOpen,
+      type: GLOBALTYPES.SHOW_ADD_BATCH_PRODUCT_MODAL,
+      payload: { type: typeOpen, data: item },
     });
   } catch (err) {}
 };
 
-export const ShowAddSupplierModal = (typeOpen) => async (dispatch) => {
+export const ShowAddSupplierModal = (typeOpen,item) => async (dispatch) => {
   try {
     dispatch({
       type: GLOBALTYPES.SHOW_ADD_SUPPLIER_MODAL,
-      payload: typeOpen,
+      payload: { type: typeOpen, data: item },
     });
   } catch (err) {}
 };
-export const ShowAddServiceGroupsModal = (typeOpen) => async (dispatch) => {
+export const ShowAddServiceModal = (typeOpen,item) => async (dispatch) => {
   try {
     dispatch({
-      type: GLOBALTYPES.SHOW_ADD_SERVICE_GROUPS_MODAL,
-      payload: typeOpen,
+      type: GLOBALTYPES.SHOW_ADD_SERVICE_MODAL,
+      payload: { type: typeOpen, data: item },
     });
   } catch (err) {}
 };
 
-export const ShowAddTypeServiceGroupsModal = (typeOpen) => async (dispatch) => {
+export const ShowAddTypeServiceModal = (typeOpen,item) => async (dispatch) => {
   try {
     dispatch({
       type: GLOBALTYPES.SHOW_ADD_TYPE_SERVICE_GROUPS_MODAL,
-      payload: typeOpen,
+      payload: { type: typeOpen, data: item },
     });
   } catch (err) {}
 };

@@ -95,3 +95,33 @@ export const headCellsListServiceSide = [
   { id: "image", numeric: false, label: "Ghi chú" },
   { id: "state", numeric: false, label: "Trạng thái" },
 ];
+
+
+export const headCellsListSupplier = [
+  { id: "id",sizeCellWidth: 100, numeric: false, label: "Mã NCC" },
+  { id: "name", numeric: false, label: "Tên Nhà NCC" },
+  { id: "email", numeric: false, label: "Email" },
+  { id: "phoneNumber", numeric: false, label: "Điện thoại" },
+  { id: "address", numeric: false, label: "Địa chỉ" },
+];
+
+export const headCellsProductAddBatchProduct = [
+  { id: "stt", sizeCellWidth: 60, label: "STT" },
+  { id: "name", numeric: false, label: "Tên sản phẩm" },
+  { id: "unit", numeric: false, label: "Đơn vị" },
+  { id:"quantity",editable:true,label: "Số lượng" },
+  { id:"price",editable:true,sizeCellWidth: 150,label: "Đơn giá" },
+  { id: "total", numeric: true, label: "Thành tiền" },
+];
+
+export const headCellsAddProductSide = [
+  { id: "id", numeric: false, label: "Số phiếu" },
+  { id: "createdDate", numeric: false, label: "Ngày nhập" },
+  { id: "NCC", numeric: false, sizeCellWidth: 140, label: "Nhà cung cấp" },
+  { id: "total", numeric: true, label: "Tổng tiền" },
+  { id: "real", numeric: true, label: "Thực trả" },
+  { id: "datra", numeric: true, label: "Đã trả" },
+  { id: "description", numeric: false, label: "Ghi chú" },
+  { id: "state", numeric: false, label: "Trạng thái" },
+];
+

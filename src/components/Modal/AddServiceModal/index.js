@@ -7,7 +7,7 @@ import {
   hideModal,
   ShowAddDrugModal,
   ShowAddSupplierModal,
-  ShowAddTypeServiceGroupsModal,
+  ShowAddTypeServiceModal,
 } from "../../../redux/actions/modal";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
 import BaseModal from "../BaseModal";
@@ -18,6 +18,7 @@ import Controls from "../../Form/controls/Controls";
 import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import { GLOBALTYPES } from "../../../redux/actionType";
 import { titleModal, type } from "../../../utils/TypeOpen";
+import { saveService } from "../../../redux/actions/service";
 const useStyle = makeStyles((theme) => ({
   paper: {
     width: "70%",
@@ -44,59 +45,46 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-const headCells = [
-  { id: "stt", sizeCellWidth: 60, label: "STT" },
-  { id: "name", numeric: false, label: "Tên sản phẩm" },
-  { id: "unit", numeric: false, label: "Đơn vị" },
-  { id: "quantity", editable: true, label: "Số lượng" },
-  { id: "price", editable: true, sizeCellWidth: 150, label: "Đơn giá" },
-  { id: "total", numeric: true, label: "Thành tiền" },
-];
 
-const optionsNCC = [
-  { id: "1", title: "NCC1" },
-  { id: "2", title: "NCC2" },
-];
+const initialValues = {
+  id:null,
+  name:null,
+  price:null,
+  description: "",
+  departmentServices:"",
+  note: "",
+};
 
-const optionsDrug = [
-  { id: "0", title: "" },
-  { id: "1", title: "NCC1" },
-  { id: "2", title: "NCC2" },
-];
-
-const optionsPay = [
-  { id: "1", title: "Tiền mặt" },
-  { id: "2", title: "Chuyển khoản" },
-];
-
-const optionsSP = [
-  { id: "1", title: "aaaaaaaaaaaaaaaaaaaaa" },
-  { id: "2", title: "Chuyển" },
-];
-
-function AddServiceGroupsSide() {
-  const { isShowAddServiceGroupsModal } = useSelector((state) => state.modal);
-  const {open,typeOpenModal} = isShowAddServiceGroupsModal
+function AddServiceSide() {
+  const { isShowAddServiceModal } = useSelector((state) => state.modal);
+  const { departmentServices } = useSelector((state) => state.service);
+  const { open, typeOpenModal } = isShowAddServiceModal;
   const classes = useStyle();
   const dispatch = useDispatch();
 
   const handleHideModal = () => {
-    dispatch(hideModal("isShowAddServiceGroupsModal"));
+    dispatch(hideModal("isShowAddServiceModal"));
   };
 
-  const handleClickShowAddTypeServiceGroupsModal = () => {
-    dispatch(ShowAddTypeServiceGroupsModal(GLOBALTYPES.ADD));
+  const handleClickShowAddTypeServiceModal = () => {
+    dispatch(ShowAddTypeServiceModal(GLOBALTYPES.ADD));
   };
 
-
-  const handleSubmitForm = (values) => {};
+  const handleSubmitForm = (values) => {
+    console.log(values)
+    // dispatch(saveService(values))
+    handleHideModal()
+  };
 
   const body = (
-    <Fade in={isShowAddServiceGroupsModal.open}>
+    <Fade in={isShowAddServiceModal.open}>
       <Paper className={classes.paper} id="modal-patient-reception">
-        <ModalHeader title={titleModal(typeOpenModal,"dịch vụ")} onClose={handleHideModal} />
+        <ModalHeader
+          title={titleModal(typeOpenModal, "dịch vụ")}
+          onClose={handleHideModal}
+        />
         <Formik
-          initialValues={{}}
+          initialValues={initialValues}
           //   validationSchema={validateionChangeGroupName}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
@@ -113,6 +101,7 @@ function AddServiceGroupsSide() {
             handleChange,
             handleSubmit,
             isSubmitting,
+            setFieldValue,
           }) => (
             <Form
               action=""
@@ -126,13 +115,32 @@ function AddServiceGroupsSide() {
                 rowSpacing={1}
                 className={classes.gridCustomInput}
               >
-                <InputLabel disable={true} label="Mã dịch vụ" size={[2, 4]} />
-                <InputLabel  label="Tên dịch vụ" require={true} size={[2, 4]} />
+                <InputLabel
+                  disable={true}
+                  label="Mã dịch vụ"
+                  name="id"
+                  onChange={handleChange}
+                  value={values?.id}
+                  size={[2, 4]}
+                />
+                <InputLabel
+                  label="Tên dịch vụ"
+                  require={true}
+                  name="name"
+                  value={values?.name}
+                  onChange={handleChange}
+                  size={[2, 4]}
+                />
                 <SelectedLabel
                   label="Nhóm dịch vụ"
-                  options={optionsNCC}
                   require={true}
                   size={[2, 3]}
+                  disable={type(typeOpenModal)}
+                  options={departmentServices}
+                  accessField={"name"}
+                  setFieldValue={setFieldValue}
+                  name="departmentServices"
+                  value={values?.departmentServices}
                 />
                 <Grid item xs={1} className={classes.button}>
                   <Controls.Button
@@ -140,19 +148,42 @@ function AddServiceGroupsSide() {
                     text="Thêm"
                     color="primary"
                     startIcon={<Add />}
-                    onClick={handleClickShowAddTypeServiceGroupsModal}
+                    onClick={handleClickShowAddTypeServiceModal}
                   />
                 </Grid>
                 <SelectedLabel
                   label="Phòng ban"
-                  options={optionsNCC}
                   require={true}
                   size={[2, 4]}
+                  disable={type(typeOpenModal)}
+                  options={departmentServices}
+                  accessField={"name"}
+                  setFieldValue={setFieldValue}
+                  name="departmentServices"
+                  value={values?.departmentServices}
                 />
-                <InputLabel label="Giá" size={[2, 4]} />
-                <Grid item xs={6}/>
-                <InputLabel label="Mô tả" size={[2, 10]} />
-                <InputLabel label="Ghi chú" size={[2, 10]} />
+                <InputLabel
+                  label="Giá"
+                  name="price"
+                  value={values?.price}
+                  onChange={handleChange}
+                  size={[2, 4]}
+                />
+                <Grid item xs={6} />
+                <InputLabel
+                  label="Mô tả"
+                  name="description"
+                  value={values?.description}
+                  onChange={handleChange}
+                  size={[2, 10]}
+                />
+                <InputLabel
+                  label="Ghi chú"
+                  name="note"
+                  value={values?.note}
+                  onChange={handleChange}
+                  size={[2, 10]}
+                />
               </Grid>
 
               {/* button -------------------- */}
@@ -181,7 +212,7 @@ function AddServiceGroupsSide() {
       </Paper>
     </Fade>
   );
-  return <BaseModal body={body} isShow={isShowAddServiceGroupsModal.open} />;
+  return <BaseModal body={body} isShow={isShowAddServiceModal.open} />;
 }
 
-export default AddServiceGroupsSide;
+export default AddServiceSide;

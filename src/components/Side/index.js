@@ -16,7 +16,7 @@ import PermissionSide from "./PermissionSide";
 import PatientSide from "./PatientSide";
 import ProductSide from "./ProductSide";
 import ProductGroupsSide from "./ProductGroupsSide";
-import AddServiceGroupsSide from "./AddServiceGroupsSide";
+import AddServiceGroupsSide from "./AddServiceSide";
 import AddSupplierSide from "./AddSupplierSide";
 import Loading from "../Loading";
 import useStyle from "./styles";
@@ -28,8 +28,11 @@ import {
   callAPIForProductSide,
   getCategoryProductExamination,
   callAPIForServiceListSide,
+  callAPIForAddSupplierSide,
+  callAPIForAddProductSide,
 } from "../../redux/actions/callAPI";
 import { getCurrentDateString } from "../../utils/Calc";
+import SaleReportSide from "./SaleReportSide";
 
 function Side() {
   const { IDSelected, ParentWithSelectedChild } = useSelector(
@@ -77,7 +80,7 @@ function Side() {
         dispatch(callAPIForMedicalExaminationSide());
         break;
       case "NSP":
-        // dispatch(getAllPatient());
+        dispatch(callAPIForAddProductSide());
         break;
       case "NQ":
        
@@ -95,7 +98,7 @@ function Side() {
         dispatch(callAPIForServiceListSide());
         break;
       case "NCCDV":
-        // dispatch(getAllExamination());
+        dispatch(callAPIForAddSupplierSide());
         break;
     }
 
@@ -123,6 +126,7 @@ function Side() {
         {item?.id == "PRD" && <ProductSide item={item} />}
         {item?.id == "DVKM" && <AddServiceGroupsSide item={item} />}
         {item?.id == "NCCDV" && <AddSupplierSide item={item} />}
+        {item?.id == "THDT" && <SaleReportSide item={item} />}
         {/* 
         {item?.id == "CHGB" && <ConfigSellingPriceSide item={item} />}
          */}

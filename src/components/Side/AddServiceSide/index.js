@@ -7,7 +7,7 @@ import { Button, InputAdornment, TableBody, Toolbar } from "@mui/material";
 import { Search, Add } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
 import TableRow from "../../TableRow/TableContextMenu";
-import { ShowAddServiceGroupsModal } from "../../../redux/actions/modal";
+import { ShowAddServiceModal } from "../../../redux/actions/modal";
 import useStyles from "../styles";
 import { GLOBALTYPES } from "../../../redux/actionType";
 import {headCellsListServiceSide} from "../../../utils/HeadCells"
@@ -59,13 +59,13 @@ function AddServiceGroupsSide({ item }) {
   };
 
   const handleClickShowEditModal = () => {
-    dispatch(ShowAddServiceGroupsModal(GLOBALTYPES.EDIT));
+    dispatch(ShowAddServiceModal(GLOBALTYPES.EDIT));
   };
   const handleClickShowViewModal = () => {
-    dispatch(ShowAddServiceGroupsModal(GLOBALTYPES.VIEW));
+    dispatch(ShowAddServiceModal(GLOBALTYPES.VIEW));
   };
   const handleClickShowAddModal = () => {
-    dispatch(ShowAddServiceGroupsModal(GLOBALTYPES.ADD));
+    dispatch(ShowAddServiceModal(GLOBALTYPES.ADD));
   };
   return (
     <>

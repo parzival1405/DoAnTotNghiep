@@ -10,44 +10,26 @@ import TableRow from "../../TableRow/TableContextMenu";
 import { ShowAddSupplierModal } from "../../../redux/actions/modal";
 import useStyles from "../styles";
 import { GLOBALTYPES } from "../../../redux/actionType";
-
-const headCells = [
-  { id: "id", numeric: false, label: "Mã NCC" },
-  { id: "fullName", numeric: false, label: "Tên Nhà NCC" },
-  { id: "age", numeric: false, label: "Email" },
-  { id: "price", numeric: false, label: "Điện thoại" },
-  { id: "dosage", numeric: false, label: "Dịa chỉ" },
-];
-
-const records = [
-  {
-    id: "1",
-    fullName: "Huuwx",
-    age: new Date().toLocaleDateString(),
-    state: "0975247624",
-    dosage: "scasdfsafasdadadsdasdasdadsdadasdasdasdasdasdas",
-    image: "scasdfsafasdadadsdasdasdadsdadasdasdasdasdasdas",
-  },
-];
+import {headCellsListSupplier} from "../../../utils/HeadCells"
 
 function AddSupplierSide({ item }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const {suppliers} = useSelector((state) => state.supplier)
   const [filter, setFiler] = useState({
     category: "",
     department: "",
     room: "",
   });
-  const [recordForEdit, setRecordForEdit] = useState(null);
+
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
     },
   });
 
-  const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(suppliers, headCellsListSupplier, filterFn);
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
@@ -110,7 +92,7 @@ function AddSupplierSide({ item }) {
                 handleDoubleClick={handleDoubleClick}
                 key={item.id}
                 item={item}
-                headCells={headCells}
+                headCells={headCellsListSupplier}
                 listItemMenu={[
                   { title: "Chỉnh sửa", onClick: handleClickShowEditModal },
                   { title: "Xem", onClick: handleClickShowViewModal },

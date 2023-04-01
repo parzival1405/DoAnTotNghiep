@@ -15,30 +15,35 @@ export default (state = initState, action) => {
       return {
         ...state,
         currentPatient: action.payload,
+        // clinicalService: action.payload.medicalExaminationDetailsResponses,
       };
-    case GLOBALTYPES.UPDATE_CURRENT_PATIENT:
+      // update field
+    case GLOBALTYPES.UPDATE_FIELD_CURRENT_PATIENT:
       const inf = state.currentPatient;
       setField(action.payload.fieldName, action.payload.fieldData, inf);
       return {
         ...state,
         currentPatient: inf,
       };
+      // get 
     case GLOBALTYPES.HISTORY_MEDICINE_OF_SERVICE:
       return {
         ...state,
         historyMedicine: action.payload,
       };
+      // history medical examination 
     case GLOBALTYPES.HISTORY_MEDICAL_EXAMINATION:
       return {
         ...state,
         historyMedicalExamination: action.payload,
       };
-
+      // add clinical service
     case GLOBALTYPES.ADD_PATIENT_CLINICAL_SERVICE:
       return {
         ...state,
         clinicalService: [action.payload, ...state.clinicalService],
       };
+      // remove clinical service
     case GLOBALTYPES.REMOVE_PATIENT_CLINICAL_SERVICE:
       return {
         ...state,

@@ -2,68 +2,16 @@ import { makeStyles } from "@mui/styles";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useTable from "../../../hooks/useTable";
-import Layout from "../Layout";
 import Controls from "../../Form/controls/Controls";
-import {
-    Button,
-  InputAdornment,
-  Menu,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  Toolbar,
-} from "@mui/material";
+import { Button, InputAdornment, TableBody, Toolbar } from "@mui/material";
 import { Search, Add } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
 import TableRow from "../../TableRow/TableContextMenu";
-import { ShowExaminationInformation } from "../../../redux/actions/tab";
-import { setCurrentPatient } from "../../../redux/actions/patient";
 import { useNavigate } from "react-router-dom";
-import { ShowAddProductModal } from "../../../redux/actions/modal";
-import useStyles from "../styles"
+import { ShowAddBatchProductModal } from "../../../redux/actions/modal";
+import useStyles from "../styles";
 import { GLOBALTYPES } from "../../../redux/actionType";
-const headCells = [
-  { id: "id", numeric: false, label: "Số phiếu" },
-  { id: "date", numeric: false, label: "Ngày nhập" },
-  { id: "NCC", numeric: false, sizeCellWidth: 140, label: "Nhà cung cấp" },
-  { id: "total", numeric: true, label: "Tổng tiền" },
-  { id: "real", numeric: true, label: "Thực trả" },
-  { id: "datra", numeric: true, label: "Đã trả" },
-  { id: "result", numeric: false, label: "Ghi chú" },
-  { id: "state", numeric: false, label: "Trạng thái" },
-];
-
-const records = [
-  {
-    id: 1,
-    fullName: "bui quang huu",
-    age: 4564,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 2,
-    fullName: "bui quang huu",
-    age: 453,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 3,
-    fullName: "bui quang huu",
-    age: 435,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-];
+import { headCellsAddProductSide } from "../../../utils/HeadCells";
 
 const options = [
   { id: "", title: "Không" },
@@ -96,6 +44,8 @@ const options = [
 function AddProductSide({ item }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const {batchProducts} = useSelector((state) => state.batchProduct)
+
   const [filter, setFiler] = useState("");
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [filterFn, setFilterFn] = useState({
@@ -105,12 +55,12 @@ function AddProductSide({ item }) {
   });
 
   const handleClickShowAddModal = () => {
-    dispatch(ShowAddProductModal(GLOBALTYPES.ADD))
-  }
+    dispatch(ShowAddBatchProductModal(GLOBALTYPES.ADD));
+  };
 
   const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable( batchProducts, headCellsAddProductSide, filterFn);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
   const navigate = useNavigate();
@@ -128,7 +78,6 @@ function AddProductSide({ item }) {
 
   const handleClick = (item, setContextMenu) => {
     try {
-
     } catch (error) {
       alert("Sai mật khẩu");
     }
@@ -164,8 +113,14 @@ function AddProductSide({ item }) {
           // className={classes.newButton}
           onClick={() => {}}
         />
-        <div style={{flex:"1"}}></div>
-        <Button variant="contained" onClick={handleClickShowAddModal} color="healing" disableElevation startIcon={<Add />}>
+        <div style={{ flex: "1" }}></div>
+        <Button
+          variant="contained"
+          onClick={handleClickShowAddModal}
+          color="healing"
+          disableElevation
+          startIcon={<Add />}
+        >
           Thêm
         </Button>
       </Toolbar>
@@ -177,10 +132,10 @@ function AddProductSide({ item }) {
           {recordsAfterPagingAndSorting().map((item) => {
             return (
               <TableRow
-                handleClick={handleClick}
+                handleDoubleClick={handleClick}
                 key={item.id}
                 item={item}
-                headCells={headCells}
+                headCells={headCellsAddProductSide}
                 listItemMenu={[{ title: "Xem" }]}
               />
             );

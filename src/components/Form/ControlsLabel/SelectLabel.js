@@ -90,8 +90,8 @@ function SelectedLabel(props) {
           options={options}
           value={value}
           name={name}
-          onChange={(e,option) => setFieldValue(name,option)}
-          getOptionLabel={(option) => resolve(option,accessField)}
+          onChange={onChange ? onChange : (e,option) => setFieldValue(name,option)}
+          getOptionLabel={(option) => resolve(option,accessField) || ""}
           renderInput={(params) => (
             <TextField {...params}  />
           )}

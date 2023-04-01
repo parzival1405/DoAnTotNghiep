@@ -1,6 +1,7 @@
 import { GLOBALTYPES } from "../actionType";
 const initState = {
   services: [],
+  departmentServices: [],
 };
 
 export default (state = initState, action) => {
@@ -10,9 +11,18 @@ export default (state = initState, action) => {
         ...state,
         services: action.payload,
       };
+    case GLOBALTYPES.GET_ALL_DEPARTMENT_SERVICE:
+      return {
+        ...state,
+        departmentServices: action.payload,
+      };
+    case GLOBALTYPES.ADD_DEPARTMENT_SERVICE:
+      return {
+        ...state,
+        departmentServices: [action.payload,...state.departmentServices],
+      };
     case GLOBALTYPES.CLEAR:
       return initState;
-
     default:
       return state;
   }
