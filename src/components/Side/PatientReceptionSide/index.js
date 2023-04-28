@@ -102,6 +102,8 @@ function PatientReceptionSide({ item }) {
     },
   });
 
+  console.log(medicalExaminations);
+
   const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(medicalExaminations, headCellsPatientReceptionSide, filterFn);
@@ -112,7 +114,6 @@ function PatientReceptionSide({ item }) {
     if (searchValue.startsWith(" ")) {
       return;
     }
-
     setSearchValue(e.target.value);
   };
 

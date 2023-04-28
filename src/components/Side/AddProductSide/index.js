@@ -44,7 +44,7 @@ const options = [
 function AddProductSide({ item }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const {batchProducts} = useSelector((state) => state.batchProduct)
+  const { batchProducts } = useSelector((state) => state.batchProduct);
 
   const [filter, setFiler] = useState("");
   const [recordForEdit, setRecordForEdit] = useState(null);
@@ -58,9 +58,13 @@ function AddProductSide({ item }) {
     dispatch(ShowAddBatchProductModal(GLOBALTYPES.ADD));
   };
 
+  const handleClickShowViewModal = (item) => {
+    dispatch(ShowAddBatchProductModal(GLOBALTYPES.VIEW, item));
+  };
+
   const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable( batchProducts, headCellsAddProductSide, filterFn);
+    useTable(batchProducts, headCellsAddProductSide, filterFn);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
   const navigate = useNavigate();
@@ -136,7 +140,12 @@ function AddProductSide({ item }) {
                 key={item.id}
                 item={item}
                 headCells={headCellsAddProductSide}
-                listItemMenu={[{ title: "Xem" }]}
+                listItemMenu={[
+                  {
+                    title: "Xem",
+                    onClick: () => handleClickShowViewModal(item),
+                  },
+                ]}
               />
             );
           })}

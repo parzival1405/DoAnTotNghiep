@@ -1,17 +1,25 @@
 import { Close, Save } from "@mui/icons-material";
-import { Fade, FormControlLabel, Grid, Paper, Radio, RadioGroup } from "@mui/material";
+import {
+  Fade,
+  FormControlLabel,
+  Grid,
+  Paper,
+  Radio,
+  RadioGroup,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { hideModal } from "../../../redux/actions/modal";
-import { addCategory } from "../../../redux/actions/product";
+import { addCategory, updateCategory } from "../../../redux/actions/product";
 import { titleModal, type } from "../../../utils/TypeOpen";
 import Controls from "../../Form/controls/Controls";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
 import Label from "../../Form/ControlsLabel/Label";
 import BaseModal from "../BaseModal";
 import ModalHeader from "../ModalHeader";
+import { GLOBALTYPES } from "../../../redux/actionType";
 const useStyle = makeStyles((theme) => ({
   paper: {
     width: "50%",
@@ -49,33 +57,31 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const initialValues = {
-  name:""
-}
+  name: "",
+};
 
 function AddProductGroupsModal() {
-  const { isShowAddProductGroupsModal } = useSelector((state) => state.modal);
-  const { open, typeOpenModal } = isShowAddProductGroupsModal;
+  const isShowAddProductGroupsModal  = useSelector((state) => state.modal.isShowAddProductGroupsModal);
+  const { open, typeOpenModal, data } = isShowAddProductGroupsModal;
 
-  const [valueOption, setValueOption] = useState([]);
   const classes = useStyle();
   const dispatch = useDispatch();
-  const [avatarFile, setAvatarFile] = useState(null);
   const handleHideModal = () => {
     dispatch(hideModal("isShowAddProductGroupsModal"));
   };
 
   const handleSubmitForm = (values) => {
-    dispatch(addCategory(values))
-    handleHideModal()
+    if(typeOpenModal == GLOBALTYPES.ADD){
+      dispatch(addCategory(values));
+    }else{
+      dispatch(updateCategory(values));
+    }
+    handleHideModal();
   };
 
   useEffect(() => {
     // return () => setAvatarFile(null);
   });
-
-  const handleChangeValue = (event, newValue) => {
-    setValueOption(newValue);
-  };
 
   const body = (
     <Fade in={isShowAddProductGroupsModal.open}>
@@ -85,7 +91,9 @@ function AddProductGroupsModal() {
           onClose={handleHideModal}
         />
         <Formik
-          initialValues={initialValues}
+          initialValues={
+            typeOpenModal == GLOBALTYPES.ADD ? initialValues : data
+          }
           //   validationSchema={validateionChangeGroupName}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
@@ -120,11 +128,16 @@ function AddProductGroupsModal() {
                   disable={type(typeOpenModal)}
                   require={true}
                   label="Tên nhóm Sản phẩm"
+                  value={values?.name}
                   onChange={handleChange}
                   size={[4, 8]}
                 />
                 <Grid item xs={4}>
-                  <Label label={"Trạng thái"} className={classes.title} />
+                  <Label
+                    disable={type(typeOpenModal)}
+                    label={"Trạng thái"}
+                    className={classes.title}
+                  />
                 </Grid>
                 <Grid item xs={8}>
                   <RadioGroup
@@ -134,11 +147,13 @@ function AddProductGroupsModal() {
                     row
                   >
                     <FormControlLabel
+                      disabled={type(typeOpenModal)}
                       value="active"
                       control={<Radio />}
                       label="Kích hoạt"
                     />
                     <FormControlLabel
+                      disabled={type(typeOpenModal)}
                       value="disable"
                       control={<Radio />}
                       label="Vô hiệu hóa"
@@ -148,21 +163,25 @@ function AddProductGroupsModal() {
                 <InputLabel
                   disable={type(typeOpenModal)}
                   label="Ghi chú"
+                  name="note"
+                  value={values?.note}
+                  onChange={handleChange}
                   size={[4, 8]}
                 />
               </Grid>
 
               {/* button -------------------- */}
               <div className={classes.action}>
-                <Controls.Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  isSubmitting={isSubmitting}
-                  text="Lưu"
-                  startIcon={<Save />}
-                  sx={{ mr: 1 }}
-                />
+                {typeOpenModal != GLOBALTYPES.VIEW && (
+                  <Controls.Button
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    text="Lưu"
+                    startIcon={<Save />}
+                    sx={{ mr: 1 }}
+                  />
+                )}
                 <Controls.Button
                   variant="contained"
                   text="Hủy"

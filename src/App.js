@@ -26,15 +26,12 @@ import AddProductGroupsModal from "./components/Modal/AddProductGroupsModal";
 import AddServiceModal from "./components/Modal/AddServiceModal";
 import AddTypeServiceGroupsModal from "./components/Modal/AddServiceModal/AddTypeServiceGroupsModal";
 import { refreshToken } from "./redux/actions/auth";
+import ReadQRCodeModal from "./components/Modal/ReadQRCodeModal";
+import AddPrescriptionModal from "./components/Modal/AddPrescriptionModal";
+import UpdateServiceCLS from "./components/Modal/UpdateServiceCLS";
 
 function App() {
-  const dispatch = useDispatch();
-  const { user, token } = useSelector((state) => state.auth);
-  useEffect(() => {
-    if (!user) {
-      dispatch(refreshToken());
-    }
-  }, [dispatch]);
+  const { user } = useSelector((state) => state.auth);
 
   const theme = createTheme({
     palette: {
@@ -49,6 +46,10 @@ function App() {
       },
       healing: {
         main: "#42f593",
+        contrastText: "#fff",
+      },
+      yellow: {
+        main: "#FFD93D",
         contrastText: "#fff",
       },
       background: {
@@ -97,6 +98,9 @@ function App() {
         <AddProductGroupsModal />
         <AddServiceModal />
         <AddTypeServiceGroupsModal />
+        <AddPrescriptionModal />
+        <ReadQRCodeModal/>
+        <UpdateServiceCLS/>
         <Routes>
           <Route
             exact

@@ -60,7 +60,6 @@ function MedicalExaminationSide() {
   const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(medicalExaminationsDoctorData, headCellsMedicalExaminationSide, filterFn);
-    console.log(medicalExaminationsDoctorData);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
   const navigate = useNavigate();
@@ -79,9 +78,7 @@ function MedicalExaminationSide() {
 
   const handleDoubleClick = (item) => {
     try {
-      dispatch(setCurrentPatient(item));
-      dispatch(ShowExaminationInformation());
-      navigate("/Checkup");
+      dispatch(setCurrentPatient(item,navigate));
     } catch (error) {
       alert("Sai mật khẩu");
     }
@@ -120,6 +117,7 @@ function MedicalExaminationSide() {
           style={{ overflowY: "scroll", height: "420px", display: "block" }}
         >
           {recordsAfterPagingAndSorting().map((item) => {
+            item.category = item.medicalExaminationDetailsResponses[0]
             return (
               <TableRow
                 handleDoubleClick={() => handleDoubleClick(item)}

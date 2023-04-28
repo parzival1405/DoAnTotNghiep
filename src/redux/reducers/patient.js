@@ -10,6 +10,11 @@ export default (state = initState, action) => {
         ...state,
         patients: action.payload,
       };
+      case GLOBALTYPES.UPDATE_PATIENT:
+      return {
+        ...state,
+        patients: state.patients.map((patient)  => patient.id === action.payload.id ? action.payload : patient ) ,
+      };
     case GLOBALTYPES.CLEAR:
       return initState;
 

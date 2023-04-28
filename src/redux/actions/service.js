@@ -18,7 +18,7 @@ export const getServiceById = (id) => async (dispatch) => {
   try {
     const { data } = await api.getServiceById(id);
     dispatch({
-      type: GLOBALTYPES.GET_ALL_SERVICE,
+      type: GLOBALTYPES.UPDATE_SERVICE,
       payload: data,
     });
   } catch (err) {
@@ -29,8 +29,20 @@ export const getServiceById = (id) => async (dispatch) => {
 export const saveService = (formData) => async (dispatch) => {
   try {
     const { data } = await api.saveService(formData);
+    // dispatch({
+    //   type: GLOBALTYPES.GET_ALL_SERVICE,
+    //   payload: data,
+    // });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const updateService = (formData) => async (dispatch) => {
+  try {
+    const { data } = await api.updateService(formData);
     dispatch({
-      type: GLOBALTYPES.GET_ALL_SERVICE,
+      type: GLOBALTYPES.UPDATE_SERVICE,
       payload: data,
     });
   } catch (err) {

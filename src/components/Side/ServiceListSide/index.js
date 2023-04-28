@@ -3,57 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useTable from "../../../hooks/useTable";
 import Controls from "../../Form/controls/Controls";
-import {
-  InputAdornment,
-  TableBody,
-  Toolbar,
-} from "@mui/material";
+import { InputAdornment, TableBody, Toolbar } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
 import TableRow from "../../TableRow/TableContextMenu";
-import useStyles from "../styles"
-const headCells = [
-  { id: "date", numeric: false, label: "Ngày làm DV" },
-  { id: "id", numeric: false, sizeCellWidth: 80, label: "Mã BN" },
-  {
-    id: "fullName",
-    numeric: false,
-    sizeCellWidth: 140,
-    label: "Tên bệnh nhân",
-  },
-  {
-    id: "age",
-    numeric: true,
-    sizeCellWidth: 80,
-    label: "Tuổi",
-  },
-  { id: "category", numeric: false, sizeCellWidth: 140, label: "Tên Dịch vụ" },
-  { id: "quantity", numeric: false,sizeCellWidth: 95, label: "Số lượng" },
-  { id: "result", numeric: false, label: "Chuẩn đoán" },
-  { id: "state", numeric: false, sizeCellWidth: 140, label: "Trạng thái" },
-];
-
-const records = [
-  {
-    id: 1,
-    fullName: "bui quang huu",
-    age: 4564,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-  {
-    id: 2,
-    fullName: "bui quang huu",
-    age: 453,
-    category: "kham bth",
-    detail: "chi tiet kham",
-    result: "ket qua",
-    state: "trang thai",
-  },
-];
-
+import useStyles from "../styles";
+import { HeadCellsServiceAvailableSide } from "../../../utils/HeadCells";
+import { ShowUpdateServiceCLSModal } from "../../../redux/actions/modal";
+import { GLOBALTYPES } from "../../../redux/actionType";
 const options = [
   { id: "", title: "Không" },
   {
@@ -98,7 +55,6 @@ const optionsDepartment = [
   },
 ];
 
-
 function ServiceListSide({ item }) {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -106,7 +62,7 @@ function ServiceListSide({ item }) {
     category: "",
     department: "",
   });
-  const [recordForEdit, setRecordForEdit] = useState(null);
+  const { servicesAvailable } = useSelector((state) => state.serviceAvailable);
 
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
@@ -114,9 +70,8 @@ function ServiceListSide({ item }) {
     },
   });
 
-  const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(servicesAvailable, HeadCellsServiceAvailableSide, filterFn);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
 
@@ -132,15 +87,15 @@ function ServiceListSide({ item }) {
     setFiler((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleClick = (item) => {
-    try {
-      // dispatch(setCurrentPatient(item));
-      // dispatch(ShowExaminationInformation());
-      // navigate("/Checkup");
-    } catch (error) {
-      alert("Sai mật khẩu");
-    }
-  };
+  const handleClick = (item) => {};
+
+  const handleUpdateResult = (item) =>{
+    dispatch(ShowUpdateServiceCLSModal(GLOBALTYPES.EDIT,item))
+  }
+  const handleViewResult = (item) =>{
+    dispatch(ShowUpdateServiceCLSModal(GLOBALTYPES.VIEW,item))
+  }
+  
 
   return (
     <>
@@ -185,14 +140,18 @@ function ServiceListSide({ item }) {
           {recordsAfterPagingAndSorting().map((item) => {
             return (
               <TableRow
-                handleClick={handleClick}
+                handleDoubleClick={handleClick}
                 key={item.id}
                 item={item}
-                headCells={headCells}
+                headCells={HeadCellsServiceAvailableSide}
                 listItemMenu={[
-                  { title: "Cập nhật kết quả CLS" },
-                  { title: "Thanh toán" },
-                  { title: "Xem" },
+                  {
+                    title: "Cập nhật kết quả CLS",
+                    onClick: () => handleUpdateResult(item),
+                  },
+                  { title: "Xem" 
+                  ,onClick: () => handleViewResult(item),
+                },
                 ]}
               />
             );

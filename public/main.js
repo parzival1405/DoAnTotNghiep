@@ -13,6 +13,7 @@ function createWindow() {
       webSecurity: false,
       allowRunningInsecureContent:true, 
     },
+    autoHideMenuBar: true,
   });
   win.maximize();
   win.loadURL("http://localhost:3000");

@@ -23,6 +23,8 @@ import Controls from "../../Form/controls/Controls";
 import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
 import { saveSupplier } from "../../../redux/actions/supplier";
+import { GLOBALTYPES } from "../../../redux/actionType";
+import { type } from "../../../utils/TypeOpen";
 
 const useStyle = makeStyles((theme) => ({
   paper: {
@@ -59,7 +61,8 @@ const initialValues = {
 };
 
 function AddSupplierModal() {
-  const { isShowAddSupplierModal } = useSelector((state) => state.modal);
+  const isShowAddSupplierModal = useSelector((state) => state.modal.isShowAddSupplierModal);
+  const { open, typeOpenModal, data } = isShowAddSupplierModal;
   const classes = useStyle();
   const dispatch = useDispatch();
 
@@ -68,7 +71,7 @@ function AddSupplierModal() {
   };
 
   const handleSubmitForm = (values) => {
-    console.log(values)
+    console.log(values);
     // dispatch(saveSupplier(values))
   };
   const body = (
@@ -76,7 +79,9 @@ function AddSupplierModal() {
       <Paper className={classes.paper} id="modal-patient-reception">
         <ModalHeader title="Thêm nhà cung cấp mới" onClose={handleHideModal} />
         <Formik
-          initialValues={initialValues}
+          initialValues={
+            typeOpenModal == GLOBALTYPES.ADD ? initialValues : data
+          }
           //   validationSchema={validateionChangeGroupName}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
@@ -107,6 +112,7 @@ function AddSupplierModal() {
                 className={classes.gridCustomInput}
               >
                 <InputLabel
+                  disable={type(typeOpenModal)}
                   label="Tên nhà cung cấp"
                   name="name"
                   value={values?.name}
@@ -114,6 +120,7 @@ function AddSupplierModal() {
                   size={[3, 4]}
                 />
                 <InputLabel
+                  disable={type(typeOpenModal)}
                   label="Email"
                   name="email"
                   value={values?.email}
@@ -121,6 +128,7 @@ function AddSupplierModal() {
                   size={[2, 3]}
                 />
                 <InputLabel
+                  disable={type(typeOpenModal)}
                   label="Địa chỉ"
                   name="address"
                   value={values?.address}
@@ -128,6 +136,7 @@ function AddSupplierModal() {
                   size={[3, 4]}
                 />
                 <InputLabel
+                  disable={type(typeOpenModal)}
                   label="Số ĐT"
                   name="phoneNumber"
                   value={values?.phoneNumber}
@@ -135,6 +144,7 @@ function AddSupplierModal() {
                   size={[2, 3]}
                 />
                 <InputLabel
+                  disable={type(typeOpenModal)}
                   label="Mô tả"
                   name="description"
                   value={values?.description}
@@ -145,15 +155,17 @@ function AddSupplierModal() {
 
               {/* button -------------------- */}
               <div className={classes.action}>
-                <Controls.Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  isSubmitting={isSubmitting}
-                  text="Lưu"
-                  startIcon={<Save />}
-                  sx={{ mr: 1 }}
-                />
+                {typeOpenModal != GLOBALTYPES.VIEW && (
+                  <Controls.Button
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    isSubmitting={isSubmitting}
+                    text="Lưu"
+                    startIcon={<Save />}
+                    sx={{ mr: 1 }}
+                  />
+                )}
 
                 <Controls.Button
                   variant="contained"

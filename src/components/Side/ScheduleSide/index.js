@@ -4,13 +4,14 @@ import useTable from "../../../hooks/useTable";
 
 import Controls from "../../Form/controls/Controls";
 import { Button, InputAdornment, TableBody, Toolbar } from "@mui/material";
-import { Search, Add } from "@mui/icons-material";
+import { Search, Add, QrCodeScanner } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
 import TableRow from "../../TableRow/TableContextMenu";
-import { ShowAddScheduleModal } from "../../../redux/actions/modal";
+import { ShowAddScheduleModal, ShowReadQRCodeModal } from "../../../redux/actions/modal";
 import useStyles from "../styles";
 import { GLOBALTYPES } from "../../../redux/actionType";
 import { headCellsScheduleSide } from "../../../utils/HeadCells";
+import { getAllDoctor } from "../../../redux/actions/staff";
 const options = [
   { id: "", title: "Không" },
   {
@@ -64,7 +65,7 @@ function ScheduleSide({ item }) {
   });
 
   const { medicalLetters } = useSelector((state) => state.medicalLetter);
-  console.log(medicalLetters);
+
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
@@ -107,8 +108,16 @@ function ScheduleSide({ item }) {
     dispatch(ShowAddScheduleModal(GLOBALTYPES.EDIT, item));
   };
 
+  const handleClickShowReceiveModal = (item) => {
+    dispatch(ShowAddScheduleModal(GLOBALTYPES.RECEIVE, item));
+  };
+
   const handleClickShowViewModal = (item) => {
     dispatch(ShowAddScheduleModal(GLOBALTYPES.VIEW, item));
+  };
+
+  const handleClickShowReadQRCode = () => {
+    dispatch(ShowReadQRCodeModal(GLOBALTYPES.ADD));
   };
   return (
     <>
@@ -153,6 +162,16 @@ function ScheduleSide({ item }) {
         >
           Thêm
         </Button>
+        <Button
+          variant="contained"
+          style={{marginLeft:"10px"}}
+          onClick={handleClickShowReadQRCode}
+          color="healing"
+          disableElevation
+          startIcon={<QrCodeScanner />}
+        >
+          QR code
+        </Button>
       </Toolbar>
 
       <TblContainer>
@@ -167,17 +186,26 @@ function ScheduleSide({ item }) {
                 key={item.id}
                 item={item}
                 headCells={headCellsScheduleSide}
-                listItemMenu={[
-                  {
-                    title: "Sửa",
-                    onClick: () => handleClickShowEditModal(item),
-                  },
-                  { title: "Thanh toán" },
+                listItemMenu={item.status == "DONE" ? [
                   {
                     title: "Xem",
                     onClick: () => handleClickShowViewModal(item),
                   },
-                ]}
+                ] : [
+                  {
+                    title: "Tiếp nhận",
+                    onClick: () => handleClickShowReceiveModal(item),
+                  },
+                  {
+                    title: "Sửa",
+                    onClick: () => handleClickShowEditModal(item),
+                  }, {
+                    title: "Xem",
+                    onClick: () => handleClickShowViewModal(item),
+                  }
+                ]
+              
+              }
               />
             );
           })}

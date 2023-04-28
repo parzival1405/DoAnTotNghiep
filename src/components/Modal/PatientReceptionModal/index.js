@@ -1,7 +1,7 @@
 import { Close, Save } from "@mui/icons-material";
 import { Fade, Grid, Paper } from "@mui/material";
 import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { hideModal } from "../../../redux/actions/modal";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
@@ -12,7 +12,10 @@ import ModalHeader from "../ModalHeader";
 import Controls from "../../Form/controls/Controls";
 import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
-import { saveExamination } from "../../../redux/actions/medicalExamination";
+import {
+  saveExamination,
+  updateMedicalExamination,
+} from "../../../redux/actions/medicalExamination";
 import { GLOBALTYPES } from "../../../redux/actionType";
 import { type } from "../../../utils/TypeOpen";
 const useStyle = makeStyles((theme) => ({
@@ -54,34 +57,42 @@ const initialValues = {
   note: "",
 };
 
-const optionsDoctor = [
-  { id: 1, fullName: "BS 1" },
-  {
-    id: 2,
-    fullName: "BS 2",
-  },
-  { id: 3, fullName: "BS 3" },
-];
-
 function PatientReceptionModal() {
-  const { isShowPatientReceptionModal } = useSelector((state) => state.modal);
+
+  const isShowPatientReceptionModal = useSelector(
+    (state) => state.modal.isShowPatientReceptionModal
+  );
   const { open, typeOpenModal, data } = isShowPatientReceptionModal;
+
   const { services } = useSelector((state) => state.service);
   const { user } = useSelector((state) => state.auth);
   const { client } = useSelector((state) => state.stomp);
+  const { socket } = useSelector((state) => state.socket);
+  const { doctors } = useSelector((state) => state.staff);
+
+  const [serviceFilter, setServiceFilter] = useState(null);
+
   const classes = useStyle();
   const dispatch = useDispatch();
+  
+  const doctorFilter = useMemo(() => {
+    if(serviceFilter){
+      return doctors.filter((item) => item?.room?.medicalDepartment?.id === serviceFilter.medicalDepartment.id)
+    }else{
+      return doctors
+    }
+  } ,[serviceFilter])
 
   const handleHideModal = () => {
     dispatch(hideModal("isShowPatientReceptionModal"));
   };
 
   const handleSubmitForm = (values) => {
-    values.reception = user
+    values.reception = user;
     if (typeOpenModal == GLOBALTYPES.ADD) {
-      dispatch(saveExamination(values, client));
+      dispatch(saveExamination(values, client, socket.current));
     } else if (typeOpenModal == GLOBALTYPES.EDIT) {
-      // dispatch(updateExamination(data))
+      dispatch(updateMedicalExamination(values));
     }
     handleHideModal();
   };
@@ -105,6 +116,18 @@ function PatientReceptionModal() {
       });
     }
   };
+
+  const onSelectService = (e,name,value,setFieldValue) => {
+    if(data){
+      data.medicalExaminationDetailsResponses[0].service = value
+    }
+    setFieldValue(name,value)
+    setServiceFilter(value);
+  };
+
+  const handleChangeDate = (name,value,setFieldValue) => {
+    setFieldValue(name,value)
+  }
 
   const body = (
     <Fade in={isShowPatientReceptionModal.open}>
@@ -163,7 +186,9 @@ function PatientReceptionModal() {
                 />
                 <DateLabel
                   label="Tuổi"
-                  onChange={handleChange}
+                  onChange={(value) => handleChangeDate("patient.dateOfBirth",value, setFieldValue)}
+                  name="patient.dateOfBirth"
+                  value={values["patient"]?.dateOfBirth}
                   size={[3, 3]}
                   disable={type(typeOpenModal)}
                 />
@@ -181,7 +206,17 @@ function PatientReceptionModal() {
                   accessField={"name"}
                   setFieldValue={setFieldValue}
                   name="service"
-                  value={values.service}
+                  onChange={(event, newValue) => onSelectService(event,"service", newValue,setFieldValue)}
+                  value={
+                    data
+                      ? services.find(
+                          (item) =>
+                            item?.id ==
+                            data?.medicalExaminationDetailsResponses[0]?.service
+                              ?.id
+                        )
+                      : values?.service
+                  }
                   label="Loại khám"
                   require={true}
                   size={[3, 3]}
@@ -195,7 +230,7 @@ function PatientReceptionModal() {
                 />
                 <SelectedLabel
                   disable={type(typeOpenModal)}
-                  options={optionsDoctor}
+                  options={doctorFilter}
                   accessField={"fullName"}
                   setFieldValue={setFieldValue}
                   name="doctor"

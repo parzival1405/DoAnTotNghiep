@@ -3,6 +3,8 @@ import { Paper, Card, Typography, Button } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { ChevronLeftOutlined } from "@mui/icons-material";
 import {  useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { clearCurrentPatient } from "../../../redux/actions/currentPatient";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#fdfdff",
@@ -27,8 +29,10 @@ const useStyles = makeStyles((theme) => ({
 export default function PageHeader(props) {
   const classes = useStyles();
   const { title, subTitle, icon, iconBack,className } = props;
+  const dispatch = useDispatch()
 const navigate = useNavigate()
    const onBack = (e) => {
+    dispatch(clearCurrentPatient());
     navigate("/HomePage")
    }
 

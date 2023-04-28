@@ -9,7 +9,7 @@ export const type = (typeOpenModal) => {
 };
 
 export const titleModal = (typeOpenModal,title) => {
-  return typeOpenModal == GLOBALTYPES.ADD
+  return typeOpenModal == GLOBALTYPES.ADD || typeOpenModal == GLOBALTYPES.ADD_BY_ANOTHER_MODAL
     ? `Thêm ${title} mới`
     : typeOpenModal == GLOBALTYPES.EDIT
     ? `Chỉnh sửa ${title}`

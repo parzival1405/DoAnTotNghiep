@@ -24,35 +24,7 @@ import {
 } from "../../../redux/actions/modal";
 import useStyles from "../styles";
 import { GLOBALTYPES } from "../../../redux/actionType";
-const headCells = [
-  { id: "avatar", numeric: false, sizeCellWidth: 80, label: "Avatar" },
-  { id: "account", numeric: false, sizeCellWidth: 120, label: "Tài khoản" },
-  {
-    id: "fullName",
-    numeric: false,
-    label: "Họ tên",
-  },
-  {
-    id: "email",
-    numeric: false,
-    label: "Email",
-  },
-  { id: "phoneNumber", numeric: false, label: "Điện thoại" },
-  { id: "address", numeric: false, label: "Địa chỉ" },
-  { id: "state", numeric: false, sizeCellWidth: 100, label: "Trạng thái" },
-];
-
-const records = [
-  {
-    avatar: "avatar",
-    account: "",
-    fullName: "fullname",
-    email: "email",
-    phoneNumber: "phoneNumber",
-    address: "address",
-    state: "state",
-  },
-];
+import { headCellsAccountSide } from "../../../utils/HeadCells";
 
 const options = [
   { id: "", title: "Không" },
@@ -106,7 +78,7 @@ function AccountSide({ item }) {
     department: "",
   });
   const [recordForEdit, setRecordForEdit] = useState(null);
-
+  const {staffs} = useSelector((state) => state.staff)
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
@@ -115,7 +87,7 @@ function AccountSide({ item }) {
 
   const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(records, headCells, filterFn);
+    useTable(staffs, headCellsAccountSide, filterFn);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
 
@@ -203,10 +175,10 @@ function AccountSide({ item }) {
           {recordsAfterPagingAndSorting().map((item) => {
             return (
               <TableRow
-                handleClick={handleClick}
+                handleDoubleClick={handleClick}
                 key={item.id}
                 item={item}
-                headCells={headCells}
+                headCells={headCellsAccountSide}
                 listItemMenu={[
                   { title: "Chỉnh sửa", onClick: handleClickShowEditModal },
                   { title: "Xem", onClick: handleClickShowViewModal },

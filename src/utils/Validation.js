@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import { ErrorOutline } from "@mui/material";
 
 export const validationLoginClinic = Yup.object().shape({
   phone_number: Yup.string()

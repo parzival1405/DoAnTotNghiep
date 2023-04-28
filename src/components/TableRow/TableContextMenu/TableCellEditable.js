@@ -1,23 +1,21 @@
-import { TableCell } from "@mui/material";
+import { TableCell, TextField } from "@mui/material";
 import React, { useState } from "react";
 
-function TableCellEditable({ itemhead, value, sizeCellWidth }) {
+function TableCellEditable({ itemhead,item, value, sizeCellWidth,handleChange }) {
   const [valueInput, setValueInput] = useState(value);
-
-  const onChange = (e) => {
-    setValueInput(e.target.value);
-  };
 
   return (
     <TableCell
       style={{ width: `${sizeCellWidth}px`}}
       align={itemhead.numeric ? "right" : "left" }
     >
-      <input
+      <TextField
         min="1"
+        size="small"
         type="number"
-        value={valueInput}
-        onChange={onChange}
+        InputProps={{ inputProps: { min: 0} }}
+        // value={item.values}
+        onChange={(event) => itemhead.onChange(item,event)}
       />
     </TableCell>
   );

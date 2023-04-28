@@ -47,7 +47,7 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 function AddPermissionModal() {
-  const { isShowPermissionModal } = useSelector((state) => state.modal);
+  const isShowPermissionModal= useSelector((state) => state.modal.isShowPermissionModal);
   const { open, typeOpenModal } = isShowPermissionModal;
 
   const [valueOption, setValueOption] = useState([]);

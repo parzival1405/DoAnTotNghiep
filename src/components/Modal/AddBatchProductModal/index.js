@@ -1,15 +1,14 @@
-import { Add, Close, LabelOutlined, Save } from "@mui/icons-material";
+import { Add, Close, Delete, Edit, Save } from "@mui/icons-material";
 import {
+  Box,
   Button,
   Divider,
   Fade,
   Grid,
-  InputAdornment,
+  IconButton,
   Paper,
-  RadioGroup,
-  TableBody,
-  TextField,
 } from "@mui/material";
+import { DataGrid as MUIDataGrid } from "@mui/x-data-grid";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,7 +30,15 @@ import TableRow from "../../TableRow/TableContextMenu";
 import { GLOBALTYPES } from "../../../redux/actionType";
 import { titleModal, type } from "../../../utils/TypeOpen";
 import { headCellsProductAddBatchProduct } from "../../../utils/HeadCells";
-
+import useDatagrid from "../../../hooks/useDatagrid";
+import {
+  addNewProductToBatch,
+  removeNewProductInBatch,
+  saveArrayDrug,
+  saveBatchProduct,
+  updateNewProductInBatch,
+} from "../../../redux/actions/batchProduct";
+import { getCurrentDateString } from "../../../utils/Calc";
 const useStyle = makeStyles((theme) => ({
   paper: {
     width: "70%",
@@ -76,64 +83,159 @@ const optionsPay = [
   { id: "2", title: "Chuyển khoản" },
 ];
 
+const initialValues = {};
+
 function AddBatchProductModal() {
-  const { isShowAddBatchProductModal } = useSelector((state) => state.modal);
+  const [hoveredRow, setHoveredRow] = useState(null);
+
+  const isShowAddBatchProductModal = useSelector(
+    (state) => state.modal.isShowAddBatchProductModal
+  );
   const { products, category } = useSelector((state) => state.product);
   const { suppliers } = useSelector((state) => state.supplier);
-  const [valueProduct, setValueProduct] = useState("");
-  const [newProducts, setNewProducts] = useState([]);
   const { user } = useSelector((state) => state.auth);
-  const { open, typeOpenModal } = isShowAddBatchProductModal;
+  const newAddProducts = useSelector(
+    (state) => state.batchProduct.newAddProducts
+  );
+  const { open, typeOpenModal, data } = isShowAddBatchProductModal;
   const classes = useStyle();
   const dispatch = useDispatch();
+
+  let newHeaderFunction = headCellsProductAddBatchProduct;
+  if (!newHeaderFunction.filter((e) => e.field === "actions").length > 0) {
+    console.log("here");
+    newHeaderFunction.push({
+      field: "actions",
+      headerName: "",
+      width: 50,
+      sortable: false,
+      disableColumnMenu: true,
+      renderCell: (params) => {
+        if (hoveredRow === params.id) {
+          return (
+            <Box
+              sx={{
+                backgroundColor: "whitesmoke",
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <IconButton onClick={() => handleRemoveProduct(params)}>
+                <Delete />
+              </IconButton>
+            </Box>
+          );
+        } else return null;
+      },
+    });
+  }
+
+  const onMouseEnterRow = (event) => {
+    const id = Number(event.currentTarget.getAttribute("data-id"));
+    setHoveredRow(id);
+  };
+
+  const onMouseLeaveRow = (event) => {
+    setHoveredRow(null);
+  };
+
+  const onSelectedDrug = (e, item) => {
+    if (newAddProducts.filter((itemmap) => itemmap.id == item.id).length == 0) {
+      dispatch(addNewProductToBatch(item));
+    }
+  };
+
+  const handleRemoveProduct = (item) => {
+    if (item) {
+      dispatch(removeNewProductInBatch(item));
+    }
+  };
 
   const handleHideModal = () => {
     dispatch(hideModal("isShowAddBatchProductModal"));
   };
 
-  const [filterFn, setFilterFn] = useState({
-    fn: (items) => {
-      return items;
-    },
-  });
-
   const handleClickShowModalAddSupplier = () => {
-    dispatch(ShowAddSupplierModal(GLOBALTYPES.ADD));
+    dispatch(ShowAddSupplierModal(GLOBALTYPES.ADD_BY_ANOTHER_MODAL));
   };
 
   const handleClickShowModalAddDrug = () => {
-    dispatch(ShowAddDrugModal(GLOBALTYPES.ADD));
+    dispatch(ShowAddDrugModal(GLOBALTYPES.ADD_BY_ANOTHER_MODAL));
   };
 
-  const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(newProducts, headCellsProductAddBatchProduct, filterFn);
+  const { DataGrid } = useDatagrid(
+    newHeaderFunction,
+    onMouseEnterRow,
+    onMouseLeaveRow
+  );
 
-  const onSelectedDrug = (e, item) => {
-    setValueProduct("");
-    if (item) {
-      setNewProducts((prev) => [...prev, item]);
+  const handleSubmitForm = async (values) => {
+    const newProductArray = newAddProducts.filter((item) => item.type == "NEW");
+
+    dispatch(saveArrayDrug(newProductArray));
+
+    if (newAddProducts.length > 0) {
+      const currentDate = getCurrentDateString();
+      const data = {
+        name: values.name,
+        description: values.description,
+        totalPrice: values.totalPrice,
+        receiptDate: currentDate,
+        userId: user.id,
+        supplierId: values.departmentServices.id,
+        totalPrice: values.totalPrice,
+        settlement: 0,
+        paidPrice: values.paid,
+        debt: values.debt,
+        detailBatchDrug: newAddProducts.map((item) => ({
+          drugId: item.id,
+          quality: item.quantity,
+          unit: item.unit,
+          price: parseInt(item.price),
+          manufactureDate: currentDate,
+          expiredDate: "01/01/2030",
+        })),
+      };
+
+      dispatch(saveBatchProduct(data));
+      handleHideModal();
+    } else {
+      alert("Không có sản phẩm");
     }
   };
 
-  const handleRemoveDrug = (item) => {
-    // setRecords((prev) => prev.filter(drug => item.id != drug.id))
+  const calcTotalPrice = (products) => {
+    return products.reduce(
+      (accumulator, item) => accumulator + item.quantity * item.price,
+      0
+    );
   };
 
-  const handleSubmitForm = (values) => {};
+  const handleChangeCells = (params, setFieldValue) => {
+    const updatedRow = { ...params, isNew: false };
+    const oldDevices = newAddProducts.map((dev) =>
+      dev.id === params.id ? params : { ...dev, ...params }
+    );
 
-  const handleRemoveProduct = (item) =>{
-    setNewProducts((prev) => prev.filter((i) => i.id != item.id ));
-  }
-
+    setFieldValue("totalPrice", calcTotalPrice(oldDevices));
+    dispatch(updateNewProductInBatch(updatedRow));
+    return updatedRow;
+  };
+  
   const body = (
-    <Fade in={isShowAddBatchProductModal.open}>
+    <Fade in={open}>
       <Paper className={classes.paper} id="modal-patient-reception">
         <ModalHeader
           title={titleModal(typeOpenModal, "phiếu nhập")}
           onClose={handleHideModal}
         />
         <Formik
-          initialValues={{}}
+          initialValues={
+            typeOpenModal == GLOBALTYPES.ADD ? initialValues : data
+          }
           //   validationSchema={validateionChangeGroupName}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
@@ -164,41 +266,68 @@ function AddBatchProductModal() {
                 rowSpacing={1}
                 className={classes.gridCustomInput}
               >
+                <InputLabel
+                  disable={type(typeOpenModal)}
+                  label="Tên lô thuốc"
+                  name="name"
+                  value={data ? data.name : values?.name}
+                  onChange={handleChange}
+                  size={[2, 10]}
+                />
                 <SelectedLabel
+                  disable={type(typeOpenModal)}
                   label="Nhà CC"
                   options={suppliers}
                   require={true}
-                  size={[2, 5]}
+                  size={data ? [2, 6] : [2, 5]}
                   accessField={"name"}
                   setFieldValue={setFieldValue}
                   name="departmentServices"
-                  value={values?.departmentServices}
+                  value={data ? data.supplier : values?.departmentServices}
                 />
-                <Grid item xs={1} className={classes.button}>
-                  <Controls.Button
-                    variant="contained"
-                    text="Thêm"
-                    color="primary"
-                    startIcon={<Add />}
-                    onClick={handleClickShowModalAddSupplier}
-                  />
-                </Grid>
-                <InputLabel label="Tổng cộng" disable={true} size={[2, 2]} />
+                {typeOpenModal == GLOBALTYPES.ADD && (
+                  <Grid item xs={1} className={classes.button}>
+                    <Controls.Button
+                      variant="contained"
+                      text="Thêm"
+                      color="primary"
+                      startIcon={<Add />}
+                      onClick={handleClickShowModalAddSupplier}
+                    />
+                  </Grid>
+                )}
+                <InputLabel
+                  label="Tổng cộng"
+                  name="totalPrice"
+                  value={data ? data.totalPrice : values?.totalPrice}
+                  disable={true}
+                  size={[2, 2]}
+                />
                 <DateLabel
+                  disable={type(typeOpenModal)}
                   label="Ngày nhập"
                   require={true}
-                  currentDate={true}
+                  currentDate={data ? false : true}
+                  value={data ? data.receiptDate : null}
                   size={[2, 2]}
                 />
                 <InputLabel
                   label="Người nhập"
-                  value={user.fullName}
+                  value={data ? data.user.fullName : user.fullName}
                   disable={true}
                   require={true}
                   size={[2, 2]}
                 />
-                <InputLabel label="Quyết toán" disable={true} size={[2, 2]} />
+                <InputLabel
+                  label="Quyết toán"
+                  name="settlement"
+                  values={data ? data.settlement : values.settlement}
+                  onChange={handleChange}
+                  disable={true}
+                  size={[2, 2]}
+                />
                 <SelectedLabel
+                  disable={type(typeOpenModal)}
                   label="Hình thức"
                   options={optionsPay}
                   name="type"
@@ -208,16 +337,26 @@ function AddBatchProductModal() {
                   size={[2, 6]}
                 />
                 <InputLabel
+                  disable={type(typeOpenModal)}
+                  type="number"
                   label="Đã trả"
                   name="paid"
                   onChange={handleChange}
                   size={[2, 2]}
                 />
-                <InputLabel label="Ghi chú" size={[2, 6]} />
+                <InputLabel
+                  disable={type(typeOpenModal)}
+                  label="Ghi chú"
+                  size={[2, 6]}
+                  name="description"
+                  onChange={handleChange}
+                />
                 <InputLabel
                   label="Công nợ"
-                  name="paid"
-                  value={parseFloat(values.paid) - 1000 || 0}
+                  name="debt"
+                  value={
+                    parseFloat(values.paid) - parseFloat(values.totalPrice) || 0
+                  }
                   disable={true}
                   size={[2, 2]}
                 />
@@ -230,10 +369,11 @@ function AddBatchProductModal() {
                 sx={{ mt: 1 }}
               >
                 <SelectedLabel
+                  disable={type(typeOpenModal)}
                   label="Tên thuốc"
                   options={products}
                   require={true}
-                  size={[2, 5]}
+                  size={data ? [2, 6] : [2, 5]}
                   accessField={"name"}
                   setFieldValue={setFieldValue}
                   name="products"
@@ -241,15 +381,17 @@ function AddBatchProductModal() {
                     onSelectedDrug(event, newValue)
                   }
                 />
-                <Grid item xs={1} className={classes.button}>
-                  <Controls.Button
-                    variant="contained"
-                    text="Thêm"
-                    color="primary"
-                    startIcon={<Add />}
-                    onClick={handleClickShowModalAddDrug}
-                  />
-                </Grid>
+                {typeOpenModal == GLOBALTYPES.ADD && (
+                  <Grid item xs={1} className={classes.button}>
+                    <Controls.Button
+                      variant="contained"
+                      text="Thêm"
+                      color="primary"
+                      startIcon={<Add />}
+                      onClick={handleClickShowModalAddDrug}
+                    />
+                  </Grid>
+                )}
                 <SelectedLabel
                   // label="Nhóm SP"
                   options={category}
@@ -263,52 +405,41 @@ function AddBatchProductModal() {
                   // }
                 />
               </Grid>
-              <>
-                <TblContainer className={classes.table}>
-                  <TblHead />
-                  <TableBody
-                    style={{
-                      overflowY: "scroll",
-                      height: "150px",
-                      display: "block",
-                    }}
-                  >
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      defaultValue="female"
-                      name="radio-buttons-group"
-                    >
-                      {recordsAfterPagingAndSorting().map((item) => {
-                        return (
-                          <TableRow
-                            handleDoubleClick={handleRemoveDrug}
-                            key={item.id}
-                            item={item}
-                            headCells={headCellsProductAddBatchProduct}
-                            listItemMenu={[
-                              {
-                                title: "Xóa",
-                                onClick: () =>
-                                  handleRemoveProduct(item),
-                              },
-                            ]}
-                          />
-                        );
-                      })}
-                    </RadioGroup>
-                  </TableBody>
-                </TblContainer>
-                <TblPagination />
-              </>
+              <Box style={{ height: "300px" }}>
+                <DataGrid
+                  disable={data ? true : false}
+                  records={
+                    data
+                      ? data.detailBatchDrugResponses.map((item, index) => ({
+                          stt: index + 1,
+                          name: item.drug.name,
+                          quantity: item.quality,
+                          ...item,
+                        }))
+                      : newAddProducts.map((item, index) => ({
+                          stt: index + 1,
+                          ...item,
+                        }))
+                  }
+                  saveDeviceCell={(params) => {
+                    handleChangeCells(params, setFieldValue);
+                  }}
+                />
+              </Box>
 
               {/* button -------------------- */}
               <div className={classes.action}>
                 <Controls.Button
                   color="primary"
                   variant="contained"
-                  type="submit"
-                  isSubmitting={isSubmitting}
-                  text="Lưu"
+                  // type="submit"
+                  disable={isSubmitting}
+                  onKeyPress={(e) => {
+                    console.log("here");
+                    e.which === 13 && e.preventDefault();
+                  }}
+                  onClick={() => handleSubmitForm(values)}
+                  text="Thanh toán"
                   startIcon={<Save />}
                   sx={{ mr: 1 }}
                 />
@@ -327,7 +458,7 @@ function AddBatchProductModal() {
       </Paper>
     </Fade>
   );
-  return <BaseModal body={body} isShow={isShowAddBatchProductModal.open} />;
+  return <BaseModal body={body} isShow={open} />;
 }
 
-export default AddBatchProductModal;
+export default React.memo(AddBatchProductModal);

@@ -16,14 +16,15 @@ export default (state = initState, action) => {
         ...state,
         medicalExaminations: [action.payload, ...state.medicalExaminations],
       };
-
+      case GLOBALTYPES.ALL_EXAMINATION_ROLE_DOCTOR:
+        return {
+          ...state,
+          medicalExaminationsDoctorData: action.payload,
+        };
     case GLOBALTYPES.DOCTOR_RECEIVE_EXAMINATION:
       return {
         ...state,
-        medicalExaminationsDoctorData: action.payload,
-        // state.medicalExaminationsDoctorData.length == 0
-        //   ? [action.payload]
-        //   : [action.payload, ...state.medicalExaminationsDoctorData],
+        medicalExaminationsDoctorData: [action.payload, ...state.medicalExaminationsDoctorData],
       };
     case GLOBALTYPES.UPDATE_DATA_CURRENT_EXAMINATION:
       const newDataExamination = action.payload;

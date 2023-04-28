@@ -14,9 +14,8 @@ import {
 import { makeStyles } from "@mui/styles";
 import React from "react";
 const { app } = window.require("@electron/remote");
-
-const dialog = window.electron.dialog;
-const BrowserWindow = window.electron.BrowserWindow;
+const dialog = window.electron?.dialog;
+const BrowserWindow = window.electron?.BrowserWindow;
 const pathModule = window.require("path");
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -34,7 +33,7 @@ let options = {
   title: "Chọn folder lưu ảnh",
 
   // See place holder 2 in above image
-  defaultPath: pathModule.join(app.getAppPath(), ".."),
+  defaultPath: pathModule?.join(app?.getAppPath(), ".."),
 
   // See place holder 3 in above image
   buttonLabel: "Chọn làm thư mục lưu ảnh chính",
@@ -57,7 +56,7 @@ function FolderViewer({ files, currentFolderName, onBack, onOpen }) {
         </IconButton>
         <Button
           variant="outlined"
-          onClick={handleConfigFolder}
+          // onClick={handleConfigFolder}
           startIcon={<DriveFileMove />}
           size="small"
         >

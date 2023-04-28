@@ -44,7 +44,9 @@ const useStyles = makeStyles((theme) => ({
 function ClinicalService() {
   const classes = useStyles();
   const [filter, setFiler] = useState("");
-  const { clinicalService } = useSelector((state) => state.currentPatient);
+  const { clinicalService,addOrDelete } = useSelector((state) => state.currentPatient);
+
+  console.log(addOrDelete);
   const { services } = useSelector((state) => state.service);
   
   const dispatch = useDispatch();
@@ -69,6 +71,7 @@ function ClinicalService() {
       dispatch(addClinicalService(service))
     }
   };
+
 
   const handleRemoveClinicalService = (service) => {
     dispatch(removeClinicalService(service))
@@ -104,7 +107,7 @@ function ClinicalService() {
       <TblContainer>
         <TblHead />
         <TableBody
-          style={{ overflowY: "scroll", height: "360px", display: "block" }}
+          style={{ overflowY: "scroll", height: "340px", display: "block" }}
         >
           {recordsAfterPagingAndSorting().map((item) => {
             return (
@@ -115,7 +118,7 @@ function ClinicalService() {
                 key={item.id}
                 item={item}
                 headCells={headCellsClinicalServiceCurrentPatient}
-                listItemMenu={[{ title: "Xóa" ,onClick: () => handleRemoveClinicalService(item)}]}
+                listItemMenu={[{ title: "Xóa" , onClick: () => handleRemoveClinicalService(item)}]}
               />
             );
           })}

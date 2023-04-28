@@ -18,7 +18,7 @@ import Controls from "../../Form/controls/Controls";
 import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import { GLOBALTYPES } from "../../../redux/actionType";
 import { titleModal, type } from "../../../utils/TypeOpen";
-import { saveService } from "../../../redux/actions/service";
+import { saveService, updateService } from "../../../redux/actions/service";
 const useStyle = makeStyles((theme) => ({
   paper: {
     width: "70%",
@@ -45,20 +45,19 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-
 const initialValues = {
-  id:null,
-  name:null,
-  price:null,
+  id: null,
+  name: null,
+  price: null,
   description: "",
-  departmentServices:"",
+  departmentServices: "",
   note: "",
 };
 
 function AddServiceSide() {
-  const { isShowAddServiceModal } = useSelector((state) => state.modal);
+  const isShowAddServiceModal = useSelector((state) => state.modal.isShowAddServiceModal);
   const { departmentServices } = useSelector((state) => state.service);
-  const { open, typeOpenModal } = isShowAddServiceModal;
+  const { open, typeOpenModal, data } = isShowAddServiceModal;
   const classes = useStyle();
   const dispatch = useDispatch();
 
@@ -71,9 +70,19 @@ function AddServiceSide() {
   };
 
   const handleSubmitForm = (values) => {
-    console.log(values)
-    // dispatch(saveService(values))
-    handleHideModal()
+    const formData = {
+      id:values.id,
+      name:values.name,
+      price:values.price,
+      medicalDepartmentId:values.medicalDepartment.id,
+      categoryServiceId:values.categoryService.id
+    }
+    if(typeOpenModal == GLOBALTYPES.ADD){
+      // dispatch(saveService(values))
+    }else{
+      dispatch(updateService(formData))
+    }
+    handleHideModal();
   };
 
   const body = (
@@ -84,7 +93,9 @@ function AddServiceSide() {
           onClose={handleHideModal}
         />
         <Formik
-          initialValues={initialValues}
+          initialValues={
+            typeOpenModal == GLOBALTYPES.ADD ? initialValues : data
+          }
           //   validationSchema={validateionChangeGroupName}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
@@ -124,6 +135,7 @@ function AddServiceSide() {
                   size={[2, 4]}
                 />
                 <InputLabel
+                  disable={type(typeOpenModal)}
                   label="Tên dịch vụ"
                   require={true}
                   name="name"
@@ -134,23 +146,26 @@ function AddServiceSide() {
                 <SelectedLabel
                   label="Nhóm dịch vụ"
                   require={true}
-                  size={[2, 3]}
+                  size={typeOpenModal != GLOBALTYPES.VIEW ? [2, 3] : [2, 4]}
                   disable={type(typeOpenModal)}
                   options={departmentServices}
                   accessField={"name"}
                   setFieldValue={setFieldValue}
-                  name="departmentServices"
-                  value={values?.departmentServices}
+                  categoryService
+                  name="categoryService"
+                  value={values?.categoryService}
                 />
-                <Grid item xs={1} className={classes.button}>
-                  <Controls.Button
-                    variant="contained"
-                    text="Thêm"
-                    color="primary"
-                    startIcon={<Add />}
-                    onClick={handleClickShowAddTypeServiceModal}
-                  />
-                </Grid>
+                {typeOpenModal != GLOBALTYPES.VIEW && (
+                  <Grid item xs={1} className={classes.button}>
+                    <Controls.Button
+                      variant="contained"
+                      text="Thêm"
+                      color="primary"
+                      startIcon={<Add />}
+                      onClick={handleClickShowAddTypeServiceModal}
+                    />
+                  </Grid>
+                )}
                 <SelectedLabel
                   label="Phòng ban"
                   require={true}
@@ -159,10 +174,11 @@ function AddServiceSide() {
                   options={departmentServices}
                   accessField={"name"}
                   setFieldValue={setFieldValue}
-                  name="departmentServices"
-                  value={values?.departmentServices}
+                  name="medicalDepartment"
+                  value={values?.medicalDepartment}
                 />
                 <InputLabel
+                  disable={type(typeOpenModal)}
                   label="Giá"
                   name="price"
                   value={values?.price}
@@ -171,6 +187,7 @@ function AddServiceSide() {
                 />
                 <Grid item xs={6} />
                 <InputLabel
+                  disable={type(typeOpenModal)}
                   label="Mô tả"
                   name="description"
                   value={values?.description}
@@ -178,6 +195,7 @@ function AddServiceSide() {
                   size={[2, 10]}
                 />
                 <InputLabel
+                  disable={type(typeOpenModal)}
                   label="Ghi chú"
                   name="note"
                   value={values?.note}
@@ -188,15 +206,16 @@ function AddServiceSide() {
 
               {/* button -------------------- */}
               <div className={classes.action}>
-                <Controls.Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  isSubmitting={isSubmitting}
-                  text="Lưu"
-                  startIcon={<Save />}
-                  sx={{ mr: 1 }}
-                />
+                {typeOpenModal != GLOBALTYPES.VIEW && (
+                  <Controls.Button
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    text="Lưu"
+                    startIcon={<Save />}
+                    sx={{ mr: 1 }}
+                  />
+                )}
 
                 <Controls.Button
                   variant="contained"

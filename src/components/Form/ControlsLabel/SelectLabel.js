@@ -57,23 +57,9 @@ function SelectedLabel(props) {
     size,
     sizeInput,
     options,
+    handleOptionEqualToValue
   } = props;
   
-  // const [valueOption, setValueOption] = useState(options[0]);
-
-  // const handleChangeValue = (event, newValue) => {
-
-  //   if (onChange) {
-  //     onChange(newValue);
-  //     setValueOption(newValue);
-  //   } else {
-  //     if (newValue == null) {
-  //       setValueOption(options[0]);
-  //     } else {
-  //       setValueOption(newValue);
-  //     }
-  //   }
-  // };
 
   return (
     <>
@@ -92,6 +78,7 @@ function SelectedLabel(props) {
           name={name}
           onChange={onChange ? onChange : (e,option) => setFieldValue(name,option)}
           getOptionLabel={(option) => resolve(option,accessField) || ""}
+          isOptionEqualToValue={(option) => option.id === value?.id || option.id === value}
           renderInput={(params) => (
             <TextField {...params}  />
           )}

@@ -1,5 +1,15 @@
 import { GLOBALTYPES } from "../actionType";
 import * as api from "../../api";
+
+
+export const ShowReadQRCodeModal = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.SHOW_READ_QR_CODE,
+    });
+  } catch (err) {}
+};
+
 export const ShowOTP = () => async (dispatch) => {
   try {
     dispatch({
@@ -51,6 +61,13 @@ export const ShowAddScheduleModal = (typeOpen, item) => async (dispatch) => {
       type: GLOBALTYPES.GET_ALL_SERVICE,
       payload: serviceResponse.data,
     });
+
+    const doctorResponse = await api.getAllStaffByRole("DOCTOR");
+    dispatch({
+      type: GLOBALTYPES.GET_ALL_DOCTOR,
+      payload: doctorResponse.data,
+    });
+
     dispatch({
       type: GLOBALTYPES.SHOW_ADD_SCHEDULE_MODAL,
       payload: { type: typeOpen, data: item },
@@ -93,11 +110,29 @@ export const ShowAddTypeServiceModal = (typeOpen,item) => async (dispatch) => {
   } catch (err) {}
 };
 
-export const ShowAddDrugModal = (typeOpen) => async (dispatch) => {
+export const ShowAddDrugModal = (typeOpen,item) => async (dispatch) => {
   try {
     dispatch({
       type: GLOBALTYPES.SHOW_ADD_DRUG_MODAL,
-      payload: typeOpen,
+      payload: { type: typeOpen, data: item },
+    });
+  } catch (err) {}
+};
+
+export const ShowUpdateServiceCLSModal = (typeOpen,item) => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.SHOW_UPDATE_SERVICE_CLS_MODAL,
+      payload: { type: typeOpen, data: item },
+    });
+  } catch (err) {}
+};
+
+export const ShowAddPrescriptionModal = (typeOpen,item) => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.SHOW_ADD_PRESCRIPTION_MODAL,
+      payload: { type: typeOpen, data: item },
     });
   } catch (err) {}
 };

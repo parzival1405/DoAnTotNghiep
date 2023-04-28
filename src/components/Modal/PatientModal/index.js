@@ -23,6 +23,8 @@ import TableRow from "../../TableRow/TableContextMenu";
 import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
 import { titleModal, type } from "../../../utils/TypeOpen";
+import { GLOBALTYPES } from "../../../redux/actionType";
+import { updatePatient } from "../../../redux/actions/patient";
 
 const useStyle = makeStyles((theme) => ({
   paper: {
@@ -55,14 +57,18 @@ const useStyle = makeStyles((theme) => ({
 
 const optionsSex = [
   {
-    id: "male",
+    id: true,
     title: "Nam",
   },
-  { id: "female", title: "Nữ" },
+  { id: false, title: "Nữ" },
 ];
 
+const initialValues = {};
+
 function PatientModal() {
-  const { isShowPatientModal } = useSelector((state) => state.modal);
+  const isShowPatientModal = useSelector(
+    (state) => state.modal.isShowPatientModal
+  );
   const { open, typeOpenModal, data } = isShowPatientModal;
   const classes = useStyle();
   const dispatch = useDispatch();
@@ -77,7 +83,16 @@ function PatientModal() {
     dispatch(hideModal("isShowPatientModal"));
   };
 
-  const handleSubmitForm = (values) => {};
+  const handleSubmitForm = (values) => {
+    if (typeOpenModal == GLOBALTYPES.EDIT) {
+      dispatch(updatePatient({...values,sex:values.sex.id}))
+      handleHideModal();
+    }
+  };
+
+  const handleChangeDate = (field, value, setFieldValue) => {
+    setFieldValue(field, value);
+  };
 
   const body = (
     <Fade in={isShowPatientModal.open}>
@@ -87,7 +102,9 @@ function PatientModal() {
           onClose={handleHideModal}
         />
         <Formik
-          initialValues={{}}
+          initialValues={
+            typeOpenModal == GLOBALTYPES.ADD ? initialValues : data
+          }
           //   validationSchema={validateionChangeGroupName}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
@@ -104,6 +121,7 @@ function PatientModal() {
             handleChange,
             handleSubmit,
             isSubmitting,
+            setFieldValue,
           }) => (
             <Form
               action=""
@@ -118,7 +136,7 @@ function PatientModal() {
                 className={classes.gridCustomInput}
               >
                 <InputLabel
-                  disable={type(typeOpenModal)}
+                  disable={true}
                   label="Mã bệnh nhân"
                   value={data?.id}
                   require={true}
@@ -127,35 +145,52 @@ function PatientModal() {
                 <InputLabel
                   disable={type(typeOpenModal)}
                   label="Tên Bệnh nhân"
+                  name="patient.fullName"
                   require={true}
                   size={[3, 3]}
-                  value={data?.fullName}
+                  value={values.fullName || ""}
+                  onChange={handleChange}
                 />
 
                 <DateLabel
                   label="Ngày sinh"
                   size={[3, 3]}
+                  onChange={(value) =>
+                    handleChangeDate("dateOfBirth", value, setFieldValue)
+                  }
                   disable={type(typeOpenModal)}
+                  value={values.dateOfBirth || ""}
                 />
                 <SelectedLabel
                   disable={type(typeOpenModal)}
                   options={optionsSex}
+                  setFieldValue={setFieldValue}
                   label="Giới tính"
-                  value={optionsSex[0].id}
+                  value={
+                    data
+                      ? optionsSex.find((item) => item.id == data.sex)
+                      : values.sex
+                  }
+                  name={"sex"}
                   require={true}
                   size={[3, 3]}
+                  accessField={"title"}
                 />
 
                 <InputLabel
                   disable={type(typeOpenModal)}
+                  onChange={handleChange}
                   label="Điện thoại"
-                  value={data?.phoneNumber}
+                  name="phoneNumber"
+                  value={values.phoneNumber || ""}
                   size={[3, 3]}
                 />
                 <InputLabel
                   disable={type(typeOpenModal)}
+                  onChange={handleChange}
                   label="CCCD/CMND"
-                  value={data?.idCard}
+                  name="idCard"
+                  value={values.idCard || ""}
                   size={[3, 3]}
                 />
 
@@ -173,8 +208,10 @@ function PatientModal() {
                 <InputLabel
                   disable={type(typeOpenModal)}
                   label="Địa chỉ"
+                  name="address"
+                  onChange={handleChange}
                   size={[3, 9]}
-                  value={data?.address}
+                  value={values.address || ""}
                 />
                 <InputLabel
                   disable={type(typeOpenModal)}
@@ -185,15 +222,17 @@ function PatientModal() {
 
               {/* button -------------------- */}
               <div className={classes.action}>
-                <Controls.Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  isSubmitting={isSubmitting}
-                  text="Lưu"
-                  startIcon={<Save />}
-                  sx={{ mr: 1 }}
-                />
+                {typeOpenModal != GLOBALTYPES.VIEW && (
+                  <Controls.Button
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    isSubmitting={isSubmitting}
+                    text="Lưu"
+                    startIcon={<Save />}
+                    sx={{ mr: 1 }}
+                  />
+                )}
 
                 <Controls.Button
                   variant="contained"

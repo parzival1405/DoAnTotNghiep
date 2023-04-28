@@ -58,11 +58,11 @@ function AddServiceGroupsSide({ item }) {
     handleClickShowViewModal();
   };
 
-  const handleClickShowEditModal = () => {
-    dispatch(ShowAddServiceModal(GLOBALTYPES.EDIT));
+  const handleClickShowEditModal = (item) => {
+    dispatch(ShowAddServiceModal(GLOBALTYPES.EDIT,item));
   };
-  const handleClickShowViewModal = () => {
-    dispatch(ShowAddServiceModal(GLOBALTYPES.VIEW));
+  const handleClickShowViewModal = (item) => {
+    dispatch(ShowAddServiceModal(GLOBALTYPES.VIEW,item));
   };
   const handleClickShowAddModal = () => {
     dispatch(ShowAddServiceModal(GLOBALTYPES.ADD));
@@ -106,8 +106,8 @@ function AddServiceGroupsSide({ item }) {
                 item={item}
                 headCells={headCellsListServiceSide}
                 listItemMenu={[
-                  { title: "Chỉnh sửa", onClick: handleClickShowEditModal },
-                  { title: "Xem", onClick: handleClickShowViewModal },
+                  { title: "Chỉnh sửa", onClick:() => handleClickShowEditModal(item) },
+                  { title: "Xem", onClick: () => handleClickShowViewModal(item) },
                 ]}
               />
             );

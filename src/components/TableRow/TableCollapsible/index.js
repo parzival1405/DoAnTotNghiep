@@ -14,6 +14,7 @@ import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import useTable from "../../../hooks/useTable";
 import { resolve } from "../../../utils/Calc";
+import dayjs, { Dayjs } from 'dayjs'
 
 const useStyles = makeStyles((theme) => ({
   tableRow: {
@@ -62,7 +63,7 @@ function TableCollapsible({ item, headCells, headCollapseCells }) {
               >
                 {itemhead.calc
                   ? itemhead.calc.fun(item["quantity"], item["price"])
-                  : resolve(item, itemhead.id)}
+                  : itemhead.type == "date" ? dayjs(resolve(item, itemhead.id)).format('DD/MM/YYYY') :  resolve(item, itemhead.id)}
               </TableCell>
             )
         )}

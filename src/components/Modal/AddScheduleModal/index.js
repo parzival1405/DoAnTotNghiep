@@ -1,15 +1,7 @@
-import { Close, LabelOutlined, Save } from "@mui/icons-material";
-import {
-  Fade,
-  Grid,
-  InputAdornment,
-  Paper,
-  RadioGroup,
-  TableBody,
-  TextField,
-} from "@mui/material";
+import { Close, Save, Start } from "@mui/icons-material";
+import { Fade, Grid, Paper } from "@mui/material";
 import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { hideModal } from "../../../redux/actions/modal";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
@@ -18,14 +10,17 @@ import BaseModal from "../BaseModal";
 import { makeStyles } from "@mui/styles";
 import ModalHeader from "../ModalHeader";
 import Controls from "../../Form/controls/Controls";
-import useTable from "../../../hooks/useTable";
-import TableRow from "../../TableRow/TableContextMenu";
 import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
 import { type } from "../../../utils/TypeOpen";
 import { GLOBALTYPES } from "../../../redux/actionType";
 import * as api from "../../../api";
-import { saveExaminationLetter } from "../../../redux/actions/medicalLetter";
+import {
+  saveExaminationFromLetter,
+  saveExaminationLetter,
+  updateMedicalLetter,
+} from "../../../redux/actions/medicalLetter";
+import { getCurrentDateString } from "../../../utils/Calc";
 const useStyle = makeStyles((theme) => ({
   paper: {
     width: "70%",
@@ -57,10 +52,10 @@ const useStyle = makeStyles((theme) => ({
 
 const optionsSex = [
   {
-    id: "male",
+    id: true,
     title: "Nam",
   },
-  { id: "female", title: "Nữ" },
+  { id: false, title: "Nữ" },
 ];
 
 const optionsAppointment = [
@@ -79,23 +74,14 @@ const optionsTimeSlot = [
   { id: "2", title: "10h - 11h" },
 ];
 
-const optionsDoctor = [
-  { id: 1, fullName: "BS 1" },
-  {
-    id: 2,
-    fullName: "BS 2",
-  },
-  { id: 3, fullName: "BS 3" },
-];
-
 const initialValues = {
-  patient: {
-    phoneNumber: null,
-    fullName: null,
-    sex: null,
-    address: null,
-    email: null,
-  },
+  phoneNumber: "",
+  patientName: "",
+  sex: null,
+  address: "",
+  email: "",
+  dateOfBirth: null,
+  date: getCurrentDateString(),
   doctor: null,
   diagnose: "",
   status: "WAIT",
@@ -107,9 +93,15 @@ const initialValues = {
 };
 
 function AddScheduleModal() {
-  const { isShowAddScheduleModal } = useSelector((state) => state.modal);
+  const isShowAddScheduleModal = useSelector(
+    (state) => state.modal.isShowAddScheduleModal
+  );
   const { open, typeOpenModal, data } = isShowAddScheduleModal;
   const { services } = useSelector((state) => state.service);
+  const doctors = useSelector((state) => state.staff.doctors);
+  const [servicesFilter, setServicesFilter] = useState(null);
+  const { client } = useSelector((state) => state.stomp);
+  const { socket } = useSelector((state) => state.socket);
   const { user } = useSelector((state) => state.auth);
   const classes = useStyle();
   const dispatch = useDispatch();
@@ -118,6 +110,21 @@ function AddScheduleModal() {
     dispatch(hideModal("isShowAddScheduleModal"));
   };
 
+  const doctorsFilter = useMemo(
+    () =>
+      doctors.filter((item) => {
+        if (servicesFilter) {
+          return (
+            item?.room?.medicalDepartment?.id ==
+            servicesFilter.medicalDepartment.id
+          );
+        } else {
+          return doctors;
+        }
+      }),
+    [servicesFilter]
+  );
+
   const changeSdt = async (e, handleChange, setFieldValue) => {
     handleChange(e);
     const callApiGetInfoPatient = async (e) => {
@@ -125,32 +132,87 @@ function AddScheduleModal() {
         e.currentTarget.value
       );
       if (patientResponse) {
-        setFieldValue("patient", patientResponse.data);
+        // setFieldValue("patient", patientResponse.data);
       }
     };
     if (e.currentTarget.value.length == 10) {
-      callApiGetInfoPatient(e);
+      // callApiGetInfoPatient(e);
     }
+  };
+
+  const handleChangeService = (name, option, setFieldValue) => {
+    setFieldValue(name, option);
+    setServicesFilter(option);
   };
 
   const handleSubmitForm = (values) => {
     const data = {
-      date:"2023-03-14",
-      doctor_id: values.doctor.id,
+      date: values.date,
+      doctor_id: values.doctor?.id,
       service_id: values.service.id,
-      patientRequest: {
-        phone_number: values.patient.phoneNumber,
-        full_name: values.patient.phoneNumber,
-        address: values.patient.phoneNumber,
-        date_of_birth: "2001-07-20",
-        sex: true,
-      },
+      phoneNumber: values.phoneNumber,
+      patientName: values.patientName,
+      address: values.address,
+      dateOfBirth: values.dateOfBirth,
+      sex: values.sex.id,
+      email: values.email,
       creator_id: user.id,
       status: "WAIT",
       description: "Tai Kham",
     };
     dispatch(saveExaminationLetter(data));
     handleHideModal();
+  };
+
+  const handleChangeDate = (field, value, setFieldValue) => {
+    setFieldValue(field, value);
+  };
+
+  const handleSaveMedicalExamination = (values) => {
+    const sendData = {
+      patient: {
+        phoneNumber: values.phoneNumber,
+        email: values.email,
+        fullName: values.patientName,
+        dateOfBirth: values.dateOfBirth,
+        address: values.address,
+        sex: values.sex instanceof Object ? values.sex.id : values.sex,
+      },
+      diagnose: values.diagnose,
+      doctorId: values.doctor?.id,
+      status: values.status,
+      receptionId: user.id,
+      description: values.description,
+      note: values.note,
+      medicalExaminationDetailsRequests: [
+        { serviceId: values.service.id, status: "DOING" },
+      ],
+      letterId: values.id,
+    };
+
+    dispatch(saveExaminationFromLetter(sendData, client, socket.current));
+    handleHideModal();
+  };
+
+  const handleUpdateOrSaveMedicalLetter = (values) => {
+    if (typeOpenModal == GLOBALTYPES.ADD) {
+      handleSubmitForm(values);
+    } else {
+      const formData = {
+        date: values.date,
+        doctor_id: values.doctor?.id,
+        service_id: values.service.id,
+        phoneNumber: values.phoneNumber,
+        patientName: values.patientName,
+        address: values.address,
+        dateOfBirth: values.dateOfBirth,
+        sex: values.sex.id,
+        email: values.email,
+        creator_id: user.id,
+      };
+      dispatch(updateMedicalLetter(formData, values.id));
+      handleHideModal();
+    }
   };
 
   const body = (
@@ -193,8 +255,8 @@ function AddScheduleModal() {
               >
                 <InputLabel
                   disable={type(typeOpenModal)}
-                  name="patient.fullName"
-                  value={values["patient"]?.fullName}
+                  name="patientName"
+                  value={values.patientName}
                   label="Bệnh nhân"
                   onChange={handleChange}
                   require={true}
@@ -207,48 +269,59 @@ function AddScheduleModal() {
                   options={optionsSex}
                   setFieldValue={setFieldValue}
                   label="Giới tính"
-                  name="patient.sex"
-                  value={values["patient"]?.sex}
+                  name="sex"
+                  value={
+                    data
+                      ? optionsSex.find((item) => item.id == data.sex)
+                      : values.sex
+                  }
                   require={true}
                   size={[2, 2]}
                 />
                 <InputLabel
                   disable={type(typeOpenModal)}
                   label="Điện thoại liên hệ"
-                  name="patient.phoneNumber"
+                  name="phoneNumber"
                   require={true}
                   size={[2, 2]}
-                  value={values["patient"]?.phoneNumber}
+                  value={values.phoneNumber}
                   onChange={(e) => changeSdt(e, handleChange, setFieldValue)}
                 />
                 {/* <Grid item xs={2} /> */}
                 <DateLabel
                   disable={type(typeOpenModal)}
-                  value={values["patient"]?.dateOfBirth}
+                  value={values.dateOfBirth}
+                  onChange={(value) =>
+                    handleChangeDate("dateOfBirth", value, setFieldValue)
+                  }
                   label="Ngày sinh"
-                  onChange={handleChange}
                   size={[2, 2]}
                 />
                 <InputLabel
                   disable={type(typeOpenModal)}
                   onChange={handleChange}
-                  name="patient.email"
+                  name="email"
                   label="Email"
-                  value={values["patient"]?.email}
+                  value={values.email}
                   size={[2, 2]}
                 />
                 {/* <Grid item xs={2} /> */}
                 <InputLabel
                   disable={type(typeOpenModal)}
-                  name="patient.address"
+                  name="address"
                   onChange={handleChange}
-                  value={values["patient"]?.address}
+                  value={values.address}
                   label="Địa chỉ"
                   size={[2, 10]}
                 />
                 <DateLabel
                   disable={type(typeOpenModal)}
+                  onChange={(value) =>
+                    handleChangeDate("date", value, setFieldValue)
+                  }
+                  value={values.date}
                   currentDate={true}
+                  disablePast={true}
                   label="Ngày Khám"
                   require={true}
                   size={[2, 3]}
@@ -267,12 +340,20 @@ function AddScheduleModal() {
                   options={services}
                   accessField={"name"}
                   setFieldValue={setFieldValue}
+                  onChange={(e, option) =>
+                    handleChangeService("service", option, setFieldValue)
+                  }
                   name="service"
-                  value={values?.service}
+                  value={
+                    data
+                      ? services.find((item) => item?.id == data?.service?.id)
+                      : values?.service
+                  }
                   label="Loại khám"
                   require={true}
-                  size={[2, 2]}
+                  size={[2, 3]}
                 />
+                <Grid item xs={3} />
                 <InputLabel
                   disable={true}
                   value={values.service?.price}
@@ -281,35 +362,52 @@ function AddScheduleModal() {
                 />
                 <SelectedLabel
                   disable={type(typeOpenModal)}
-                  value={values?.doctor}
-                  options={optionsDoctor}
+                  value={
+                    data?.doctor
+                      ? doctors.find((item) => item.id == data.doctor.id)
+                      : values?.doctor
+                  }
+                  options={doctorsFilter}
                   accessField={"fullName"}
                   setFieldValue={setFieldValue}
                   name="doctor"
                   label="Bác sĩ khám"
-                  size={[2, 2]}
+                  size={[2, 3]}
                 />
+                <Grid item xs={3} />
                 <SelectedLabel
                   disable={type(typeOpenModal)}
                   accessField="title"
                   setFieldValue={setFieldValue}
                   options={optionsAppointment}
                   label="Kiểu hẹn khám"
-                  size={[2, 3]}
+                  size={[2, 2]}
                 />
               </Grid>
 
               {/* button -------------------- */}
               <div className={classes.action}>
-                <Controls.Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  isSubmitting={isSubmitting}
-                  text="Lưu"
-                  startIcon={<Save />}
-                  sx={{ mr: 1 }}
-                />
+                {typeOpenModal == GLOBALTYPES.RECEIVE && (
+                  <Controls.Button
+                    color="healing"
+                    variant="contained"
+                    text="Tiếp nhận"
+                    onClick={() => handleSaveMedicalExamination(values)}
+                    startIcon={<Start />}
+                    sx={{ mr: 1 }}
+                  />
+                )}
+                {typeOpenModal == GLOBALTYPES.EDIT ||
+                  (typeOpenModal == GLOBALTYPES.ADD && (
+                    <Controls.Button
+                      color="primary"
+                      variant="contained"
+                      text="Lưu"
+                      onClick={() => handleUpdateOrSaveMedicalLetter(values)}
+                      startIcon={<Save />}
+                      sx={{ mr: 1 }}
+                    />
+                  ))}
 
                 <Controls.Button
                   variant="contained"

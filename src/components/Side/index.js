@@ -30,14 +30,28 @@ import {
   callAPIForServiceListSide,
   callAPIForAddSupplierSide,
   callAPIForAddProductSide,
+  callAPIForAccountSide,
+  callAPIForAddPrescriptionSide
 } from "../../redux/actions/callAPI";
 import { getCurrentDateString } from "../../utils/Calc";
 import SaleReportSide from "./SaleReportSide";
+import PrescriptionSide from "./PrescriptionSide";
+import { GLOBALTYPES } from "../../redux/actionType";
+import { receiverExaminationLetterCurrentDate } from "../../redux/actions/medicalLetter";
+
+const permission = {
+  admin : ["ADMIN"],
+  doctor : ["DOCTOR"],
+  reception : ["RECEPTIONIST"],
+  drugDealer : ["DRUG_DEALER"],
+}
 
 function Side() {
   const { IDSelected, ParentWithSelectedChild } = useSelector(
     (state) => state.sidebar
   );
+  const { socket } = useSelector((state) => state.socket);
+  const {user} = useSelector((state) => state.auth)
   const classes = useStyle();
 
   const { isLoadingCallApi } = useSelector((state) => state.loading);
@@ -60,9 +74,10 @@ function Side() {
 
     switch (item.id) {
       case "TKNV":
-      // dispatch(getAllPatient());
+        dispatch(callAPIForAccountSide());
+        break;
       case "LHK":
-        let formData = new FormData();
+        var formData = new FormData();
         formData.append("from", getCurrentDateString());
         formData.append("to", getCurrentDateString());
         dispatch(callAPIForScheduleSide(formData));
@@ -71,19 +86,30 @@ function Side() {
         // dispatch(getAllPatient());
         break;
       case "TDBN":
-        dispatch(callAPIForPatientReceptionSide());
+        var date = getCurrentDateString()
+        var formData = new FormData()
+        formData.append("date",date)
+        dispatch(callAPIForPatientReceptionSide(formData));
         break;
       case "DSDV":
-        dispatch(callAPIForServiceListSide());
+        var date = getCurrentDateString()
+        var formData = new FormData()
+        formData.append("date",date)
+        dispatch(callAPIForServiceListSide(formData));
         break;
       case "HMB":
-        dispatch(callAPIForMedicalExaminationSide());
+        var date = getCurrentDateString()
+        var formData = new FormData()
+        var currentDay = getCurrentDateString();
+        formData.append("date",currentDay)
+        formData.append("roomId",user.room.id)
+        formData.append("doctorId",user.id)
+        dispatch(callAPIForMedicalExaminationSide(formData));
         break;
       case "NSP":
         dispatch(callAPIForAddProductSide());
         break;
       case "NQ":
-       
         break;
       case "BNN":
         dispatch(callAPIForPatientSide());
@@ -95,16 +121,54 @@ function Side() {
         dispatch(callAPIForProductSide());
         break;
       case "DVKM":
-        dispatch(callAPIForServiceListSide());
+        // dispatch(callAPIForServiceListSide(formData));
         break;
       case "NCCDV":
         dispatch(callAPIForAddSupplierSide());
+        break;
+      case "DNT":
+        dispatch(callAPIForAddPrescriptionSide());
         break;
     }
 
     setItem(item);
   }, [IDSelected]);
 
+  useEffect(() => {
+    socket?.current.on("receiveMedicalExamination", (data) => {
+      console.log(data)
+      dispatch({
+        type: GLOBALTYPES.DOCTOR_RECEIVE_EXAMINATION,
+        payload: data,
+      });
+    });
+
+    return () => socket?.current.off("receiveMedicalExamination");
+  }, [socket, dispatch]);
+
+  useEffect(() => {
+    socket?.current.on("receiveMedicalLetter", (data) => {
+      dispatch({
+        type: GLOBALTYPES.ADD_MEDICAL_LETTER,
+        payload: data,
+      });
+    });
+
+    return () => socket?.current.off("receiveMedicalLetter");
+  }, [socket, dispatch]);
+
+  useEffect(() => {
+    socket?.current.on("receiveDoneServiceCLS", (data) => {
+      console.log(data)
+      // dispatch({
+      //   type: GLOBALTYPES.UPDATE_DONE_SERVICE_CLS,
+      //   payload: data,
+      // });
+    });
+
+    return () => socket?.current.off("receiveDoneServiceCLS");
+  }, [socket, dispatch]);
+  
   return isLoadingCallApi ? (
     <Loading className={classes.positionNone} />
   ) : (
@@ -127,6 +191,7 @@ function Side() {
         {item?.id == "DVKM" && <AddServiceGroupsSide item={item} />}
         {item?.id == "NCCDV" && <AddSupplierSide item={item} />}
         {item?.id == "THDT" && <SaleReportSide item={item} />}
+        {item?.id == "DNT" && <PrescriptionSide item={item} />}
         {/* 
         {item?.id == "CHGB" && <ConfigSellingPriceSide item={item} />}
          */}

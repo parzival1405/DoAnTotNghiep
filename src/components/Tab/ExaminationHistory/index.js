@@ -22,7 +22,7 @@ function ExaminationHistory() {
       <TblContainer>
         <TblHead />
         <TableBody
-          style={{ overflowY: "scroll", height: "440px", display: "block" }}
+          style={{ overflowY: "scroll", height: "420px", display: "block" }}
         >
           {recordsAfterPagingAndSorting().map((item) => {
             return (

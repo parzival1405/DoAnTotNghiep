@@ -1,20 +1,11 @@
-import {
-  Autocomplete,
-  Box,
-  FormControl,
-  FormHelperText,
-  Grid,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import Label from "./Label";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs, { Dayjs } from "dayjs";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -50,8 +41,11 @@ function DateLabel(props) {
     disable = false,
     currentDate,
     sizeInput,
+    disablePast,
   } = props;
-  const [valueDate, setValueDate] = useState(currentDate ? new Date() : null);
+  const [valueDate, setValueDate] = useState(
+    currentDate ? new Date() : value ? value : null
+  );
   return (
     <>
       <Grid item xs={size[0]}>
@@ -60,11 +54,13 @@ function DateLabel(props) {
       <Grid item xs={size[1]}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
+            disablePast={disablePast}
             disabled={disable}
             className={classes.dateSelected}
             value={valueDate}
             onChange={(newValue) => {
               setValueDate(newValue);
+              onChange(dayjs(newValue).format("DD/MM/YYYY"));
             }}
             renderInput={(params) => <TextField {...params} />}
           />

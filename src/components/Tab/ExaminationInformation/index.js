@@ -5,19 +5,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateCurrentPatient } from "../../../redux/actions/currentPatient";
 import { resolve } from "../../../utils/Calc";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
-
-const initialValues = {
-};
+import dayjs, { Dayjs } from 'dayjs'
+const initialValues = {};
 
 function ExaminationInformation() {
   const { currentPatient } = useSelector((state) => state.currentPatient);
   const dispatch = useDispatch();
   const isMountedFormRef = useRef();
- 
-  const handleChangeValues=(e,handleChange)=>{
-    handleChange(e)
-    dispatch(updateCurrentPatient(e.target.name,e.target.value))
-  }
+  const handleChangeValues = (e, handleChange) => {
+    handleChange(e);
+    dispatch(updateCurrentPatient(e.target.name, e.target.value));
+  };
 
   return (
     <>
@@ -43,168 +41,152 @@ function ExaminationInformation() {
                 value={values["patient"]?.fullName}
                 require={true}
                 size={[2, 3]}
-                onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
+                disable={true}
               />
               <Grid item xs={2} />
               <InputLabel
                 label="Tuổi"
-                // value={resolve(currentPatient, "patient.dateOfBirth")}
                 name="patient.dateOfBirth"
-                value={values["patient"]?.dateOfBirth}
+                value={dayjs().diff(values["patient"]?.dateOfBirth)}
                 size={[2, 3]}
                 onChange={handleChange}
+                disable={true}
               />
               <InputLabel
                 label="Nhân viên tiếp đón"
-                // value={resolve(currentPatient, "reception.fullName")}
                 name="reception.fullName"
                 value={values["reception"]?.fullName}
                 require={true}
                 size={[2, 3]}
                 onChange={handleChange}
+                disable={true}
               />
               <Grid item xs={2} />
               <InputLabel
                 label="Điện thoại"
-                // value={resolve(currentPatient, "patient.phoneNumber")}
                 name="patient.phoneNumber"
                 value={values["patient"]?.phoneNumber}
                 size={[2, 3]}
                 onChange={handleChange}
+                disable={true}
               />
               <InputLabel
                 label="Loại khám"
-                value={resolve(currentPatient, "patient.fullName")}
-                // name="patient.phoneNumber"
-                // value={values["patient"]?.phoneNumber}
+                // value={resolve(
+                //   currentPatient?.medicalExaminationDetailsResponses[0],
+                //   "serviceResponse.name"
+                // )}
+                value={values["medicalExaminationDetailsResponses"][0]?.service?.name}
                 require={true}
+                disable={true}
                 size={[2, 3]}
                 onChange={handleChange}
               />
               <Grid item xs={2} />
               <InputLabel
                 label="Ngày lập"
-                value={resolve(currentPatient, "patient.createdDate")}
-                // name="patient.phoneNumber"
-                // value={values["patient"]?.phoneNumber}
+                value={dayjs(resolve(currentPatient, "patient.createdDate")).format('DD/MM/YYYY')}
                 require={true}
                 size={[2, 3]}
                 onChange={handleChange}
+                disable={true}
               />
               <InputLabel
                 label="Bác sĩ khám"
-                // value={resolve(currentPatient, "doctor.fullName")}
                 name="doctor.fullName"
                 value={values["doctor"]?.fullName}
                 require={true}
                 size={[2, 3]}
                 onChange={handleChange}
+                disable={true}
               />
               <Grid item xs={2} />
               <InputLabel
                 label="Tổng tiền"
-                // value={resolve(currentPatient, "totalPrice")}
                 name="totalPrice"
                 value={values.totalPrice}
                 size={[2, 3]}
                 onChange={handleChange}
+                disable={true}
               />
               <InputLabel
                 label="Ghi chú"
-                // value={resolve(
-                //   currentPatient,
-                //   "medicalExaminationDetailsResponses"
-                // )}
                 name="note"
                 value={values?.note}
                 size={[2, 10]}
-                onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
+                disable={true}
               />
               <InputLabel
                 label="Cân nặng"
-                // value={resolve(currentPatient, "patient.weight")}
                 name="weight"
                 value={values?.weight}
                 size={[2, 2]}
-                onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
               />
               <InputLabel
                 label="Chiều cao"
-                // value={resolve(currentPatient, "patient.height")}
                 name="height"
                 value={values?.height}
                 size={[2, 2]}
-                onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
               />
               <InputLabel
                 label="Mạch"
-                // value={resolve(currentPatient, "pulse")}
                 name="heartbeat"
                 value={values?.heartbeat}
                 size={[2, 2]}
-                onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
               />
               <InputLabel
                 label="Huyết áp"
-                // value={resolve(currentPatient, "bloodPressure")}
                 name="bloodPressure"
                 value={values?.bloodPressure}
                 size={[2, 2]}
-                 onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
               />
               <InputLabel
                 label="Nhiệt độ"
-                // value={resolve(currentPatient, "temperature")}
                 name="temperature"
                 value={values?.temperature}
                 size={[2, 2]}
-                 onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
               />
               <InputLabel
                 label="Para"
-                // value={resolve(currentPatient, "para")}
                 name="para"
                 value={values?.para}
                 size={[2, 2]}
-                 onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
               />
               <InputLabel
                 label="Dấu hiệu lâm sàng"
-                // value={resolve(
-                //   currentPatient,
-                //   "patient.medicalExaminationDetailsResponses"
-                // )}
-                name="diagnose"
-                value={values?.diagnose}
+                name="clinicalSign"
+                value={values?.clinicalSign}
                 size={[2, 10]}
-                 onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
               />
               <InputLabel
                 label="Mã bệnh ICD10"
-                value={resolve(
-                  currentPatient,
-                  "patient.medicalExaminationDetailsResponses"
-                )}
+                name="codeicd"
+                value={values?.codeicd}
                 size={[2, 10]}
-                 onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
               />
               <InputLabel
                 label="Chuẩn đoán lâm sàng"
-                value={resolve(
-                  currentPatient,
-                  "patient.medicalExaminationDetailsResponses"
-                )}
+                name="diagnose"
+                value={values?.diagnose}
                 size={[2, 10]}
-                 onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
               />
               <InputLabel
                 label="Bệnh lý"
-                value={resolve(
-                  currentPatient,
-                  "patient.medicalExaminationDetailsResponses"
-                )}
+                name="pathological"
+                value={values?.pathological}
                 size={[2, 3]}
-                 onChange={(e) => handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
               />
               <Grid item xs={2} />
               <InputLabel
@@ -212,7 +194,7 @@ function ExaminationInformation() {
                 name="result"
                 value={values?.result}
                 size={[2, 3]}
-                onChange={(e)=>handleChangeValues(e,handleChange)}
+                onChange={(e) => handleChangeValues(e, handleChange)}
               />
             </Grid>
           </Form>

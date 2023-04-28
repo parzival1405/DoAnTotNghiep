@@ -59,6 +59,7 @@ function ItemMenu({ obj, drawerOpen, sub = false }) {
   const { IDSelected, IDParent, ParentWithSelectedChild } = useSelector(
     (state) => state.sidebar
   );
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const handleClick = () => {
@@ -74,60 +75,79 @@ function ItemMenu({ obj, drawerOpen, sub = false }) {
   };
 
   const subMenu = obj.subMenu.length > 0;
-
   return (
     <ListItem disablePadding sx={{ display: "block" }}>
-      <ListItemButton
-        onClick={handleClick}
-        sx={
-          sub
-            ? { pl: 4 }
-            : {
-                minHeight: 48,
-                justifyContent: drawerOpen ? "initial" : "center",
-                px: 2.5,
-              }
-        }
-        style={{
-          backgroundColor:
-            ParentWithSelectedChild == obj.id
-              ? "#4eb0ba"
-              : ParentWithSelectedChild == null && IDSelected == obj.id
-              ? "#4eb0ba"
-              : IDSelected == obj.id
-              ? "#73d5de"
-              : "",
-          color: ParentWithSelectedChild == obj.id || IDSelected == obj.id ? "#fffffa" : "",
-        }}
-      >
-        <ListItemIcon
-          sx={{
-            minWidth: 0,
-            mr: drawerOpen ? 3 : "auto",
-            justifyContent: "center",
-          }}
-          style={{color: ParentWithSelectedChild == obj.id || IDSelected == obj.id ? "#fffffa" : "",}}
-        >
-          {obj.icon}
-        </ListItemIcon>
-        <ListItemText primary={obj.name} sx={{ opacity: drawerOpen ? 1 : 0 }} />
-        {drawerOpen &&
-          subMenu &&
-          (IDParent == obj.id ? <ExpandLess /> : <ExpandMore />)}
-      </ListItemButton>
-      {subMenu && (
-        <Collapse in={IDParent == obj.id} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            {obj.subMenu.map((newObj, newIndex) => (
-              <ItemMenu
-                key={newIndex}
-                obj={newObj}
-                drawerOpen={drawerOpen}
-                sub={true}
-              />
-            ))}
-          </List>
-        </Collapse>
+      {(obj.role.length == 0 ? true : obj.role.includes(user.role)) && (
+        <>
+          <ListItemButton
+            onClick={handleClick}
+            sx={
+              sub
+                ? { pl: 4 }
+                : {
+                    minHeight: 48,
+                    justifyContent: drawerOpen ? "initial" : "center",
+                    px: 2.5,
+                  }
+            }
+            style={{
+              backgroundColor:
+                ParentWithSelectedChild == obj.id
+                  ? "#4eb0ba"
+                  : ParentWithSelectedChild == null && IDSelected == obj.id
+                  ? "#4eb0ba"
+                  : IDSelected == obj.id
+                  ? "#73d5de"
+                  : "",
+              color:
+                ParentWithSelectedChild == obj.id || IDSelected == obj.id
+                  ? "#fffffa"
+                  : "",
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: drawerOpen ? 3 : "auto",
+                justifyContent: "center",
+              }}
+              style={{
+                color:
+                  ParentWithSelectedChild == obj.id || IDSelected == obj.id
+                    ? "#fffffa"
+                    : "",
+              }}
+            >
+              {obj.icon}
+            </ListItemIcon>
+            <ListItemText
+              primary={obj.name}
+              sx={{ opacity: drawerOpen ? 1 : 0 }}
+            />
+            {drawerOpen &&
+              subMenu &&
+              (IDParent == obj.id ? <ExpandLess /> : <ExpandMore />)}
+          </ListItemButton>
+          {subMenu && (
+            <Collapse in={IDParent == obj.id} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {obj.subMenu.map(
+                  (newObj, newIndex) =>
+                    (newObj.role.length == 0
+                      ? true
+                      : newObj.role.includes(user.role)) && (
+                      <ItemMenu
+                        key={newIndex}
+                        obj={newObj}
+                        drawerOpen={drawerOpen}
+                        sub={true}
+                      />
+                    )
+                )}
+              </List>
+            </Collapse>
+          )}
+        </>
       )}
     </ListItem>
   );

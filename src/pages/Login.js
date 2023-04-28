@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   InputAdornment,
@@ -15,7 +15,7 @@ import { makeStyles } from "@mui/styles";
 import { Grid } from "@mui/material";
 import Controls from "../components/Form/controls/Controls";
 import AuthLayout from "../components/Layout/AuthLayout";
-import { login } from "../redux/actions/auth";
+import { login, refreshToken } from "../redux/actions/auth";
 import Loading from "../components/Loading";
 // import { useForm, Form } from "../components/Form/useForm";
 
@@ -34,10 +34,16 @@ const useStyles = makeStyles((theme) => ({
 
 function Login() {
   const { isLoading } = useSelector((state) => state.loading);
+  const {user} = useSelector((state) => state.auth)
   const classes = useStyles();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) {
+      dispatch(refreshToken(navigate));
+    }
+  }, [dispatch]);
 
   const handleClickShowPassword = () => {
     setShowPassword((prev) => !prev);
@@ -65,8 +71,8 @@ function Login() {
     <AuthLayout>
       <Formik
         initialValues={{
-          phone_number: "0975247624",
-          password: "0975247624",
+          phone_number: "0975247621",
+          password: "password",
         }}
         validationSchema={validationLoginClinic}
         onSubmit={(values, { setSubmitting, resetForm }) => {

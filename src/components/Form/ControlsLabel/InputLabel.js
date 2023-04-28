@@ -40,6 +40,7 @@ function InputLabel(props) {
     sizeInput,
     disable
   } = props;
+
   return (
     <>
       <Grid item xs={size[0]}>

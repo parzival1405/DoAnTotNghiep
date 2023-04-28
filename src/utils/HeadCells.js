@@ -1,15 +1,15 @@
 export const headCellsPatientSide = [
   { id: "id", numeric: false, label: "Id bệnh nhân" },
   { id: "fullName", numeric: false, label: "Tên bệnh nhân" },
-  { id: "dateOfBirth", numeric: false, label: "Tuổi" },
+  { id: "dateOfBirth", numeric: false, label: "Tuổi",type:"age" },
   { id: "phoneNumber", numeric: false, label: "Số điện thoại" },
 ];
 
 export const headCellsMedicalExaminationSide = [
-  { id: "id", numeric: false, label: "Id bệnh nhân" },
+  { id: "id", numeric: false,sizeCellWidth: 50, label: "Id" },
   { id: "patient.fullName", numeric: false, label: "Tên bệnh nhân" },
-  { id: "patient.dateOfBirth", numeric: true, label: "Tuổi" },
-  { id: "category", numeric: false, label: "Loại khám" },
+  { id: "patient.dateOfBirth",sizeCellWidth: 70, numeric: true, label: "Tuổi",type:"age" },
+  { id: "category.service.name",sizeCellWidth: 200, numeric: false, label: "Loại khám" },
   { id: "diagnose", numeric: false, label: "CĐ Lâm sàng" },
   { id: "result", numeric: false, label: "Kết luận" },
   { id: "status", numeric: false, label: "Trạng thái" },
@@ -18,8 +18,12 @@ export const headCellsMedicalExaminationSide = [
 export const headCellsPatientReceptionSide = [
   { id: "id", numeric: false, label: "Id bệnh nhân" },
   { id: "patient.fullName", numeric: false, label: "Tên bệnh nhân" },
-  { id: "patient.dateOfBirth", numeric: true, label: "Tuổi" },
-  { id: "medicalExaminationDetailsResponses.name", numeric: false, label: "Loại khám" },
+  { id: "patient.dateOfBirth", numeric: true, label: "Tuổi",type:"age" },
+  {
+    id: "medicalExaminationDetailsResponses.name",
+    numeric: false,
+    label: "Loại khám",
+  },
   { id: "detail", numeric: false, label: "CĐ Lâm sàng" },
   { id: "result", numeric: false, label: "Kết luận" },
   { id: "status", numeric: false, label: "Trạng thái" },
@@ -27,17 +31,22 @@ export const headCellsPatientReceptionSide = [
 
 export const headCellsScheduleSide = [
   { id: "id", numeric: false, sizeCellWidth: 100, label: "Mã phiếu" },
-  { id: "patient.fullName", numeric: false, label: "Tên bệnh nhân" },
-  { id: "patient.sex", numeric: false, sizeCellWidth: 100, label: "Giới tính" },
-  { id: "date", numeric: false, label: "Ngày hẹn khám" },
-  { id: "service.name", numeric: false, sizeCellWidth: 140, label: "Kiểu khám" },
+  { id: "patientName", numeric: false, label: "Tên bệnh nhân" },
+  { id: "sex", numeric: false, sizeCellWidth: 100, label: "Giới tính",type:"gender" },
+  { id: "date", numeric: false, label: "Ngày hẹn khám"},
+  {
+    id: "service.name",
+    numeric: false,
+    sizeCellWidth: 140,
+    label: "Kiểu khám",
+  },
   // { id: "cause", numeric: false, label: "Lý do" },
   // { id: "note", numeric: false, label: "Ghi chú" },
   { id: "status", numeric: false, sizeCellWidth: 140, label: "Trạng thái" },
 ];
- 
+
 export const headCellsMedicalExaminationHistory = [
-  { id: "createdDate", numeric: false, label: "Ngày khám" },
+  { id: "createdDate", numeric: false, label: "Ngày khám",type:"date" },
   { id: "doctor.fullName", numeric: false, label: "Bác sĩ khám" },
   { id: "note", numeric: false, label: "Ghi chú" },
   { id: "diagnose", numeric: false, label: "Chuẩn đoán" },
@@ -45,11 +54,19 @@ export const headCellsMedicalExaminationHistory = [
 ];
 
 export const headCellsClinicalServiceCurrentPatient = [
-  { id: "id", numeric: false, label: "Id dịch vụ" },
-  { id: "name", numeric: false, label: "Tên dịch vụ" },
-  { id: "department", numeric: false, label: "Phòng ban" },
-  { id: "quantity", numeric: true, editable: true, label: "Số lượng" },
-  { id: "price", numeric: true, label: "Giá" },
+  { id: "service.id", numeric: false, label: "Id dịch vụ" },
+  {
+    id: "service.name",
+    sizeCellWidth: 300,
+    numeric: false,
+    label: "Tên dịch vụ",
+  },
+  {
+    id: "service.medicalDepartment.name",
+    numeric: false,
+    label: "Phòng ban",
+  },
+  { id: "service.price", numeric: false, label: "Giá" },
   // {
   //   id: "totalPrice",
   //   numeric: true,
@@ -70,11 +87,11 @@ export const headCellsProductSide = [
 ];
 
 export const headCellsPrescription = [
-  { id : "", sizeCellWidth: 50,numeric:false,label:""},
+  { id: "", sizeCellWidth: 50, numeric: false, label: "" },
   { id: "id", numeric: false, label: "Mã đơn thuốc" },
-  { id: "createdDate", numeric: false, label: "Ngày khám" },
+  { id: "createdDate", numeric: false, label: "Ngày khám",type:"date"},
   { id: "note", numeric: false, label: "Ghi chú" },
-  { id: "diagnostic", numeric: false, label: "Chuẩn đoán" },
+  { id: "result", numeric: false, label: "Chuẩn đoán" },
   { id: "totalPrice", numeric: false, label: "Giá tiền" },
 ];
 
@@ -84,7 +101,6 @@ export const headCollapseCellsPrescription = [
   { id: "designate", numeric: false, label: "Chỉ định" },
   { id: "drug.benefit", numeric: false, label: "Công dụng" },
 ];
-
 
 export const headCellsListServiceSide = [
   { id: "id", numeric: false, label: "Mã dịch vụ" },
@@ -96,32 +112,132 @@ export const headCellsListServiceSide = [
   { id: "state", numeric: false, label: "Trạng thái" },
 ];
 
-
 export const headCellsListSupplier = [
-  { id: "id",sizeCellWidth: 100, numeric: false, label: "Mã NCC" },
+  { id: "id", sizeCellWidth: 100, numeric: false, label: "Mã NCC" },
   { id: "name", numeric: false, label: "Tên Nhà NCC" },
   { id: "email", numeric: false, label: "Email" },
   { id: "phoneNumber", numeric: false, label: "Điện thoại" },
   { id: "address", numeric: false, label: "Địa chỉ" },
 ];
 
+export const AddPrescriptionCell = [
+  { field: "stt", width: 70, editable: false, headerName: "Stt" },
+  { field: "name", editable: false, headerName: "Tên sản phẩm", flex: 1 },
+  
+  {
+    field: "quantity",
+    editable: true,
+    type: "number",
+    headerName: "Số lượng",
+    width: 70,
+  },
+  {
+    field: "designate",
+    type: "text",
+    editable: true,
+    headerName: "Chỉ định",
+    flex: 1,
+  },
+  {
+    field: "total",
+    editable: false,
+    type: "number",
+    headerName: "Thành tiền",
+    valueGetter: (params) => params.row.quantity * params.row.price || 0,
+    flex: 1,
+  },
+];
+
 export const headCellsProductAddBatchProduct = [
-  { id: "stt", sizeCellWidth: 60, label: "STT" },
-  { id: "name", numeric: false, label: "Tên sản phẩm" },
-  { id: "unit", numeric: false, label: "Đơn vị" },
-  { id:"quantity",editable:true,label: "Số lượng" },
-  { id:"price",editable:true,sizeCellWidth: 150,label: "Đơn giá" },
-  { id: "total", numeric: true, label: "Thành tiền" },
+  { field: "stt", width: 70, editable: false, headerName: "Stt" },
+  { field: "name", editable: false, headerName: "Tên sản phẩm", flex: 1 },
+  {
+    field: "unit",
+    editable: true,
+    headerName: "Đơn vị",
+    flex: 1,
+    type: "singleSelect",
+    valueOptions: [
+      { code: "thung", name: "Thùng" },
+      { code: "hop", name: "Hộp" },
+      { code: "vi", name: "Vỉ" },
+      { code: "vien", name: "Viên" },
+    ],
+    getOptionValue: (value) => value.code,
+    getOptionLabel: (value) => value.name,
+  },
+  {
+    field: "quantity",
+    editable: true,
+    type: "number",
+    headerName: "Số lượng",
+    width: 100,
+  },
+  {
+    field: "price",
+    editable: true,
+    type: "number",
+    headerName: "Đơn giá",
+    flex: 1,
+  },
+  {
+    field: "total",
+    editable: false,
+    type: "number",
+    headerName: "Thành tiền",
+    valueGetter: (params) => params.row.quantity * params.row.price || 0,
+    flex: 1,
+  },
 ];
 
 export const headCellsAddProductSide = [
   { id: "id", numeric: false, label: "Số phiếu" },
-  { id: "createdDate", numeric: false, label: "Ngày nhập" },
-  { id: "NCC", numeric: false, sizeCellWidth: 140, label: "Nhà cung cấp" },
-  { id: "total", numeric: true, label: "Tổng tiền" },
-  { id: "real", numeric: true, label: "Thực trả" },
-  { id: "datra", numeric: true, label: "Đã trả" },
+  { id: "createdDate", numeric: false, label: "Ngày nhập",type:"date"  },
+  { id: "supplierResponse.name", numeric: false, sizeCellWidth: 140, label: "Nhà cung cấp" },
+  { id: "totalPrice", numeric: true, label: "Tổng tiền" },
+  { id: "paidPrice", numeric: true, label: "Đã trả" },
+  { id: "debt", numeric: true, label: "Công nợ" },
   { id: "description", numeric: false, label: "Ghi chú" },
   { id: "state", numeric: false, label: "Trạng thái" },
 ];
 
+export const headCellsPrescriptionSide = [
+  { id: "id", numeric: false, label: "Số phiếu" },
+  { id: "createdDate", numeric: false, label: "Ngày lập",type:"date"  },
+  { id: "NCC", numeric: false, sizeCellWidth: 140, label: "tên bệnh nhân" },
+  { id: "type", numeric: false, label: "Kiểu đơn" },
+  { id: "doctor", numeric: true, label: "Bác sĩ kê" },
+  { id: "note", numeric: false, label: "Ghi chú" },
+  { id: "state", numeric: false, label: "Trạng thái" },
+];
+
+export const headCellsAccountSide = [
+  { id: "avatar", numeric: false, sizeCellWidth: 80, label: "Avatar" },
+  { id: "phoneNumber", numeric: false, sizeCellWidth: 120, label: "Tài khoản" },
+  {
+    id: "fullName",
+    numeric: false,
+    label: "Họ tên",
+  },
+  {
+    id: "room.medicalDepartment.name",
+    numeric: false,
+    label: "Khoa",
+  },
+  { id: "address", numeric: false, label: "Địa chỉ" },
+  { id: "state", numeric: false, sizeCellWidth: 100, label: "Trạng thái" },
+];
+
+export const HeadCellsServiceAvailableSide = [
+  { id: "createdDate",sizeCellWidth: 120, numeric: false, label: "Ngày làm DV",type:"date" },
+  {
+    id: "patient",
+    numeric: false,
+    sizeCellWidth: 140,
+    label: "Tên bệnh nhân",
+  },
+  { id: "service.name", numeric: false, sizeCellWidth: 140, label: "Tên Dịch vụ" },
+  { id: "doctor.fullName", numeric: false, sizeCellWidth: 140, label: "BS chỉ định" },
+  { id: "diagnose", numeric: false, label: "Chuẩn đoán" },
+  { id: "status", numeric: false, sizeCellWidth: 100, label: "Trạng thái" },
+];

@@ -13,6 +13,7 @@ import { makeStyles } from "@mui/styles";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { saveStaff } from "../../../redux/actions/auth";
 import { hideModal } from "../../../redux/actions/modal";
 import { type } from "../../../utils/TypeOpen";
 import Controls from "../../Form/controls/Controls";
@@ -60,7 +61,7 @@ const useStyle = makeStyles((theme) => ({
 
 const optionsGroup = [
   {
-    id: "1",
+    id: "DOCTOR",
     title: "Bác sĩ",
   },
   {
@@ -75,14 +76,25 @@ const optionsGroup = [
 
 const optionsSex = [
   {
-    id: "male",
+    id: "true",
     title: "Nam",
   },
-  { id: "female", title: "Nữ" },
+  { id: "false", title: "Nữ" },
 ];
 
+const initialValues = {
+  phoneNumber: null,
+  fullName: null,
+  password: "password",
+  dateOfBirth: null,
+  email:null,
+  address: null,
+  sex:null,
+  role: null,
+};
+
 function AddAccountStaffModal() {
-  const { isShowAddAccountStaffModal } = useSelector((state) => state.modal);
+  const isShowAddAccountStaffModal = useSelector((state) => state.modal.isShowAddAccountStaffModal);
   const { open, typeOpenModal } = isShowAddAccountStaffModal;
 
   const [valueOption, setValueOption] = useState([]);
@@ -93,7 +105,11 @@ function AddAccountStaffModal() {
     dispatch(hideModal("isShowAddAccountStaffModal"));
   };
 
-  const handleSubmitForm = (values) => {};
+  const handleSubmitForm = (values) => {
+    console.log(avatarFile);
+    dispatch(saveStaff(values,avatarFile))
+    handleHideModal();
+  };
 
   useEffect(() => {
     // return () => setAvatarFile(null);
@@ -120,7 +136,7 @@ function AddAccountStaffModal() {
       <Paper className={classes.paper} id="modal-Account-staff">
         <ModalHeader title="Thêm nhân viên mới" onClose={handleHideModal} />
         <Formik
-          initialValues={{}}
+          initialValues={initialValues}
           //   validationSchema={validateionChangeGroupName}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
@@ -137,6 +153,7 @@ function AddAccountStaffModal() {
             handleChange,
             handleSubmit,
             isSubmitting,
+            setFieldValue,
           }) => (
             <Form
               action=""
@@ -154,30 +171,46 @@ function AddAccountStaffModal() {
                   disable={type(typeOpenModal)}
                   require={true}
                   label="Tên nhân viên"
+                  name="fullName"
+                  value={values.fullName}
+                  onChange={handleChange}
                   size={[2, 4]}
                 />
                 <SelectedLabel
                   options={optionsSex}
                   label="Giới tính"
+                  name="sex"
                   require={true}
                   size={[2, 4]}
+                  accessField={"title"}
+                  setFieldValue={setFieldValue}
+                  value={values?.sex}
                 />
                 <DateLabel label="Ngày sinh" size={[2, 4]} />
                 <InputLabel
                   disable={type(typeOpenModal)}
                   require={true}
                   label="Email"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
                   size={[2, 4]}
                 />
                 <InputLabel
                   disable={type(typeOpenModal)}
                   require={true}
                   label="Điện thoại"
+                  name="phoneNumber"
+                  value={values.phoneNumber}
+                  onChange={handleChange}
                   size={[2, 4]}
                 />
                 <InputLabel
                   disable={type(typeOpenModal)}
                   label="Địa chỉ"
+                  name="address"
+                  value={values.address}
+                  onChange={handleChange}
                   size={[2, 4]}
                 />
                 <SelectedLabel
@@ -185,6 +218,10 @@ function AddAccountStaffModal() {
                   require={true}
                   options={optionsGroup}
                   size={[2, 4]}
+                  name="role"
+                  accessField={"title"}
+                  setFieldValue={setFieldValue}
+                  value={values?.role}
                 />
                 <Grid item xs={2}>
                   <Label label={"Avatar"} className={classes.title} />

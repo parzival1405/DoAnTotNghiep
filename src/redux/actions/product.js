@@ -13,17 +13,40 @@ export const addCategory = (formData) => async (dispatch) => {
   }
 };
 
+export const updateCategory = (formData) => async (dispatch) => {
+  try {
+    const { data } = await api.updateCategoryDrugs(formData);
+    dispatch({
+      type: GLOBALTYPES.UPDATE_CATEGORY,
+      payload: data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const getAllProduct = () => async (dispatch) => {
+  try {
+    const productResponse = await api.getAllProduct();
+    dispatch({
+      type: GLOBALTYPES.GET_ALL_PRODUCT,
+      payload: productResponse.data,
+    });
+
+    const categoryResponse = await api.getAllCategoryDrugs();
+    dispatch({
+      type: GLOBALTYPES.ALL_CATEGORY,
+      payload: categoryResponse.data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const addProduct = (formData) => async (dispatch) => {
   try {
-    const sendData = {
-      name: formData.name,
-      description: formData.description,
-      benefit: formData.benefit,
-      price: formData.price,
-      categoryDrugId: formData.category.id,
-      note: formData.note,
-    };
-    const { data } = await api.saveDrug(sendData);
+    console.log(formData);
+    const { data } = await api.saveDrug(formData);
 
     dispatch({
       type: GLOBALTYPES.ADD_DRUGS,
@@ -33,3 +56,23 @@ export const addProduct = (formData) => async (dispatch) => {
     console.log(err);
   }
 };
+
+export const updateProduct = (formData) => async (dispatch) => {
+  const { data } = await api.updateDrug(formData);
+
+    dispatch({
+      type: GLOBALTYPES.UPDATE_DRUGS,
+      payload: data,
+    });
+} 
+export const addPrescription = (data) => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.ADD_PRESCRIPTION,
+      payload: data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+

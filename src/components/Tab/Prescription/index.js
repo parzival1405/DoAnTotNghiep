@@ -15,7 +15,7 @@ function Prescription() {
     },
   });
   const { historyMedicine } = useSelector((state) => state.currentPatient);
-  console.log(historyMedicine);
+  
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(historyMedicine, headCellsPrescription, filterFn);
   return (
@@ -23,7 +23,7 @@ function Prescription() {
       <TblContainer>
         <TblHead />
         <TableBody
-          style={{ overflowY: "scroll", height: "440px", display: "block" }}
+          style={{ overflowY: "scroll", height: "420px", display: "block" }}
         >
           {recordsAfterPagingAndSorting().map((item) => {
             return (
@@ -42,4 +42,4 @@ function Prescription() {
   );
 }
 
-export default Prescription;
+export default React.memo(Prescription);

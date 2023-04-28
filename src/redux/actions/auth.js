@@ -30,15 +30,19 @@ export const login = (formData, navigate) => async (dispatch) => {
   }
 };
 
-export const refreshToken = () => async (dispatch) => {
+export const refreshToken = (navigate) => async (dispatch) => {
   const firstLogin = JSON.parse(localStorage.getItem("firstLogin"));
+  const refreshToken = localStorage.getItem("refreshToken");
   if (firstLogin) {
+    const formData = {
+      refreshToken : refreshToken
+    }
     try {
       dispatch({
         type: GLOBALTYPES.START_LOADING,
       });
-      const { data } = await api.refreshLogin();
-      console.log(data);
+      const { data } = await api.refreshLogin(formData);
+
       dispatch({
         type: GLOBALTYPES.AUTH,
         payload: data,
@@ -49,7 +53,8 @@ export const refreshToken = () => async (dispatch) => {
       });
 
       localStorage.setItem("token", data.access_token);
-      localStorage.setItem("refreshToken", data.refresh_token);
+
+      navigate("/Homepage");
     } catch (err) {
       dispatch({
         type: GLOBALTYPES.END_LOADING,
@@ -85,6 +90,38 @@ export const forgotPassword = (data, navigate) => async (dispatch) => {
     await api.forgotPassword(data.phone_number);
     alert("Lấy lại mật khẩu thành công");
     navigate("/login");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const saveStaff = (formData, fileAvatar) => async (dispatch) => {
+  try {
+    if (fileAvatar) {
+      const fData = new FormData();
+      fData.append("file", fileAvatar);
+
+      const url = await api.saveImage(fData);
+
+      const formatData = {
+        phoneNumber: formData.phoneNumber,
+        fullName: formData.fullName,
+        password: "password",
+        dateOfBirth: formData.dateOfBirth,
+        email: formData.email,
+        address: formData.address,
+        sex: formData.sex.id,
+        role: formData.role.id,
+        avatar: url.data,
+      };
+      
+      const accountResponse = await api.register(formatData);
+
+      dispatch({
+        type: GLOBALTYPES.ADD_STAFF,
+        payload: accountResponse.data,
+      });
+    }
   } catch (error) {
     console.log(error);
   }

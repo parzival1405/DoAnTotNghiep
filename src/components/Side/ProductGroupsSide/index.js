@@ -63,8 +63,11 @@ function ProductGroupsSide({ item }) {
     }
   };
 
-  const handleClickShowEditModal = () => {
-    dispatch(ShowAddProductGroupsModal(GLOBALTYPES.EDIT));
+  const handleClickShowEditModal = (item) => {
+    dispatch(ShowAddProductGroupsModal(GLOBALTYPES.EDIT,item));
+  };
+  const handleClickShowViewModal = (item) => {
+    dispatch(ShowAddProductGroupsModal(GLOBALTYPES.VIEW,item));
   };
   const handleClickShowAddModal = () => {
     dispatch(ShowAddProductGroupsModal(GLOBALTYPES.ADD));
@@ -103,12 +106,13 @@ function ProductGroupsSide({ item }) {
           {recordsAfterPagingAndSorting().map((item) => {
             return (
               <TableRow
-                handleClick={handleClick}
+                handleDoubleClick={handleClick}
                 key={item.id}
                 item={item}
                 headCells={headCells}
                 listItemMenu={[
-                  { title: "Chỉnh sửa", onClick: handleClickShowEditModal },
+                  { title: "Chỉnh sửa", onClick: () => handleClickShowEditModal(item) },
+                  { title: "Xem thêm thông tin", onClick: () => handleClickShowViewModal(item)  },
                 ]}
               />
             );

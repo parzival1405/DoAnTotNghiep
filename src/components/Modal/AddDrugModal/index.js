@@ -25,7 +25,10 @@ import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import DateLabel from "../../Form/ControlsLabel/DateLabel";
 import { titleModal, type } from "../../../utils/TypeOpen";
 import Label from "../../Form/ControlsLabel/Label";
-import { addProduct } from "../../../redux/actions/product";
+import { addProduct, updateProduct } from "../../../redux/actions/product";
+import { GLOBALTYPES } from "../../../redux/actionType";
+import { v4 as uuidv4 } from 'uuid';
+import { newProductFromAddProductModal } from "../../../redux/actions/batchProduct";
 
 const useStyle = makeStyles((theme) => ({
   paper: {
@@ -69,18 +72,6 @@ const useStyle = makeStyles((theme) => ({
     },
   },
 }));
-
-const optionsTypeDrug = [
-  {
-    id: "1",
-    title: "Kháng sinh",
-  },
-  {
-    id: "2",
-    title: "Giảm đau",
-  },
-];
-
 const optionsUnit = [
   {
     id: "1",
@@ -95,10 +86,9 @@ const optionsUnit = [
 const initialValues = {};
 
 function AddDrugModal() {
-  const { isShowAddDrugModal } = useSelector((state) => state.modal);
+  const isShowAddDrugModal= useSelector((state) => state.modal.isShowAddDrugModal);
   const { category } = useSelector((state) => state.product);
-  const { open, typeOpenModal } = isShowAddDrugModal;
-
+  const { open, typeOpenModal, data } = isShowAddDrugModal;
   const classes = useStyle();
   const dispatch = useDispatch();
   const [imageFile, setImageFile] = useState(null);
@@ -119,8 +109,27 @@ function AddDrugModal() {
   };
 
   const handleSubmitForm = (values) => {
-    dispatch(addProduct(values))
-    handleHideModal()
+    const sendData = {
+      id:values?.id,
+      name: values.name,
+      description: values.description,
+      benefit: values.benefit,
+      price: values.price,
+      vienVi:values.vienVi,
+      viHop:values.viHop,
+      hopThung: values.hopThung,
+      categoryDrugId: values.categoryDrug.id,
+      note: values.note,
+    };
+
+    if(typeOpenModal == GLOBALTYPES.ADD){
+      dispatch(addProduct(sendData));
+    }else if(typeOpenModal == GLOBALTYPES.ADD_BY_ANOTHER_MODAL){
+      dispatch(newProductFromAddProductModal({...sendData,id:uuidv4()}));
+    }else{
+      dispatch(updateProduct(sendData));
+    }
+    handleHideModal();
   };
   const body = (
     <Fade in={isShowAddDrugModal.open}>
@@ -130,7 +139,9 @@ function AddDrugModal() {
           onClose={handleHideModal}
         />
         <Formik
-          initialValues={initialValues}
+          initialValues={
+            typeOpenModal == GLOBALTYPES.ADD || typeOpenModal == GLOBALTYPES.ADD_BY_ANOTHER_MODAL ? initialValues : data
+          }
           //   validationSchema={validateionChangeGroupName}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
@@ -161,66 +172,110 @@ function AddDrugModal() {
                 className={classes.gridCustomInput}
               >
                 <InputLabel
+                  disable={type(typeOpenModal)}
                   name="name"
                   label="Tên sản phẩm"
+                  value={values.name}
                   size={[3, 9]}
                   onChange={handleChange}
                 />
                 <SelectedLabel
-                  label="Loại sản phẩm"
                   disable={type(typeOpenModal)}
+                  label="Loại sản phẩm"
                   options={category}
                   accessField={"name"}
                   setFieldValue={setFieldValue}
-                  name="category"
-                  value={values.category}
+                  name="categoryDrug"
+                  value={values.categoryDrug}
                   require={true}
                   size={[3, 3]}
                 />
                 <InputLabel
                   name="price"
+                  disable={type(typeOpenModal)}
                   label="Giá bán"
+                  value={values.price}
                   size={[3, 3]}
                   onChange={handleChange}
                 />
                 <InputLabel
+                  disable={type(typeOpenModal)}
                   label="Mô tả"
                   name="description"
+                  value={values.description}
                   size={[3, 9]}
                   onChange={handleChange}
                 />
                 <InputLabel
+                  disable={type(typeOpenModal)}
+                  label="Hộp/Thùng"
+                  type="number"
+                  name="hopThung"
+                  value={values.hopThung}
+                  size={[3, 3]}
+                  onChange={handleChange}
+                />
+                <InputLabel
+                  disable={type(typeOpenModal)}
+                  label="Vỉ/Hộp"
+                  type="number"
+                  name="viHop"
+                  value={values.viHop}
+                  size={[3, 3]}
+                  onChange={handleChange}
+                />
+                <InputLabel
+                  disable={type(typeOpenModal)}
+                  label="Chai-Viên/Vỉ"
+                  type="number"
+                  name="vienVi"
+                  value={values.vienVi}
+                  size={[3, 3]}
+                  onChange={handleChange}
+                />
+                <Grid item xs={6}/>
+                <InputLabel
+                  disable={type(typeOpenModal)}
                   label="Ghi chú"
                   name="note"
+                  value={values.note}
                   size={[3, 9]}
                   onChange={handleChange}
                 />
                 <SelectedLabel
+                  disable={type(typeOpenModal)}
                   label="Đơn vị đo"
                   options={optionsUnit}
+                  setFieldValue={setFieldValue}
+                  accessField={"title"}
+                  name="unit"
+                  value={values.unit}
+                  require={true}
                   size={[3, 3]}
                 />
                 <Grid item xs={6} />
                 <Grid item xs={3}>
                   <Label label={"Hình ảnh"} className={classes.title} />
                 </Grid>
-                <Grid item xs={2}>
-                  <Button
-                    variant="contained"
-                    component="label"
-                    disabled={type(typeOpenModal)}
-                  >
-                    Chọn
-                    <input
-                      type="file"
-                      hidden
-                      accept="image/*"
-                      name="fileImage"
-                      id="fileImage"
-                      onChange={handleChangeImage}
-                    />
-                  </Button>
-                </Grid>
+                {typeOpenModal == GLOBALTYPES.ADD && (
+                  <Grid item xs={2}>
+                    <Button
+                      variant="contained"
+                      component="label"
+                      disabled={type(typeOpenModal)}
+                    >
+                      Chọn
+                      <input
+                        type="file"
+                        hidden
+                        accept="image/*"
+                        name="fileImage"
+                        id="fileImage"
+                        onChange={handleChangeImage}
+                      />
+                    </Button>
+                  </Grid>
+                )}
                 <Grid item xs={4}>
                   {imageFile ? (
                     <CardMedia
@@ -240,15 +295,17 @@ function AddDrugModal() {
 
               {/* button -------------------- */}
               <div className={classes.action}>
-                <Controls.Button
-                  color="primary"
-                  variant="contained"
-                  type="submit"
-                  isSubmitting={isSubmitting}
-                  text="Lưu"
-                  startIcon={<Save />}
-                  sx={{ mr: 1 }}
-                />
+                {typeOpenModal != GLOBALTYPES.VIEW && (
+                  <Controls.Button
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    isSubmitting={isSubmitting}
+                    text="Lưu"
+                    startIcon={<Save />}
+                    sx={{ mr: 1 }}
+                  />
+                )}
 
                 <Controls.Button
                   variant="contained"

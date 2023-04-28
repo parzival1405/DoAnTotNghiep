@@ -6,7 +6,8 @@ import loading from "./loading";
 import sidebar from "./sidebar";
 import tab from "./tab";
 import patient from "./patient";
-import currentPatient from "./currentPatient";
+import currentPatient from "./CurrentPatient/currentPatient";
+import medicineOfPrescription from "./CurrentPatient/medicineOfPrescription";
 import medicalLetter from "./medicalLetter";
 import medicalExamination from "./medicalExamination";
 import service from "./service";
@@ -14,7 +15,14 @@ import product from "./product";
 import stomp from "./stomp";
 import supplier from "./supplier";
 import batchProduct from "./batchProduct";
+import serviceAvailable from "./serviceAvailable";
+import staff from "./staff";
+import socket from "./socket";
+import prescription from "./prescription";
 export default combineReducers({
+  prescription,
+  socket,
+  staff,
   batchProduct,
   supplier,
   product,
@@ -25,7 +33,9 @@ export default combineReducers({
   sidebar,
   tab,
   service,
+  serviceAvailable,
   currentPatient,
+  medicineOfPrescription,
   patient,
   medicalExamination,
   medicalLetter,

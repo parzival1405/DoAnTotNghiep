@@ -30,4 +30,4 @@ function BaseModal({body, isShow}) {
     )
 }
 
-export default BaseModal
+export default React.memo(BaseModal)

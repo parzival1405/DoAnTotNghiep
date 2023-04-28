@@ -46,11 +46,11 @@ function AddSupplierSide({ item }) {
     handleClickShowViewModal();
   };
 
-  const handleClickShowEditModal = () => {
-    dispatch(ShowAddSupplierModal(GLOBALTYPES.EDIT));
+  const handleClickShowEditModal = (item) => {
+    dispatch(ShowAddSupplierModal(GLOBALTYPES.EDIT,item));
   };
-  const handleClickShowViewModal = () => {
-    dispatch(ShowAddSupplierModal(GLOBALTYPES.VIEW));
+  const handleClickShowViewModal = (item) => {
+    dispatch(ShowAddSupplierModal(GLOBALTYPES.VIEW,item));
   };
   const handleClickShowAddModal = () => {
     dispatch(ShowAddSupplierModal(GLOBALTYPES.ADD));
@@ -94,8 +94,8 @@ function AddSupplierSide({ item }) {
                 item={item}
                 headCells={headCellsListSupplier}
                 listItemMenu={[
-                  { title: "Chỉnh sửa", onClick: handleClickShowEditModal },
-                  { title: "Xem", onClick: handleClickShowViewModal },
+                  { title: "Chỉnh sửa", onClick: () => handleClickShowEditModal(item) },
+                  { title: "Xem thêm thông tin", onClick: () => handleClickShowViewModal(item) },
                 ]}
               />
             );

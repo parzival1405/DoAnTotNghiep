@@ -19,3 +19,15 @@ export const getAllPatient = () => async (dispatch) => {
     console.log(err)
   }
 };
+
+export const updatePatient = (formData) => async (dispatch) => {
+  try {
+    const {data} = await api.updatePatient(formData);
+    dispatch({
+      type:GLOBALTYPES.UPDATE_PATIENT,
+      payload:data
+    });
+  } catch (err) {
+    console.log(err)
+  }
+};

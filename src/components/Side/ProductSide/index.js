@@ -41,10 +41,6 @@ function ProductSide({ item }) {
     setSearchValue(e.target.value);
   };
 
-  const onChangeSelected = (e) => {
-    setFiler((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
   const handleClick = (item) => {
     try {
     } catch (error) {
@@ -52,8 +48,11 @@ function ProductSide({ item }) {
     }
   };
 
-  const handleClickShowEditModal = () => {
-    dispatch(ShowAddDrugModal(GLOBALTYPES.EDIT));
+  const handleClickShowEditModal = (item) => {
+    dispatch(ShowAddDrugModal(GLOBALTYPES.EDIT,item));
+  };
+  const handleClickShowViewModal = (item) => {
+    dispatch(ShowAddDrugModal(GLOBALTYPES.VIEW,item));
   };
   const handleClickShowAddModal = () => {
     dispatch(ShowAddDrugModal(GLOBALTYPES.ADD));
@@ -97,7 +96,8 @@ function ProductSide({ item }) {
                 item={item}
                 headCells={headCellsProductSide}
                 listItemMenu={[
-                  { title: "Chỉnh sửa", onClick: handleClickShowEditModal },
+                  { title: "Chỉnh sửa", onClick: () => handleClickShowEditModal(item) },
+                  { title: "Xem thêm thông tin", onClick: () => handleClickShowViewModal(item) },
                 ]}
               />
             );

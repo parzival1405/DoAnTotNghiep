@@ -52,8 +52,8 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 function AddTypeServiceGroupsModal() {
-  const { isShowAddTypeServiceGroupsModal } = useSelector(
-    (state) => state.modal
+  const isShowAddTypeServiceGroupsModal = useSelector(
+    (state) => state.modal.isShowAddTypeServiceGroupsModal
   );
   const { open, typeOpenModal } = isShowAddTypeServiceGroupsModal;
   const classes = useStyle();

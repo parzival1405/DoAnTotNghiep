@@ -15,7 +15,7 @@ import { forgotPassword } from "../../../redux/actions/auth";
 
 function OTPModal() {
   const navigate = useNavigate();
-  const { isShowOTP } = useSelector((state) => state.modal);
+  const  isShowOTP= useSelector((state) => state.modal.isShowOTP);
 
   const classes = useStyles();
   const dispatch = useDispatch();

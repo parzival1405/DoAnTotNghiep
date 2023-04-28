@@ -21,6 +21,12 @@ export default (state = initState, action) => {
         ...state,
         departmentServices: [action.payload,...state.departmentServices],
       };
+      case GLOBALTYPES.UPDATE_SERVICE:
+      return {
+        ...state,
+        services: state.services.map((item) => item.id === action.payload.id ? action.payload : item),
+      };
+      
     case GLOBALTYPES.CLEAR:
       return initState;
     default:

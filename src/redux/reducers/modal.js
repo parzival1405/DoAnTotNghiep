@@ -8,6 +8,7 @@ const initType = {
 
 export default function modalReducers(
   state = {
+    isShowReadQRCodeModal: initType,
     isShowOTP: initType,
     isShowPatientReceptionModal: initType,
     isShowAddScheduleModal: initType,
@@ -20,6 +21,8 @@ export default function modalReducers(
     isShowAddProductGroupsModal: initType,
     isShowAddServiceModal: initType,
     isShowAddTypeServiceGroupsModal: initType,
+    isShowAddPrescriptionModal:initType,
+    isShowUpdateServiceCLSModal:initType,
   },
   action
 ) {
@@ -42,6 +45,26 @@ export default function modalReducers(
           data: action.payload.data,
         },
       };
+      case GLOBALTYPES.SHOW_UPDATE_SERVICE_CLS_MODAL:
+        return {
+          ...state,
+          isShowUpdateServiceCLSModal: {
+            open: true,
+            typeOpenModal: action.payload.type,
+            data: action.payload.data,
+          },
+        };
+      
+    case GLOBALTYPES.SHOW_ADD_PRESCRIPTION_MODAL:
+      return {
+        ...state,
+        isShowAddPrescriptionModal: {
+          open: true,
+          typeOpenModal: action.payload.type,
+          data: action.payload.data,
+        },
+      };
+
     case GLOBALTYPES.SHOW_ADD_TYPE_SERVICE_GROUPS_MODAL:
       return {
         ...state,
@@ -74,6 +97,14 @@ export default function modalReducers(
       return {
         ...state,
         isShowOTP: {
+          open: true,
+          typeOpenModal: action.payload,
+        },
+      };
+    case GLOBALTYPES.SHOW_READ_QR_CODE:
+      return {
+        ...state,
+        isShowReadQRCodeModal: {
           open: true,
           typeOpenModal: action.payload,
         },
