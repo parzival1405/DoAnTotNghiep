@@ -5,13 +5,20 @@ export const type = (typeOpenModal) => {
     ? false
     : typeOpenModal == GLOBALTYPES.EDIT
     ? false
-    : typeOpenModal == GLOBALTYPES.VIEW ? true : false
+    : typeOpenModal == GLOBALTYPES.VIEW
+    ? true
+    : typeOpenModal == GLOBALTYPES.DOCTOR_VIEW
+    ? true
+    : false;
 };
 
-export const titleModal = (typeOpenModal,title) => {
-  return typeOpenModal == GLOBALTYPES.ADD || typeOpenModal == GLOBALTYPES.ADD_BY_ANOTHER_MODAL
+export const titleModal = (typeOpenModal, title) => {
+  return typeOpenModal == GLOBALTYPES.ADD ||
+    typeOpenModal == GLOBALTYPES.ADD_BY_ANOTHER_MODAL
     ? `Thêm ${title} mới`
     : typeOpenModal == GLOBALTYPES.EDIT
     ? `Chỉnh sửa ${title}`
-    : typeOpenModal == GLOBALTYPES.VIEW ? `Xem ${title}` : false
+    : typeOpenModal == GLOBALTYPES.VIEW || typeOpenModal == GLOBALTYPES.DOCTOR_VIEW 
+    ? `Xem ${title}`
+    : false;
 };

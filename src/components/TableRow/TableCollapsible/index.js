@@ -14,7 +14,7 @@ import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
 import useTable from "../../../hooks/useTable";
 import { resolve } from "../../../utils/Calc";
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { Dayjs } from "dayjs";
 
 const useStyles = makeStyles((theme) => ({
   tableRow: {
@@ -25,6 +25,13 @@ const useStyles = makeStyles((theme) => ({
 
   bbn: {
     borderBottom: "none",
+  },
+
+  textContainer: {
+    display: "block",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
 }));
 
@@ -61,9 +68,13 @@ function TableCollapsible({ item, headCells, headCollapseCells }) {
                 }}
                 align={itemhead.numeric ? "right" : "left"}
               >
-                {itemhead.calc
-                  ? itemhead.calc.fun(item["quantity"], item["price"])
-                  : itemhead.type == "date" ? dayjs(resolve(item, itemhead.id)).format('DD/MM/YYYY') :  resolve(item, itemhead.id)}
+                <div className={classes.textContainer}>
+                  {itemhead.calc
+                    ? itemhead.calc.fun(item["quantity"], item["price"])
+                    : itemhead.type == "date"
+                    ? dayjs(resolve(item, itemhead.id)).format("DD/MM/YYYY")
+                    : resolve(item, itemhead.id)}
+                </div>
               </TableCell>
             )
         )}
@@ -110,7 +121,9 @@ function TableCollapsible({ item, headCells, headCollapseCells }) {
                           }}
                           align={itemhead.numeric ? "right" : "left"}
                         >
-                          {resolve(itemSub, itemhead.id)}
+                          <div className={classes.textContainer}>
+                            {resolve(itemSub, itemhead.id)}
+                          </div>
                         </TableCell>
                       ))}
                     </TableRow>

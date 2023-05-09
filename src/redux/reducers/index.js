@@ -19,7 +19,9 @@ import serviceAvailable from "./serviceAvailable";
 import staff from "./staff";
 import socket from "./socket";
 import prescription from "./prescription";
+import alert from "./alert";
 export default combineReducers({
+  alert,
   prescription,
   socket,
   staff,

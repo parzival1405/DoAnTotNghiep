@@ -27,6 +27,7 @@ import {
   MonetizationOn,
   MedicalInformation,
   Store,
+  Paid,
 } from "@mui/icons-material";
 import { ListItemAvatar } from "@mui/material";
 
@@ -208,14 +209,15 @@ export const items = [
     id: "TCI",
     name: "Thu chi",
     icon: <MonetizationOn />,
-    role:[],
+    role: ["RECEPTIONIST"],
     subMenu: [
-      // {
-      //   id: "CTLK",
-      //   name: "Chi tiết loại Khám",
-      //   icon: <SignalCellularAlt />,
-      //   subMenu: [],
-      // },
+      {
+        id: "TTDV",
+        name: "Thanh toán dịch vụ",
+        icon: <PriceCheck />,
+        subMenu: [],
+        role: ["RECEPTIONIST"],
+      },
       // {
       //   id: "THLK",
       //   name: "Tổng hợp loại khám",
@@ -302,4 +304,6 @@ export const itemMap = new Map([
   ["THLK", "BC"],
   ["THDV", "BC"],
   ["THDT", "BC"],
+
+  ["TTDV","TCI"],
 ]);

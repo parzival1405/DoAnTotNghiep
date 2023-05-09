@@ -1,6 +1,5 @@
 import * as api from "../../api";
 import { GLOBALTYPES } from "../actionType";
-const qs = require("qs");
 
 export const getAllService = () => async (dispatch) => {
   try {

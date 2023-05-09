@@ -3,19 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useTable from "../../../hooks/useTable";
 import Controls from "../../Form/controls/Controls";
-import { Button, InputAdornment, TableBody, Toolbar } from "@mui/material";
-import { Search, Add } from "@mui/icons-material";
+import { InputAdornment, TableBody, Toolbar } from "@mui/material";
+import { Search } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
 import TableRow from "../../TableRow/TableContextMenu";
-import { useNavigate } from "react-router-dom";
-import {
-  ShowAddBatchProductModal,
-  ShowAddPrescriptionModal,
-} from "../../../redux/actions/modal";
 import useStyles from "../styles";
+import { HeadCellsServiceAvailableUnPaid } from "../../../utils/HeadCells";
 import { GLOBALTYPES } from "../../../redux/actionType";
-import { headCellsPrescriptionSide } from "../../../utils/HeadCells";
-
+import { ShowServicePaymentModal } from "../../../redux/actions/modal";
 const options = [
   { id: "", title: "Không" },
   {
@@ -44,39 +39,44 @@ const options = [
   },
 ];
 
-function PrescriptionSide({ item }) {
+const optionsDepartment = [
+  { id: "", title: "Tất cả" },
+  {
+    id: "dp1",
+    title: "Răng hàm mặt",
+  },
+  {
+    id: "dp2",
+    title: "Khám Mắt",
+  },
+  {
+    id: "dp3",
+    title: "Khám Nhi",
+  },
+];
+
+const record = []
+
+function ServicePaymentSide({ item }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { prescription } = useSelector((state) => state.prescription);
+  const [filter, setFiler] = useState({
+    category: "",
+    department: "",
+  });
+  const servicesAvailableUnpaid = useSelector((state) => state.serviceAvailable.servicesAvailableUnpaid);
 
-  const [filter, setFiler] = useState("");
-  const [recordForEdit, setRecordForEdit] = useState(null);
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
     },
   });
 
-  console.log(prescription);
-
-  const handleClickShowAddModal = () => {
-    dispatch(ShowAddPrescriptionModal(GLOBALTYPES.ADD));
-  };
-
-  const handleClickShowEditModal = (item) => {
-    dispatch(ShowAddPrescriptionModal(GLOBALTYPES.EDIT, item));
-  };
-
-  const handleClickShowViewModal = (item) => {
-    dispatch(ShowAddPrescriptionModal(GLOBALTYPES.VIEW, item));
-  };
-
-  const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(prescription, headCellsPrescriptionSide, filterFn);
+    useTable(servicesAvailableUnpaid, HeadCellsServiceAvailableUnPaid, filterFn);
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
-  const navigate = useNavigate();
+
   const handleSearch = (e) => {
     if (searchValue.startsWith(" ")) {
       return;
@@ -86,24 +86,22 @@ function PrescriptionSide({ item }) {
   };
 
   const onChangeSelected = (e) => {
-    setFiler(e.target.value);
+    setFiler((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleClick = (item, setContextMenu) => {
-    try {
-    } catch (error) {
-      alert("Sai mật khẩu");
-    }
-  };
+  const handleClick = (item) => {};
+
+  const handleShowModalPayment = (item) =>{
+    dispatch(ShowServicePaymentModal(GLOBALTYPES.EDIT,item))
+  }
+  const handleViewResult = (item) =>{
+    // dispatch(ShowUpdateServiceCLSModal(GLOBALTYPES.VIEW,item))
+  }
+  
+
   return (
     <>
       <Toolbar className={classes.toolBar} sx={{ pt: 2 }}>
-        <Controls.DatePicker
-          currentDate={true}
-          label="Từ ngày"
-          require={true}
-        />
-        <Controls.DatePicker label="Đến ngày" />
         <Controls.Input
           label="Tìm kiếm"
           className={classes.searchInput}
@@ -119,40 +117,41 @@ function PrescriptionSide({ item }) {
         <Controls.Select
           label="Tìm kiếm theo"
           variant="outlined"
+          name="category"
           onChange={onChangeSelected}
-          value={filter}
-          className={classes.selected20}
+          value={filter.category}
+          className={classes.selected}
           options={options}
-          // className={classes.newButton}
-          onClick={() => {}}
         />
-        <div style={{ flex: "1" }}></div>
-        <Button
-          variant="contained"
-          onClick={handleClickShowAddModal}
-          color="healing"
-          disableElevation
-          startIcon={<Add />}
-        >
-          Thêm
-        </Button>
+        <Controls.Select
+          label="Khoa"
+          variant="outlined"
+          name="department"
+          onChange={onChangeSelected}
+          value={filter.department}
+          className={classes.selectedD}
+          options={optionsDepartment}
+        />
       </Toolbar>
+
       <TblContainer>
         <TblHead />
         <TableBody
           style={{ overflowY: "scroll", height: "420px", display: "block" }}
         >
           {recordsAfterPagingAndSorting().map((item) => {
-            item.status = item.buyMedicine
+            item.category = item.serviceAvailable[0]
             return (
               <TableRow
                 handleDoubleClick={handleClick}
                 key={item.id}
                 item={item}
-                headCells={headCellsPrescriptionSide}
+                headCells={HeadCellsServiceAvailableUnPaid}
                 listItemMenu={[
-                  { title: "Xem", onClick: () => handleClickShowViewModal(item) },
-                  { title: "Xuất đơn thuốc", onClick: () => handleClickShowEditModal(item) },
+                  {
+                    title: "Thanh toán dịch vụ",
+                    onClick: () => handleShowModalPayment(item),
+                  },
                 ]}
               />
             );
@@ -164,4 +163,4 @@ function PrescriptionSide({ item }) {
   );
 }
 
-export default PrescriptionSide;
+export default ServicePaymentSide

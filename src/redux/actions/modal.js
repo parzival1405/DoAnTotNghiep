@@ -128,6 +128,15 @@ export const ShowUpdateServiceCLSModal = (typeOpen,item) => async (dispatch) => 
   } catch (err) {}
 };
 
+export const ShowServicePaymentModal = (typeOpen,item) => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.SHOW_SERVICE_PAYMENT_MODAL,
+      payload: { type: typeOpen, data: item },
+    });
+  } catch (err) {}
+};
+
 export const ShowAddPrescriptionModal = (typeOpen,item) => async (dispatch) => {
   try {
     dispatch({
@@ -146,6 +155,15 @@ export const ShowAddAccountStaffModal = (typeOpen) => async (dispatch) => {
   } catch (err) {}
 };
 
+export const ShowDetailedMedicalHistoryModal = (typeOpen,item) => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.SHOW_DETAIL_MEDICAL_HISTORY,
+      payload: { type: typeOpen, data: item },
+    });
+  } catch (err) {}
+};
+
 export const hideModal = (modal) => async (dispatch) => {
   try {
     dispatch({
@@ -154,3 +172,4 @@ export const hideModal = (modal) => async (dispatch) => {
     });
   } catch (err) {}
 };
+

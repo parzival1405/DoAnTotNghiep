@@ -1,17 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
 import { makeStyles } from "@mui/styles";
-import { useNavigate } from "react-router-dom";
-import Drawer from "../components/Drawer";
-import Sidemenu from "../components/Sidemenu";
-import Loading from "../components/Loading";
-import { useDispatch, useSelector } from "react-redux";
-import { initStomp } from "../redux/actions/stomp";
 import { Client } from "@stomp/stompjs";
-import { addExaminationRoleDoctor } from "../redux/actions/medicalExamination";
-import { initSocket } from "../redux/actions/socket";
+import React, { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
-import { addServiceAvailable } from "../redux/actions/serviceAvailable";
-import { addPrescription } from "../redux/actions/product";
+import Drawer from "../components/Drawer";
+import Loading from "../components/Loading";
+import { addExaminationRoleDoctor } from "../redux/actions/medicalExamination";
+import { addOrUpdatePrescription } from "../redux/actions/product";
+import { addOrUpdateServiceAvailable } from "../redux/actions/serviceAvailable";
+import { initSocket } from "../redux/actions/socket";
+import { initStomp } from "../redux/actions/stomp";
 const useStyles = makeStyles({
   appMain: {
     paddingLeft: "320px",
@@ -40,8 +38,10 @@ function Main() {
             client.subscribe(
               `/queue/${user.room.medicalDepartment.codeDepartment}`,
               (message) =>
-              // chỉ trường hợp khi chưa có bác sĩ
-                dispatch(addExaminationRoleDoctor(JSON.parse(message.body),user.id))
+                // chỉ trường hợp khi chưa có bác sĩ
+                dispatch(
+                  addExaminationRoleDoctor(JSON.parse(message.body), user.id)
+                )
             );
           },
         });
@@ -54,10 +54,8 @@ function Main() {
             passcode: "admin",
           },
           onConnect: () => {
-            client.subscribe(
-              `/queue/prescription`,
-              (message) =>
-                dispatch(addPrescription(JSON.parse(message.body)))
+            client.subscribe(`/queue/prescription`, (message) =>
+              dispatch(addOrUpdatePrescription(JSON.parse(message.body)))
             );
           },
         });
@@ -70,11 +68,9 @@ function Main() {
             passcode: "admin",
           },
           onConnect: () => {
-            client.subscribe(
-              `/queue/clinical_service`,
-              (message) =>
-                dispatch(addServiceAvailable(JSON.parse(message.body)))
-            );
+            client.subscribe(`/queue/clinical_service`, (message) => {
+              dispatch(addOrUpdateServiceAvailable(JSON.parse(message.body)));
+            });
           },
         });
       } else if (user.role == "RECEPTIONIST") {
@@ -105,8 +101,8 @@ function Main() {
     if (user) {
       socket.current = io(process.env.REACT_APP_URL_SERVER_SOCKET, {
         query: {
-          id:user.id,
-          role:user.role
+          id: user.id,
+          role: user.role,
         },
       });
       dispatch(initSocket({ socket: socket }));

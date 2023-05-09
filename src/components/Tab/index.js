@@ -46,6 +46,9 @@ function Tab() {
   const { client } = useSelector(
     (state) => state.stomp
   );
+  const { socket } = useSelector(
+    (state) => state.socket
+  );
   
   const [open, setOpen] = React.useState(false);
   const addOrDeleteDrug = useSelector(
@@ -57,7 +60,7 @@ function Tab() {
   };
 
   const handleSubmit = () => {
-    dispatch(updateMedicalExamination({ currentPatient, addOrDelete, addOrDeleteDrug,check },client));
+    dispatch(updateMedicalExamination({ currentPatient, addOrDelete, addOrDeleteDrug,check },client,socket.current));
   };
 
   const handleSubmitAndPrint = () => {};

@@ -1,5 +1,13 @@
 import { Add, Cancel, Close, Save } from "@mui/icons-material";
-import { Box, Button, Fade, Grid, Paper } from "@mui/material";
+import {
+  Box,
+  Button,
+  Fade,
+  Grid,
+  ImageListItem,
+  ImageListItemBar,
+  Paper,
+} from "@mui/material";
 import { DataGrid as MUIDataGrid } from "@mui/x-data-grid";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
@@ -16,6 +24,7 @@ import useDatagrid from "../../../hooks/useDatagrid";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
 import { updateServiceAvailable } from "../../../redux/actions/serviceAvailable";
 import { bloodResult, bloodResultColumn } from "../../../utils/ResultCLS";
+import ImageModal from "../ImageModal";
 
 const useStyle = makeStyles((theme) => ({
   mediaItem: {
@@ -90,13 +99,20 @@ function UpdateServiceCLS() {
 
   const [bloodResultData, setBloodResultData] = useState([]);
 
+  const [isShowFullImage, setIsShowFullImage] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [imageFull, setImageFull] = useState({
+    image: "",
+    title: "",
+  });
+
   useEffect(() => {
     if (data?.result?.length > 0) {
       setBloodResultData(data.result);
-    }else{
+    } else {
       setBloodResultData(bloodResult);
     }
-  }, [data,dispatch]);
+  }, [data, dispatch]);
 
   const handleHideModal = () => {
     dispatch(hideModal("isShowUpdateServiceCLSModal"));
@@ -107,11 +123,30 @@ function UpdateServiceCLS() {
   const { DataGrid } = useDatagrid(bloodResultColumn);
 
   const handleSubmitForm = async (values) => {
+    console.log(values);
     const formData = new FormData();
     formData.append("status", "DONE");
+    formData.append("conclusions",values.conclusions);
     media.forEach((item) => formData.append("files", item));
     formData.append("result", JSON.stringify(bloodResultData));
-    dispatch(updateServiceAvailable(data.id,data.doctor.id, formData,socket.current));
+    dispatch(
+      updateServiceAvailable(
+        data.id,
+        {
+          idMedicalExamination: data.idMedicalExamination,
+          doctorId: data.doctor.id,
+        },
+        formData,
+        socket.current
+      )
+    );
+    handleHideModal()
+  };
+
+  const handleClick = (name) => {
+    if (!selectedImages.includes(name)) {
+      setSelectedImages((prev) => [...prev, name]);
+    }
   };
 
   const handleChangeCells = (params, setFieldValue) => {
@@ -144,6 +179,11 @@ function UpdateServiceCLS() {
     setMedia(newMedia);
   };
 
+  const handleViewFullImageLightBox = (name, src) => {
+    setImageFull({ src: src, name: name });
+    setIsShowFullImage(true);
+  };
+
   const body = (
     <Fade in={open}>
       <Paper className={classes.paper} id="modal-patient-reception">
@@ -151,6 +191,16 @@ function UpdateServiceCLS() {
           title={titleModal(typeOpenModal, "kết quả cls")}
           onClose={handleHideModal}
         />
+
+        {isShowFullImage && (
+          <ImageModal
+            src={imageFull.src}
+            name={imageFull.name}
+            onClose={() => setIsShowFullImage(false)}
+            isShowFullImage={isShowFullImage}
+          />
+        )}
+
         <Formik
           initialValues={
             typeOpenModal == GLOBALTYPES.ADD ? initialValues : data
@@ -188,30 +238,35 @@ function UpdateServiceCLS() {
                 <InputLabel
                   disable={type(typeOpenModal)}
                   label="Kết luận"
-                  name="name"
-                  // value={values?.result}
+                  name="conclusions"
+                  value={values?.conclusions}
                   onChange={handleChange}
                   size={[2, 10]}
                 />
-                <Grid item xs={9} />
-                <Grid item xs={3}>
-                  <Button
-                    variant="contained"
-                    component="label"
-                    disabled={type(typeOpenModal)}
-                  >
-                    Thêm hình ảnh
-                    <input
-                      type="file"
-                      hidden
-                      multiple
-                      accept="image/*"
-                      name="fileAvatar"
-                      id="fileAvatar"
-                      onChange={handleChangeMedia}
-                    />
-                  </Button>
-                </Grid>
+                {typeOpenModal != GLOBALTYPES.DOCTOR_VIEW && (
+                  <>
+                    <Grid item xs={10} />
+                    <Grid item xs={2}>
+                      <Button
+                        variant="contained"
+                        component="label"
+                        disabled={type(typeOpenModal)}
+                        style={{ width: "100%" }}
+                      >
+                        Thêm hình ảnh
+                        <input
+                          type="file"
+                          hidden
+                          multiple
+                          accept="image/*"
+                          name="fileAvatar"
+                          id="fileAvatar"
+                          onChange={handleChangeMedia}
+                        />
+                      </Button>
+                    </Grid>{" "}
+                  </>
+                )}
                 {media?.map((item, index) => (
                   <Grid item xs={3}>
                     {
@@ -226,18 +281,30 @@ function UpdateServiceCLS() {
                     </span>
                   </Grid>
                 ))}
-                {data?.image?.map((item, index) => (
+                {data?.images?.map((item, index) => (
                   <Grid item xs={3}>
-                    {
-                      <img
-                        src={item}
-                        alt="images"
-                        style={{ width: "90%", height: "90%" }}
-                      />
-                    }
-                    <span onClick={() => handleDeleteMedia(index)}>
-                      <Cancel />{" "}
-                    </span>
+                    <ImageListItem
+                      key={item}
+                      onClick={() =>
+                        handleViewFullImageLightBox(
+                          "",
+                          item
+                        )
+                      }
+                    >
+                      {
+                        <img
+                          src={item}
+                          alt="images"
+                          style={{ width: "90%", height: "90%" }}
+                        />
+                      }
+                      {typeOpenModal != GLOBALTYPES.DOCTOR_VIEW && (
+                        <span onClick={() => handleDeleteMedia(index)}>
+                          <Cancel />{" "}
+                        </span>
+                      )}
+                    </ImageListItem>
                   </Grid>
                 ))}
               </Grid>
@@ -253,30 +320,32 @@ function UpdateServiceCLS() {
               </Box>
 
               {/* button -------------------- */}
-              <div className={classes.action}>
-                <Controls.Button
-                  color="primary"
-                  variant="contained"
-                  // type="submit"
-                  // disable={isSubmitting}
-                  onKeyPress={(e) => {
-                    console.log("here");
-                    e.which === 13 && e.preventDefault();
-                  }}
-                  onClick={() => handleSubmitForm(values)}
-                  text="Cập nhật"
-                  startIcon={<Save />}
-                  sx={{ mr: 1 }}
-                />
+              {typeOpenModal != GLOBALTYPES.DOCTOR_VIEW && (
+                <div className={classes.action}>
+                  <Controls.Button
+                    color="primary"
+                    variant="contained"
+                    // type="submit"
+                    // disable={isSubmitting}
+                    onKeyPress={(e) => {
+                      console.log("here");
+                      e.which === 13 && e.preventDefault();
+                    }}
+                    onClick={() => handleSubmitForm(values)}
+                    text="Cập nhật"
+                    startIcon={<Save />}
+                    sx={{ mr: 1 }}
+                  />
 
-                <Controls.Button
-                  variant="contained"
-                  text="Hủy"
-                  color="error"
-                  startIcon={<Close />}
-                  onClick={handleHideModal}
-                />
-              </div>
+                  <Controls.Button
+                    variant="contained"
+                    text="Hủy"
+                    color="error"
+                    startIcon={<Close />}
+                    onClick={handleHideModal}
+                  />
+                </div>
+              )}
             </Form>
           )}
         </Formik>

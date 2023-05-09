@@ -65,11 +65,20 @@ export const updateProduct = (formData) => async (dispatch) => {
       payload: data,
     });
 } 
-export const addPrescription = (data) => async (dispatch) => {
+export const addOrUpdatePrescription = (data) => async (dispatch) => {
   try {
+    const data2 = {
+      id: data.id,
+      doctor: data.doctor,
+      updatedDate: data.updatedDate,
+      patient: data.patient,
+      diagnose: data.diagnose,
+      prescription: data.detailMedicineResponses,
+    }
+
     dispatch({
       type: GLOBALTYPES.ADD_PRESCRIPTION,
-      payload: data,
+      payload: data2,
     });
   } catch (err) {
     console.log(err);

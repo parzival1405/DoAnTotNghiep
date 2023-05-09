@@ -21,10 +21,14 @@ export default (state = initState, action) => {
         // clinicalService: action.payload.medicalExaminationDetailsResponses,
       };
     case GLOBALTYPES.UPDATE_DONE_SERVICE_CLS:
+      console.log(state.clinicalService)
       return {
         ...state,
-        clinicalService: state.clinicalService.map((item) => item.id === action.payload.id ? action.payload : item)
-        // clinicalService: action.payload.medicalExaminationDetailsResponses,
+        clinicalService: state.clinicalService.map((item) =>
+          item.id === action.payload.data.id
+            ? action.payload.data
+            : item
+        )
       };
     // update field
     case GLOBALTYPES.UPDATE_FIELD_CURRENT_PATIENT:

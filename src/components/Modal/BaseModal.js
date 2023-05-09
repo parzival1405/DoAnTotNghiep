@@ -3,11 +3,14 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import useStyles from './styles'
 import {hideModal} from '../../redux/actions/modal'
-function BaseModal({body, isShow}) {
+function BaseModal({body, isShow,callback}) {
     const classes = useStyles()
     const dispatch = useDispatch()
 
     const handleCloseModal = React.useCallback(() => {
+        if(callback){
+            callback()
+        }
         dispatch(hideModal())
         // dispatch(removeUserState())
     },[dispatch])

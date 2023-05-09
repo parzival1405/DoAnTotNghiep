@@ -1,12 +1,8 @@
-import { Close, LabelOutlined, Save } from "@mui/icons-material";
+import { Close, Save } from "@mui/icons-material";
 import {
   Fade,
   Grid,
-  InputAdornment,
-  Paper,
-  RadioGroup,
-  TableBody,
-  TextField,
+  Paper
 } from "@mui/material";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
@@ -16,15 +12,13 @@ import InputLabel from "../../Form/ControlsLabel/InputLabel";
 import BaseModal from "../BaseModal";
 
 import { makeStyles } from "@mui/styles";
-import ModalHeader from "../ModalHeader";
-import Controls from "../../Form/controls/Controls";
-import useTable from "../../../hooks/useTable";
-import TableRow from "../../TableRow/TableContextMenu";
-import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
-import DateLabel from "../../Form/ControlsLabel/DateLabel";
-import { titleModal, type } from "../../../utils/TypeOpen";
 import { GLOBALTYPES } from "../../../redux/actionType";
 import { updatePatient } from "../../../redux/actions/patient";
+import { titleModal, type } from "../../../utils/TypeOpen";
+import DateLabel from "../../Form/ControlsLabel/DateLabel";
+import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
+import Controls from "../../Form/controls/Controls";
+import ModalHeader from "../ModalHeader";
 
 const useStyle = makeStyles((theme) => ({
   paper: {

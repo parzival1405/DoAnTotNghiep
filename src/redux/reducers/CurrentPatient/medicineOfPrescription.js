@@ -68,7 +68,7 @@ export default (state = initState, action) => {
         }
       }
     case GLOBALTYPES.UPDATE_MEDICINE_OF_PRESCRIPTION:
-      const { designate, quantity } = action.payload;
+      const { designate, purchaseQuantity } = action.payload;
       const addOrDeleteDrug2 = state.addOrDeleteDrug.find(
         (e) => e.drugId == action.payload.id
       );
@@ -78,7 +78,7 @@ export default (state = initState, action) => {
           addOrDeleteDrug: [
             {
               drugId: action.payload.id,
-              quantity: quantity,
+              quantity: purchaseQuantity,
               designate: designate,
               type: "update",
             },
@@ -90,12 +90,12 @@ export default (state = initState, action) => {
           ...state,
           medicineOfPrescription: state.medicineOfPrescription.map((item) =>
             item.id == action.payload.id
-              ? { ...item, quantity: quantity, designate: designate }
+              ? { ...item, purchaseQuantity: purchaseQuantity, designate: designate }
               : item
           ),
           addOrDeleteDrug: state.addOrDeleteDrug.map((item) =>
             item.drugId == action.payload.id
-              ? { ...item, quantity: quantity, designate: designate }
+              ? { ...item, quantity: purchaseQuantity, designate: designate }
               : item
           ),
         };

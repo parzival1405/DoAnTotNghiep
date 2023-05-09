@@ -40,6 +40,12 @@ function AddPrescriptionDrawer({ open, setOpen }) {
     }
   } ,[filterCategory])
 
+  
+  const handleDeleteDrug = (id) => {
+    console.log(id)
+  }
+
+
   const dataArrayRender = useMemo(
     () =>
       medicineOfPrescription?.map((item, index) => ({
@@ -47,8 +53,10 @@ function AddPrescriptionDrawer({ open, setOpen }) {
         stt: index + 1,
         name: item.name,
         quantity: item.quantity,
+        purchaseQuantity : item.purchaseQuantity,
         designate: item.designate,
         price: item.price,
+        callback: () => handleDeleteDrug(item.id)
       })),
     [medicineOfPrescription]
   );
@@ -80,10 +88,10 @@ function AddPrescriptionDrawer({ open, setOpen }) {
 
   const handleChangeCells = (params) => {
     const updatedRow = { ...params, isNew: false };
-
+    console.log(params);
     const oldDevices = medicineOfPrescription.map((dev) =>
       dev.id === params.id
-        ? { ...dev, quantity: params.quantity ?  params.quantity : 0, price: params.price }
+        ? { ...dev, purchaseQuantity: params.purchaseQuantity ?  params.purchaseQuantity : 0, price: params.price }
         : dev
     );
     setTotalPrice(calcTotalPrice(oldDevices));
@@ -94,14 +102,13 @@ function AddPrescriptionDrawer({ open, setOpen }) {
 
   const calcTotalPrice = (products) => {
     return products.reduce(
-      (accumulator, item) => accumulator + item.quantity * item.price,
+      (accumulator, item) => accumulator + item.purchaseQuantity * item.price,
       0
     );
   };
 
   const onSelectCategory = (event,newValue) => {
     setFilterCategory(newValue)
-
   }
 
   return (

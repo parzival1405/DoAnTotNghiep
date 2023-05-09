@@ -48,7 +48,7 @@ function ExaminationInformation() {
               <InputLabel
                 label="Tuổi"
                 name="patient.dateOfBirth"
-                value={dayjs().diff(values["patient"]?.dateOfBirth)}
+                value={dayjs().diff(values["patient"]?.dateOfBirth,"year")}
                 size={[2, 3]}
                 onChange={handleChange}
                 disable={true}

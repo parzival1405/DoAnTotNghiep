@@ -29,7 +29,9 @@ import { refreshToken } from "./redux/actions/auth";
 import ReadQRCodeModal from "./components/Modal/ReadQRCodeModal";
 import AddPrescriptionModal from "./components/Modal/AddPrescriptionModal";
 import UpdateServiceCLS from "./components/Modal/UpdateServiceCLS";
-
+import ServicePaymentModal from "./components/Modal/ServicePaymentModal";
+import { SnackbarProvider } from "notistack";
+import DetailedMedicalHistory from "./components/Modal/DetailedMedicalHistory";
 function App() {
   const { user } = useSelector((state) => state.auth);
 
@@ -84,50 +86,59 @@ function App() {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <HashRouter>
-        <OTPModal />
-        <PatientReceptionModal />
-        <AddScheduleModal />
-        <AddBatchProductModal />
-        <AddSupplierModal />
-        <AddDrugModal />
-        <AddAccountStaffModal />
-        <AddPermissionModal />
-        <PatientModal />
-        <AddProductGroupsModal />
-        <AddServiceModal />
-        <AddTypeServiceGroupsModal />
-        <AddPrescriptionModal />
-        <ReadQRCodeModal/>
-        <UpdateServiceCLS/>
-        <Routes>
-          <Route
-            exact
-            path="*"
-            element={
-              user ? (
-                <Navigate to="/Homepage" replace />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          ></Route>
-          <Route exact path="/login" element={<Login />}></Route>
-          <Route
-            exact
-            path="/forgotPassword"
-            element={<ForgotPassword />}
-          ></Route>
-          <Route
-            exact
-            path="/Homepage"
-            element={user ? <Homepage /> : <Navigate to="/login" replace />}
-          ></Route>
-          <Route exact path="/Checkup" element={<Checkup />}></Route>
-        </Routes>
-      </HashRouter>
-    </ThemeProvider>
+    <SnackbarProvider
+      maxSnack={6}
+      autoHideDuration={5000}
+      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      style={{ backgroundColor: "#00ff99" }}
+    >
+      <ThemeProvider theme={theme}>
+        <HashRouter>
+          <OTPModal />
+          <PatientReceptionModal />
+          <AddScheduleModal />
+          <AddBatchProductModal />
+          <AddSupplierModal />
+          <AddDrugModal />
+          <AddAccountStaffModal />
+          <AddPermissionModal />
+          <PatientModal />
+          <AddProductGroupsModal />
+          <AddServiceModal />
+          <AddTypeServiceGroupsModal />
+          <AddPrescriptionModal />
+          <ReadQRCodeModal />
+          <UpdateServiceCLS />
+          <ServicePaymentModal />
+          <DetailedMedicalHistory/>
+          <Routes>
+            <Route
+              exact
+              path="*"
+              element={
+                user ? (
+                  <Navigate to="/Homepage" replace />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            ></Route>
+            <Route exact path="/login" element={<Login />}></Route>
+            <Route
+              exact
+              path="/forgotPassword"
+              element={<ForgotPassword />}
+            ></Route>
+            <Route
+              exact
+              path="/Homepage"
+              element={user ? <Homepage /> : <Navigate to="/login" replace />}
+            ></Route>
+            <Route exact path="/Checkup" element={<Checkup />}></Route>
+          </Routes>
+        </HashRouter>
+      </ThemeProvider>
+    </SnackbarProvider>
   );
 }
 

@@ -9,5 +9,15 @@ export default makeStyles((theme) => ({
   },
   inf:{
     margin:1,
+  },
+  wrapPrescription:{
+    
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  containerPrescription:{
+    width:"100%",
   }
 }));

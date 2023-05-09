@@ -62,7 +62,7 @@ function ServiceListSide({ item }) {
     category: "",
     department: "",
   });
-  const { servicesAvailable } = useSelector((state) => state.serviceAvailable);
+  const servicesAvailable= useSelector((state) => state.serviceAvailable.servicesAvailable);
 
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {

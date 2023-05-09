@@ -57,7 +57,7 @@ export const setCurrentPatient =
         })),
       });
 
-      const serviceResponse = await api.getAllService();
+      const serviceResponse = await api.getAllServiceCLS(true);
       dispatch({
         type: GLOBALTYPES.GET_ALL_SERVICE,
         payload: serviceResponse.data,

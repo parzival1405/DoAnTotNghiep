@@ -1,44 +1,28 @@
-import { Add, Close, Delete, Edit, Save } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Divider,
-  Fade,
-  Grid,
-  IconButton,
-  Paper,
-} from "@mui/material";
-import { DataGrid as MUIDataGrid } from "@mui/x-data-grid";
+import { Close, Save } from "@mui/icons-material";
+import { Box, Button, Fade, Grid, Paper } from "@mui/material";
 import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  hideModal,
-  ShowAddDrugModal,
-  ShowAddSupplierModal,
-} from "../../../redux/actions/modal";
+import { hideModal } from "../../../redux/actions/modal";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
 import BaseModal from "../BaseModal";
 
 import { makeStyles } from "@mui/styles";
-import ModalHeader from "../ModalHeader";
-import Controls from "../../Form/controls/Controls";
-import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
-import DateLabel from "../../Form/ControlsLabel/DateLabel";
-import useTable from "../../../hooks/useTable";
-import TableRow from "../../TableRow/TableContextMenu";
-import { GLOBALTYPES } from "../../../redux/actionType";
-import { titleModal, type } from "../../../utils/TypeOpen";
-import { headCellsProductAddBatchProduct } from "../../../utils/HeadCells";
+import ReactToPrint from "react-to-print";
 import useDatagrid from "../../../hooks/useDatagrid";
+import { GLOBALTYPES } from "../../../redux/actionType";
 import {
   addNewProductToBatch,
-  removeNewProductInBatch,
-  saveArrayDrug,
-  saveBatchProduct,
   updateNewProductInBatch,
 } from "../../../redux/actions/batchProduct";
-import { getCurrentDateString } from "../../../utils/Calc";
+import { buyMedicineMedicalExamination } from "../../../redux/actions/medicalExamination";
+import { headCellsPrescriptionPayment } from "../../../utils/HeadCells";
+import { titleModal, type } from "../../../utils/TypeOpen";
+import DateLabel from "../../Form/ControlsLabel/DateLabel";
+import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
+import Controls from "../../Form/controls/Controls";
+import { PrescriptionPrint } from "../../PrintComponent/PrescriptionPrint";
+import ModalHeader from "../ModalHeader";
 const useStyle = makeStyles((theme) => ({
   paper: {
     width: "70%",
@@ -87,7 +71,7 @@ const initialValues = {};
 
 function AddPrescriptionModal() {
   const [hoveredRow, setHoveredRow] = useState(null);
-
+  const componentRef = useRef();
   const isShowAddPrescriptionModal = useSelector(
     (state) => state.modal.isShowAddPrescriptionModal
   );
@@ -102,15 +86,17 @@ function AddPrescriptionModal() {
     dispatch(hideModal("isShowAddPrescriptionModal"));
   };
 
-  const newHeaderFunction = [];
-
-  const { DataGrid } = useDatagrid(newHeaderFunction);
+  const { DataGrid } = useDatagrid(headCellsPrescriptionPayment);
 
   const handleSubmitForm = async (values) => {
-    if (newAddProducts.length > 0) {
-      handleHideModal();
+    if (data) {
+      dispatch(buyMedicineMedicalExamination(data.id));
     } else {
-      alert("Không có sản phẩm");
+      if (newAddProducts.length > 0) {
+        handleHideModal();
+      } else {
+        alert("Không có sản phẩm");
+      }
     }
   };
 
@@ -183,13 +169,13 @@ function AddPrescriptionModal() {
                   disable={type(typeOpenModal)}
                   label="Tên khách hàng"
                   name="name"
-                  value={data ? data.name : values?.name}
+                  value={data ? data.patient.fullName : values?.name}
                   onChange={handleChange}
                   size={[2, 10]}
                 />
                 <InputLabel
                   label="Người nhập"
-                  value={data ? data.user.fullName : user.fullName}
+                  value={data ? data?.user?.fullName : user.fullName}
                   disable={true}
                   require={true}
                   size={[2, 5]}
@@ -236,10 +222,11 @@ function AddPrescriptionModal() {
                   disable={data ? true : false}
                   records={
                     data
-                      ? data.detailBatchDrugResponses.map((item, index) => ({
+                      ? data.prescription.map((item, index) => ({
                           stt: index + 1,
                           name: item.drug.name,
                           quantity: item.quality,
+                          price: item.drug.price,
                           ...item,
                         }))
                       : newAddProducts.map((item, index) => ({
@@ -262,7 +249,19 @@ function AddPrescriptionModal() {
                 <InputLabel
                   label="Tổng cộng"
                   name="totalPrice"
-                  value={data ? data.totalPrice : values?.totalPrice}
+                  value={
+                    data
+                      ? calcTotalPrice(
+                          data.prescription.map((item, index) => ({
+                            stt: index + 1,
+                            name: item.drug.name,
+                            quantity: item.quality,
+                            price: item.drug.price,
+                            ...item,
+                          }))
+                        )
+                      : values?.totalPrice
+                  }
                   disable={true}
                   size={[2, 3]}
                 />
@@ -285,6 +284,23 @@ function AddPrescriptionModal() {
                   sx={{ mr: 1 }}
                 />
 
+                <ReactToPrint
+                  trigger={() => {
+                    return (
+                      <Button
+                        variant="contained"
+                        disableElevation
+                        color="yellow"
+                        sx={{ mr: 1 }}
+                        startIcon={<Save />}
+                      >
+                        Thanh toán & in hóa đơn
+                      </Button>
+                    );
+                  }}
+                  content={() => componentRef.current}
+                />
+
                 <Controls.Button
                   variant="contained"
                   text="Hủy"
@@ -296,6 +312,9 @@ function AddPrescriptionModal() {
             </Form>
           )}
         </Formik>
+        <div style={{ display: "none" }}>
+          <PrescriptionPrint ref={componentRef} data={data} />
+        </div>
       </Paper>
     </Fade>
   );

@@ -31,27 +31,29 @@ import {
   callAPIForAddSupplierSide,
   callAPIForAddProductSide,
   callAPIForAccountSide,
-  callAPIForAddPrescriptionSide
+  callAPIForAddPrescriptionSide,
+  callAPIServicePaymentSide,
 } from "../../redux/actions/callAPI";
 import { getCurrentDateString } from "../../utils/Calc";
 import SaleReportSide from "./SaleReportSide";
 import PrescriptionSide from "./PrescriptionSide";
 import { GLOBALTYPES } from "../../redux/actionType";
 import { receiverExaminationLetterCurrentDate } from "../../redux/actions/medicalLetter";
+import ServicePaymentSide from "./ServicePaymentSide";
 
 const permission = {
-  admin : ["ADMIN"],
-  doctor : ["DOCTOR"],
-  reception : ["RECEPTIONIST"],
-  drugDealer : ["DRUG_DEALER"],
-}
+  admin: ["ADMIN"],
+  doctor: ["DOCTOR"],
+  reception: ["RECEPTIONIST"],
+  drugDealer: ["DRUG_DEALER"],
+};
 
 function Side() {
   const { IDSelected, ParentWithSelectedChild } = useSelector(
     (state) => state.sidebar
   );
   const { socket } = useSelector((state) => state.socket);
-  const {user} = useSelector((state) => state.auth)
+  const { user } = useSelector((state) => state.auth);
   const classes = useStyle();
 
   const { isLoadingCallApi } = useSelector((state) => state.loading);
@@ -86,24 +88,24 @@ function Side() {
         // dispatch(getAllPatient());
         break;
       case "TDBN":
-        var date = getCurrentDateString()
-        var formData = new FormData()
-        formData.append("date",date)
+        var date = getCurrentDateString();
+        var formData = new FormData();
+        formData.append("date", date);
         dispatch(callAPIForPatientReceptionSide(formData));
         break;
       case "DSDV":
-        var date = getCurrentDateString()
-        var formData = new FormData()
-        formData.append("date",date)
+        var date = getCurrentDateString();
+        var formData = new FormData();
+        formData.append("date", date);
         dispatch(callAPIForServiceListSide(formData));
         break;
       case "HMB":
-        var date = getCurrentDateString()
-        var formData = new FormData()
+        var date = getCurrentDateString();
+        var formData = new FormData();
         var currentDay = getCurrentDateString();
-        formData.append("date",currentDay)
-        formData.append("roomId",user.room.id)
-        formData.append("doctorId",user.id)
+        formData.append("date", currentDay);
+        formData.append("roomId", user.room.id);
+        formData.append("doctorId", user.id);
         dispatch(callAPIForMedicalExaminationSide(formData));
         break;
       case "NSP":
@@ -127,7 +129,16 @@ function Side() {
         dispatch(callAPIForAddSupplierSide());
         break;
       case "DNT":
-        dispatch(callAPIForAddPrescriptionSide());
+        var date = getCurrentDateString();
+        var formData = new FormData();
+        formData.append("date", date);
+        dispatch(callAPIForAddPrescriptionSide(formData));
+        break;
+      case "TTDV":
+        var date = getCurrentDateString();
+        var formData = new FormData();
+        formData.append("date", date);
+        dispatch(callAPIServicePaymentSide(formData));
         break;
     }
 
@@ -136,7 +147,7 @@ function Side() {
 
   useEffect(() => {
     socket?.current.on("receiveMedicalExamination", (data) => {
-      console.log(data)
+      console.log(data);
       dispatch({
         type: GLOBALTYPES.DOCTOR_RECEIVE_EXAMINATION,
         payload: data,
@@ -160,15 +171,27 @@ function Side() {
   useEffect(() => {
     socket?.current.on("receiveDoneServiceCLS", (data) => {
       console.log(data)
-      // dispatch({
-      //   type: GLOBALTYPES.UPDATE_DONE_SERVICE_CLS,
-      //   payload: data,
-      // });
+      dispatch({
+        type: GLOBALTYPES.UPDATE_DONE_SERVICE_CLS,
+        payload: data,
+      });
     });
 
     return () => socket?.current.off("receiveDoneServiceCLS");
   }, [socket, dispatch]);
   
+  useEffect(() => {
+    socket?.current.on("receiveServicePayment", (data) => {
+      console.log(data);
+      dispatch({
+        type: GLOBALTYPES.UNPAID_SERVICE_CLS,
+        payload: data,
+      });
+    });
+
+    return () => socket?.current.off("receiveServicePayment");
+  }, [socket, dispatch]);
+
   return isLoadingCallApi ? (
     <Loading className={classes.positionNone} />
   ) : (
@@ -192,6 +215,8 @@ function Side() {
         {item?.id == "NCCDV" && <AddSupplierSide item={item} />}
         {item?.id == "THDT" && <SaleReportSide item={item} />}
         {item?.id == "DNT" && <PrescriptionSide item={item} />}
+        {item?.id == "TTDV" && <ServicePaymentSide item={item} />}
+
         {/* 
         {item?.id == "CHGB" && <ConfigSellingPriceSide item={item} />}
          */}

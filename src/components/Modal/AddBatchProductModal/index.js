@@ -103,7 +103,6 @@ function AddBatchProductModal() {
 
   let newHeaderFunction = headCellsProductAddBatchProduct;
   if (!newHeaderFunction.filter((e) => e.field === "actions").length > 0) {
-    console.log("here");
     newHeaderFunction.push({
       field: "actions",
       headerName: "",

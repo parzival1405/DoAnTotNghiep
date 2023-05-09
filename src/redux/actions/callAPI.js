@@ -1,13 +1,14 @@
 import { GLOBALTYPES } from "../actionType";
 import * as api from "../../api";
 
-export const callAPIForPatientReceptionSide =(formData) => async (dispatch) => {
+export const callAPIForPatientReceptionSide =
+  (formData) => async (dispatch) => {
     try {
       dispatch({
         type: GLOBALTYPES.START_LOADING_CALL_API,
       });
 
-      const serviceResponse = await api.getAllService();
+      const serviceResponse = await api.getAllServiceCLS(false);
       dispatch({
         type: GLOBALTYPES.GET_ALL_SERVICE,
         payload: serviceResponse.data,
@@ -81,7 +82,8 @@ export const callAPIForScheduleSide = (data) => async (dispatch) => {
   }
 };
 
-export const callAPIForMedicalExaminationSide = (formData) => async (dispatch) => {
+export const callAPIForMedicalExaminationSide =
+  (formData) => async (dispatch) => {
     try {
       dispatch({
         type: GLOBALTYPES.START_LOADING_CALL_API,
@@ -165,25 +167,25 @@ export const callAPIForServiceListSide = (formData) => async (dispatch) => {
 
     const { data } = await api.getExaminationsCurrentDayAndRoom(formData);
 
-    let arrayService = []
+    let arrayService = [];
     for (let i = 0; i < data.length; i++) {
       const service = data[i].medicalExaminationDetailsResponses.filter(
         (item, index) => index != 0
       );
-  
-      const serviceCLS = service.map((item) => ({
-        id: data[i].id,
-        doctor: data[i].doctor,
-        updatedDate: data[i].updatedDate,
-        patient: data[i].patient.fullName,
-        diagnose: data[i].diagnose,
-        ...item,
-      }));
 
-      arrayService.push(...serviceCLS)
+      const serviceCLS = service
+        .filter((item) => item.paid === true)
+        .map((item) => ({
+          idMedicalExamination: data[i].id,
+          doctor: data[i].doctor,
+          updatedDate: data[i].updatedDate,
+          patient: data[i].patient.fullName,
+          diagnose: data[i].diagnose,
+          ...item,
+        }));
+
+      arrayService.push(...serviceCLS);
     }
-
-    console.log(arrayService);
 
     dispatch({
       type: GLOBALTYPES.GET_ALL_SERVICE_AVAILABLE,
@@ -194,7 +196,40 @@ export const callAPIForServiceListSide = (formData) => async (dispatch) => {
       type: GLOBALTYPES.END_LOADING_CALL_API,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    dispatch({
+      type: GLOBALTYPES.END_LOADING_CALL_API,
+    });
+  }
+};
+
+export const callAPIServicePaymentSide = (formData) => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.START_LOADING_CALL_API,
+    });
+
+    const { data } = await api.getExaminationsCurrentDayAndRoom(formData);
+
+    const data2 = data.map((item) => ({
+      id: item.id,
+      doctor: item.doctor,
+      updatedDate: item.updatedDate,
+      patient: item.patient,
+      diagnose: item.diagnose,
+      serviceAvailable: item.medicalExaminationDetailsResponses,
+    }));
+
+    dispatch({
+      type: GLOBALTYPES.ALL_UNPAID_SERVICE_CLS,
+      payload: data2.filter((item) => item.serviceAvailable.length >= 2),
+    });
+
+    dispatch({
+      type: GLOBALTYPES.END_LOADING_CALL_API,
+    });
+  } catch (error) {
+    console.log(error);
     dispatch({
       type: GLOBALTYPES.END_LOADING_CALL_API,
     });
@@ -287,10 +322,27 @@ export const callAPIForAccountSide = () => async (dispatch) => {
   }
 };
 
-export const callAPIForAddPrescriptionSide = () => async (dispatch) => {
+export const callAPIForAddPrescriptionSide = (formData) => async (dispatch) => {
   try {
     dispatch({
       type: GLOBALTYPES.START_LOADING_CALL_API,
+    });
+
+    const { data } = await api.getExaminationsCurrentDayAndRoom(formData);
+
+    const data2 = data.map((item) => ({
+      id: item.id,
+      doctor: item.doctor,
+      updatedDate: item.updatedDate,
+      patient: item.patient,
+      diagnose: item.diagnose,
+      prescription: item.detailMedicineResponses,
+      buyMedicine: item.buyMedicine ? "Đã thanh toán" : "Chưa thanh toán",
+    }));
+
+    dispatch({
+      type: GLOBALTYPES.ALL_UNPAID_PRESCRIPTION,
+      payload: data2.filter((item) => item.prescription.length > 0),
     });
 
     const productResponse = await api.getAllProduct();

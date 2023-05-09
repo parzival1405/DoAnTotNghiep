@@ -21,8 +21,10 @@ export default function modalReducers(
     isShowAddProductGroupsModal: initType,
     isShowAddServiceModal: initType,
     isShowAddTypeServiceGroupsModal: initType,
-    isShowAddPrescriptionModal:initType,
-    isShowUpdateServiceCLSModal:initType,
+    isShowAddPrescriptionModal: initType,
+    isShowUpdateServiceCLSModal: initType,
+    isShowServicePaymentModal: initType,
+    isShowDetailedMedicalHistoryModal:initType,
   },
   action
 ) {
@@ -36,6 +38,26 @@ export default function modalReducers(
           data: action.payload.data,
         },
       };
+    case GLOBALTYPES.SHOW_DETAIL_MEDICAL_HISTORY:
+      return {
+        ...state,
+        isShowDetailedMedicalHistoryModal: {
+          open: true,
+          typeOpenModal: action.payload.type,
+          data: action.payload.data,
+        },
+      };
+
+    case GLOBALTYPES.SHOW_SERVICE_PAYMENT_MODAL:
+      return {
+        ...state,
+        isShowServicePaymentModal: {
+          open: true,
+          typeOpenModal: action.payload.type,
+          data: action.payload.data,
+        },
+      };
+
     case GLOBALTYPES.SHOW_ADD_SERVICE_MODAL:
       return {
         ...state,
@@ -45,16 +67,16 @@ export default function modalReducers(
           data: action.payload.data,
         },
       };
-      case GLOBALTYPES.SHOW_UPDATE_SERVICE_CLS_MODAL:
-        return {
-          ...state,
-          isShowUpdateServiceCLSModal: {
-            open: true,
-            typeOpenModal: action.payload.type,
-            data: action.payload.data,
-          },
-        };
-      
+    case GLOBALTYPES.SHOW_UPDATE_SERVICE_CLS_MODAL:
+      return {
+        ...state,
+        isShowUpdateServiceCLSModal: {
+          open: true,
+          typeOpenModal: action.payload.type,
+          data: action.payload.data,
+        },
+      };
+
     case GLOBALTYPES.SHOW_ADD_PRESCRIPTION_MODAL:
       return {
         ...state,

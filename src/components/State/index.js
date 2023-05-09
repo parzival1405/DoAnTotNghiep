@@ -1,10 +1,15 @@
-import { Chip } from '@mui/material'
-import React from 'react'
+import { Chip } from "@mui/material";
+import React from "react";
 
-function State({type,color}) {
+function State({ type, color }) {
   return (
-    <Chip label={type} color={color}/>
-  )
+    <Chip
+      label={
+        type == "DONE" ? "Hoàn thoành" : type == "DOING" ? "Đang làm" : "status"
+      }
+      color={color}
+    />
+  );
 }
 
-export default State
+export default State;

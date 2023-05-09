@@ -36,10 +36,7 @@ export const saveExamination =
           body: JSON.stringify(data),
         });
       } else {
-        socket.emit(
-          "newMedicalExamination",
-          JSON.stringify(data)
-        );
+        socket.emit("newMedicalExamination", JSON.stringify(data));
       }
       dispatch({
         type: GLOBALTYPES.ADD_EXAMINATION,
@@ -75,8 +72,9 @@ export const addExaminationRoleDoctor = (data, id) => async (dispatch) => {
 };
 
 export const updateMedicalExamination =
-  (formData, client) => async (dispatch) => {
-    const { currentPatient, addOrDelete, addOrDeleteDrug,check } = formData;
+  (formData, client, socket) => async (dispatch) => {
+    const { currentPatient, addOrDelete, addOrDeleteDrug, check } = formData;
+
     try {
       const sendData = {
         doctorId: currentPatient.doctor.id,
@@ -99,7 +97,7 @@ export const updateMedicalExamination =
         result: currentPatient.result,
         medicalExaminationDetailsRequests: addOrDelete,
         detailMedicineRequests: addOrDeleteDrug,
-        status:check?.value ? check.value : "DOING"
+        status: check?.value ? check.value : "DOING",
       };
 
       const { data } = await api.updateMedicalExamination(
@@ -115,33 +113,48 @@ export const updateMedicalExamination =
       dispatch({
         type: GLOBALTYPES.CLEAR_SERVICE_AND_DRUG,
       });
+      if (addOrDelete) {
+        console.log(socket);
+        socket.emit(
+          "servicePayment",
+          JSON.stringify({
+            id: data.id,
+            doctor: data.doctor,
+            updatedDate: data.updatedDate,
+            patient: data.patient.fullname,
+            diagnose: data.diagnose,
+            serviceAvailable: data.medicalExaminationDetailsResponses,
+          })
+        );
+      }
 
-      client.publish({
-        destination: `/queue/clinical_service`,
-        body: JSON.stringify({
-          id:data.id,
-          doctor:data.doctor,
-          updatedDate:data.updatedDate,
-          patient:data.patient.fullname,
-          diagnose:data.diagnose,
-          serviceAvailable: data.medicalExaminationDetailsResponses.filter(
-            (item, index) => index != 0
-          ),
-        }),
-      });
-
-      client.publish({
-        destination: `/queue/prescription`,
-        body: JSON.stringify({ 
-          id:data.id,
-          updatedDate:data.updatedDate,
-          doctor:data.doctor.fullName,
-          updatedDate:data.doctor.updatedDate,
-          patient:data.patient.fullname,
-          note:data.note,
-          prescription: data.detailMedicineResponses }),
-      });
+      if (addOrDeleteDrug) {
+        client.publish({
+          destination: `/queue/prescription`,
+          body: JSON.stringify({
+            id: data.id,
+            updatedDate: data.updatedDate,
+            doctor: data.doctor.fullName,
+            updatedDate: data.doctor.updatedDate,
+            patient: data.patient.fullname,
+            note: data.note,
+            prescription: data.detailMedicineResponses,
+          }),
+        });
+      }
     } catch (err) {
       console.log(err);
     }
   };
+
+export const buyMedicineMedicalExamination = (id) => async (dispatch) => {
+  try {
+    await api.buyMedicineMedicalExamination(id);
+    dispatch({
+      type: GLOBALTYPES.UPDATE_PAID_PRESCRIPTION,
+      payload: id,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
