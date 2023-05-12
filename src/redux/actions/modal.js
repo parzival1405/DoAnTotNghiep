@@ -173,3 +173,21 @@ export const hideModal = (modal) => async (dispatch) => {
   } catch (err) {}
 };
 
+export const ShowPrivateInformation = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.SHOW_PRIVATE_INFORMATION_MODAL,
+    });
+  } catch (err) {
+    console.log(err)
+  }
+};
+
+export const ShowChangePassword = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: GLOBALTYPES.SHOW_CHANGE_PASSWORD_MODAL,
+    });
+  } catch (err) {}
+};
+

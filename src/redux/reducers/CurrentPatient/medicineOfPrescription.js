@@ -40,18 +40,18 @@ export default (state = initState, action) => {
       }
     case GLOBALTYPES.REMOVE_MEDICINE_OF_PRESCRIPTION:
       const addOrDeleteDrug = state.addOrDeleteDrug;
-      const finder2 = addOrDeleteDrug.find(
+      const finder2 = addOrDeleteDrug?.find(
         (e) => e?.drugId == action.payload.id
       );
       if (!finder2) {
         return {
           ...state,
-          pres: state.medicineOfPrescription.filter(
+          medicineOfPrescription: state.medicineOfPrescription.filter(
             (item) => item.id !== action.payload.id
           ),
           addOrDeleteDrug: [
             { drugId: action.payload.id, type: "delete" },
-            ...state.addOrDelete,
+            ...state.addOrDeleteDrug,
           ],
         };
       } else {

@@ -22,6 +22,7 @@ function Main() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const socket = useRef();
+  
 
   useEffect(() => {
     var client = null;

@@ -32,11 +32,12 @@ export const headCellsMedicalExaminationSide = [
 ];
 
 export const headCellsPatientReceptionSide = [
-  { id: "id", numeric: false, label: "Id bệnh nhân" },
+  { id: "id", numeric: false, label: "Id phiếu khám" },
   { id: "patient.fullName", numeric: false, label: "Tên bệnh nhân" },
   { id: "patient.dateOfBirth", numeric: true, label: "Tuổi", type: "age" },
   {
-    id: "medicalExaminationDetailsResponses.name",
+    id: "category.service.name",
+    sizeCellWidth: 200,
     numeric: false,
     label: "Loại khám",
   },

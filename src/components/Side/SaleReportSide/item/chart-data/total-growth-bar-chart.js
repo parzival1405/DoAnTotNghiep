@@ -1,87 +1,260 @@
 // ===========================|| DASHBOARD - TOTAL GROWTH BAR CHART ||=========================== //
 
-const chartData = {
-    height: 480,
-    type: 'bar',
-    options: {
-        chart: {
-            id: 'bar-chart',
-            stacked: true,
-            toolbar: {
-                show: true
-            },
-            zoom: {
-                enabled: true
-            }
-        },
-        responsive: [
-            {
-                breakpoint: 480,
-                options: {
-                    legend: {
-                        position: 'bottom',
-                        offsetX: -10,
-                        offsetY: 0
-                    }
-                }
-            }
-        ],
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '50%'
-            }
-        },
-        xaxis: {
-            type: 'category',
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        },
-        legend: {
-            show: true,
-            fontSize: '14px',
-            fontFamily: `'Roboto', sans-serif`,
-            position: 'bottom',
-            offsetX: 20,
-            labels: {
-                useSeriesColors: false
-            },
-            markers: {
-                width: 16,
-                height: 16,
-                radius: 5
-            },
-            itemMargin: {
-                horizontal: 15,
-                vertical: 8
-            }
-        },
-        fill: {
-            type: 'solid'
-        },
-        dataLabels: {
-            enabled: false
-        },
-        grid: {
-            show: true
-        }
+export const chartData = {
+  height: 480,
+  type: "bar",
+  options: {
+    chart: {
+      id: "bar-chart",
+      stacked: true,
+      toolbar: {
+        show: true,
+      },
+      zoom: {
+        enabled: true,
+      },
     },
-    series: [
-        {
-            name: 'Investment',
-            data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75]
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          legend: {
+            position: "bottom",
+            offsetX: -10,
+            offsetY: 0,
+          },
         },
-        {
-            name: 'Loss',
-            data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75]
-        },
-        {
-            name: 'Profit',
-            data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10]
-        },
-        {
-            name: 'Maintenance',
-            data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]
-        }
-    ]
+      },
+    ],
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: "50%",
+      },
+    },
+    xaxis: {
+      type: "category",
+      categories: [
+        "Tháng 1",
+        "Tháng 2",
+        "Tháng 3",
+        "Tháng 4",
+        "Tháng 5",
+        "Tháng 6",
+        "Tháng 7",
+        "Tháng 8",
+        "Tháng 9",
+        "Tháng 10",
+        "Tháng 11",
+        "Tháng 12",
+      ],
+    },
+    legend: {
+      show: true,
+      fontSize: "14px",
+      fontFamily: `'Roboto', sans-serif`,
+      position: "bottom",
+      offsetX: 20,
+      labels: {
+        useSeriesColors: false,
+      },
+      markers: {
+        width: 16,
+        height: 16,
+        radius: 5,
+      },
+      itemMargin: {
+        horizontal: 15,
+        vertical: 8,
+      },
+    },
+    fill: {
+      type: "solid",
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    grid: {
+      show: true,
+    },
+  },
+  series: [
+    {
+      name: "Đầu tư",
+      data: [
+        350000, 1250000, 350000, 350000, 350000, 800000, 350000, 200000, 350000,
+        450000, 150000, 750000,
+      ],
+    },
+    {
+      name: "Mất mát",
+      data: [
+        350000, 150000, 150000, 350000, 650000, 400000, 800000, 250000, 150000,
+        850000, 250000, 750000,
+      ],
+    },
+    {
+      name: "Lợi nhuận",
+      data: [
+        350000, 1450000, 350000, 350000, 200000, 1050000, 1000000, 100000,
+        650000, 450000, 300000, 100000,
+      ],
+    },
+  ],
 };
-export default chartData;
+
+// ===========================|| DASHBOARD - TOTAL GROWTH BAR CHART ||=========================== //
+
+export const chartData2 = {
+  height: 480,
+  type: "bar",
+  options: {
+    chart: {
+      id: "bar-chart",
+      stacked: true,
+      toolbar: {
+        show: true,
+      },
+      zoom: {
+        enabled: true,
+      },
+    },
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          legend: {
+            position: "bottom",
+            offsetX: -10,
+            offsetY: 0,
+          },
+        },
+      },
+    ],
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: "50%",
+      },
+    },
+    xaxis: {
+      type: "category",
+      categories: [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+      ],
+    },
+    legend: {
+      show: true,
+      fontSize: "14px",
+      fontFamily: `'Roboto', sans-serif`,
+      position: "bottom",
+      offsetX: 20,
+      labels: {
+        useSeriesColors: false,
+      },
+      markers: {
+        width: 16,
+        height: 16,
+        radius: 5,
+      },
+      itemMargin: {
+        horizontal: 15,
+        vertical: 8,
+      },
+    },
+    fill: {
+      type: "solid",
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    grid: {
+      show: true,
+    },
+  },
+  series: [
+    {
+      name: "Đầu tư",
+      data: [
+        350000, 1250000, 350000, 350000, 350000, 800000, 350000, 200000, 350000,
+        450000, 150000, 350000, 1250000, 350000, 350000, 350000, 800000, 350000,
+        200000, 350000, 450000, 350000, 1250000, 350000, 350000, 350000, 800000,
+        350000, 200000, 350000, 450000,
+      ],
+    },
+    {
+      name: "Mất mát",
+      data: [
+        350000, 150000, 150000, 350000, 650000, 400000, 800000, 250000, 150000,
+        850000, 250000, 350000, 150000, 150000, 350000, 650000, 400000, 800000,
+        250000, 150000, 850000, 350000, 150000, 150000, 350000, 650000, 400000,
+        800000, 250000, 150000, 850000,
+      ],
+    },
+    {
+      name: "Lợi nhuận",
+      data: [
+        350000, 1450000, 350000, 350000, 200000, 1050000, 1000000, 100000,
+        650000, 450000, 350000, 1450000, 350000, 350000, 200000, 1050000,
+        1000000, 100000, 650000, 450000, 350000, 1450000, 350000, 350000,
+        200000, 1050000, 1000000, 100000, 650000, 450000, 450000,
+      ],
+    },
+  ],
+};
+
+export const chartData3 = {
+  series: [44, 55, 13],
+  type:"pie", 
+  height:523,
+  options: {
+    chart: {
+      type: "pie",
+      height:480,
+    },
+    labels: ["Đầu tư", "Mất mát", "Lợi nhuận"],
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200,
+          },
+          legend: {
+            position: "bottom",
+          },
+        },
+      },
+    ],
+  },
+};

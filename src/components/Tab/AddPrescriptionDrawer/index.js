@@ -9,6 +9,7 @@ import SelectedLabel from "../../Form/ControlsLabel/SelectLabel";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
 import {
   addMedicineOfPrescription,
+  removeMedicineOfPrescription,
   updateMedicineOfPrescription,
 } from "../../../redux/actions/currentPatient";
 const drawerWidth = 550;
@@ -41,10 +42,13 @@ function AddPrescriptionDrawer({ open, setOpen }) {
   } ,[filterCategory])
 
   
-  const handleDeleteDrug = (id) => {
-    console.log(id)
+  const handleDeleteDrug = (item) => {
+    if (item) {
+      dispatch(removeMedicineOfPrescription(item));
+    }
   }
 
+  console.log(medicineOfPrescription);
 
   const dataArrayRender = useMemo(
     () =>
@@ -56,7 +60,7 @@ function AddPrescriptionDrawer({ open, setOpen }) {
         purchaseQuantity : item.purchaseQuantity,
         designate: item.designate,
         price: item.price,
-        callback: () => handleDeleteDrug(item.id)
+        callback: () => handleDeleteDrug(item)
       })),
     [medicineOfPrescription]
   );
@@ -145,7 +149,7 @@ function AddPrescriptionDrawer({ open, setOpen }) {
         />
         <SelectedLabel
           label="Tên thuốc"
-          options={drugFiler}
+          options={drugFiler || products}
           size={[3, 9]}
           accessField={"name"}
           name="products"

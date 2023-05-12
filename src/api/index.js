@@ -16,6 +16,10 @@ export const refreshLogin = (formData) =>
 export const forgotPassword = (phone_number) =>
   API.post(`api/auth/forgot/password/${phone_number}`);
 export const register = (formData) => API.post("api/auth/register", formData);
+export const changePassword = (phoneNumber, formData) =>
+  API.post(`api/auth/password/${phoneNumber}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 // user
 export const saveImage = (formData) =>
   API.post("api/users/avatar", formData, {
@@ -25,7 +29,8 @@ export const getAllUser = () => API.get("api/users");
 export const getAllStaffByRole = (role) =>
   API.get(`api/users/roles?role=${role}`);
 // medical_examination
-export const buyMedicineMedicalExamination= (id) => API.put(`/api/medical_examinations/export/${id}`);
+export const buyMedicineMedicalExamination = (id) =>
+  API.put(`/api/medical_examinations/export/${id}`);
 export const getAllExamination = () => API.get("api/medical_examinations");
 export const getExaminationsCurrentDayAndRoom = (formData) =>
   API.post("api/medical_examinations/date", formData, {
@@ -37,18 +42,22 @@ export const updateMedicalExamination = (formData, id) =>
   API.put(`api/medical_examinations/${id}`, formData);
 export const getMedicalExaminationById = (id) =>
   API.get(`api/medical_examinations/${id}`);
-
+export const searchMedicalExamination = (filter,debouncedValue) =>
+  API.get(`api/medical_examinations/search?type=${filter}&keyword=${debouncedValue}`)
 // service
 export const getAllService = () => API.get("api/services");
-export const getAllServiceCLS = (formData) => API.get(`api/services/cls?cls=${formData}`);
+export const getAllServiceCLS = (formData) =>
+  API.get(`api/services/cls?cls=${formData}`);
 export const getServiceById = (id) => API.get(`api/services/${id}`);
 export const saveService = (data) => API.get("api/services", data);
-export const updateService = (formData) => API.put(`api/services/${formData.id}`, formData);
-export const updateServiceCLS = (id,formData) => API.put(`api/medical_detail_examinations/${id}`, formData, {
-  headers: { "Content-Type": "multipart/form-data" },
-});
-export const updatePaidServiceCLS = (formData) => API.put(`api/medical_detail_examinations/paid`, formData);
-
+export const updateService = (formData) =>
+  API.put(`api/services/${formData.id}`, formData);
+export const updateServiceCLS = (id, formData) =>
+  API.put(`api/medical_detail_examinations/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+export const updatePaidServiceCLS = (formData) =>
+  API.put(`api/medical_detail_examinations/paid`, formData);
 
 // patient
 export const findPatientByPhonenumber = (phoneMumber) =>
@@ -106,4 +115,5 @@ export const getMedicineByPatientId = (id) =>
 export const getMedicineById = (id) => API.get(`api/medicines/${id}`);
 // drug
 export const saveDrug = (formData) => API.post(`api/drugs`, formData);
-export const updateDrug = (formData) => API.put(`api/drugs/${formData.id}`, formData);
+export const updateDrug = (formData) =>
+  API.put(`api/drugs/${formData.id}`, formData);

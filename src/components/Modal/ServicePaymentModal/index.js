@@ -151,7 +151,7 @@ function ServicePaymentModal() {
           pageSizeOptions={[5]}
         />
         <Grid container rowSpacing={1} className={classes.gridCustomInput}>
-          <Grid xs={7} />
+          <Grid item xs={7} />
           <InputLabel
             disable={true}
             value={totalPrice}

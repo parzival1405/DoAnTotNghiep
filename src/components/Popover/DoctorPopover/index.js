@@ -16,6 +16,7 @@ import useStyles from "./styles";
 import { logout } from "../../../redux/actions/auth";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { ShowChangePassword, ShowPrivateInformation } from "../../../redux/actions/modal";
 function DoctorPopover() {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -34,6 +35,14 @@ function DoctorPopover() {
     dispatch(logout(navigate));
   };
 
+  const handleViewPrivateInformation = () => {
+    dispatch(ShowPrivateInformation())
+  };
+
+  const handleChangePassword = () => {
+    dispatch(ShowChangePassword())
+  };
+  
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
@@ -58,13 +67,22 @@ function DoctorPopover() {
         onClose={handleClose}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "left",
+          horizontal: "right",
         }}
+        // PaperProps={{
+        //   style: { width: '100%' },
+        // }}
       >
         <List>
-          <ListItem onClick={handleLogout}>
+          <ListItemButton  onClick={handleLogout} >
             <ListItemText primary={"Đăng xuất"} />
-          </ListItem>
+          </ListItemButton>
+          <ListItemButton onClick={handleViewPrivateInformation} >
+            <ListItemText primary={"Xem thông tin"} />
+          </ListItemButton>
+          <ListItemButton onClick={handleChangePassword} >
+            <ListItemText primary={"Đổi mật khẩu"} />
+          </ListItemButton>
         </List>
       </Popover>
     </>

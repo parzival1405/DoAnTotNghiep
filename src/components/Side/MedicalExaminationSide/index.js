@@ -3,11 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useTable from "../../../hooks/useTable";
 import Controls from "../../Form/controls/Controls";
-import {
-  InputAdornment,
-  TableBody,
-  Toolbar,
-} from "@mui/material";
+import { InputAdornment, TableBody, Toolbar } from "@mui/material";
 import { Search, Add } from "@mui/icons-material";
 import useDebounce from "../../../hooks/useDebounce";
 import TableRow from "../../TableRow/TableContextMenu";
@@ -16,61 +12,61 @@ import { setCurrentPatient } from "../../../redux/actions/currentPatient";
 import { useNavigate } from "react-router-dom";
 import useStyles from "../styles";
 import { headCellsMedicalExaminationSide } from "../../../utils/HeadCells";
-
-const options = [
-  { id: "", title: "Không" },
-  {
-    id: "fullName",
-    title: "Họ & Tên",
-  },
-  {
-    id: "age",
-    title: "Tuổi",
-  },
-  {
-    id: "category",
-    title: "Loại Khám",
-  },
-  {
-    id: "detail",
-    title: "CĐ Lâm sàng",
-  },
-  {
-    id: "result",
-    title: "Kết luận",
-  },
-  {
-    id: "state",
-    title: "Trạng thái",
-  },
-];
+import { optionsMedicalExaminationSide } from "../../../utils/OptionSearch";
+import { searchByDoctorRoom, searchMedicalExamination } from "../../../redux/actions/medicalExamination";
+import { getCurrentDateString } from "../../../utils/Calc";
 
 function MedicalExaminationSide() {
   const classes = useStyles();
   const [filter, setFiler] = useState("");
-  const { medicalExaminationsDoctorData } = useSelector((state) => state.medicalExamination);
-  const [recordForEdit, setRecordForEdit] = useState(null);
-
+  const { user } = useSelector(
+    (state) => state.auth
+  );
+  const { medicalExaminationsDoctorData } = useSelector(
+    (state) => state.medicalExamination
+  );
+  const [optionSelectedId, setOptionSelectedId] = useState(null);
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
     },
   });
-
-  const [openPopup, setOpenPopup] = useState(false);
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
-    useTable(medicalExaminationsDoctorData, headCellsMedicalExaminationSide, filterFn);
+    useTable(
+      medicalExaminationsDoctorData,
+      headCellsMedicalExaminationSide,
+      filterFn
+    );
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const handleSearch = (e) => {
     if (searchValue.startsWith(" ")) {
       return;
     }
-
     setSearchValue(e.target.value);
   };
+
+  useEffect(() => {
+    if (searchValue.trim() && filter) {
+      const formData = new FormData();
+      formData.append("type", filter);
+      formData.append("keyword", debouncedValue);
+
+      dispatch(searchMedicalExamination(filter, debouncedValue));
+    } else {
+      var date = getCurrentDateString();
+      var formData = new FormData();
+      var currentDay = getCurrentDateString();
+      formData.append("date", currentDay);
+      formData.append("roomId", user.room.id);
+      formData.append("doctorId", user.id);
+      dispatch(searchByDoctorRoom(formData));
+    }
+    return;
+  }, [debouncedValue]);
 
   const onChangeSelected = (e) => {
     setFiler(e.target.value);
@@ -78,7 +74,7 @@ function MedicalExaminationSide() {
 
   const handleDoubleClick = (item) => {
     try {
-      dispatch(setCurrentPatient(item,navigate));
+      dispatch(setCurrentPatient(item, navigate));
     } catch (error) {
       alert("Sai mật khẩu");
     }
@@ -105,9 +101,7 @@ function MedicalExaminationSide() {
           onChange={onChangeSelected}
           value={filter}
           className={classes.selected20}
-          options={options}
-          // className={classes.newButton}
-          onClick={() => {}}
+          options={optionsMedicalExaminationSide}
         />
       </Toolbar>
 
@@ -117,7 +111,7 @@ function MedicalExaminationSide() {
           style={{ overflowY: "scroll", height: "420px", display: "block" }}
         >
           {recordsAfterPagingAndSorting().map((item) => {
-            item.category = item.medicalExaminationDetailsResponses[0]
+            item.category = item.medicalExaminationDetailsResponses[0];
             return (
               <TableRow
                 handleDoubleClick={() => handleDoubleClick(item)}
@@ -125,7 +119,10 @@ function MedicalExaminationSide() {
                 item={item}
                 headCells={headCellsMedicalExaminationSide}
                 listItemMenu={[
-                  { title: "Khám bệnh", onClick: () => handleDoubleClick(item) },
+                  {
+                    title: "Khám bệnh",
+                    onClick: () => handleDoubleClick(item),
+                  },
                   { title: "Chuyển xuống dưới", onclick: null },
                 ]}
               />

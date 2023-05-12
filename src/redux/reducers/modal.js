@@ -24,11 +24,27 @@ export default function modalReducers(
     isShowAddPrescriptionModal: initType,
     isShowUpdateServiceCLSModal: initType,
     isShowServicePaymentModal: initType,
-    isShowDetailedMedicalHistoryModal:initType,
+    isShowDetailedMedicalHistoryModal: initType,
+    isShowPrivateInformationModal: initType,
+    isShowChangePasswordModal: initType,
   },
   action
 ) {
   switch (action.type) {
+    case GLOBALTYPES.SHOW_PRIVATE_INFORMATION_MODAL:
+      return {
+        ...state,
+        isShowPrivateInformationModal: {
+          open: true
+        },
+      };
+    case GLOBALTYPES.SHOW_CHANGE_PASSWORD_MODAL:
+      return {
+        ...state,
+        isShowChangePasswordModal: {
+          open: true
+        },
+      };
     case GLOBALTYPES.SHOW_ADD_ACCOUNT_STAFF_MODAL:
       return {
         ...state,

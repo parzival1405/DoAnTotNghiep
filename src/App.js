@@ -1,37 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { ThemeProvider, createTheme } from "@mui/material";
+import { SnackbarProvider } from "notistack";
+import React from "react";
+import { useSelector } from "react-redux";
 import {
   HashRouter,
-  Routes,
-  Route,
   Navigate,
-  useNavigate,
+  Route,
+  Routes
 } from "react-router-dom";
-import Login from "./pages/Login";
-import ForgotPassword from "./pages/ForgotPassword";
-import Homepage from "./pages/HomePage";
-import { Paper } from "@mui/material";
-import OTPModal from "./components/Modal/OTPModal";
-import { createTheme, ThemeProvider, styled } from "@mui/material";
-import Checkup from "./pages/Checkup";
-import PatientReceptionModal from "./components/Modal/PatientReceptionModal";
-import AddScheduleModal from "./components/Modal/AddScheduleModal";
-import AddBatchProductModal from "./components/Modal/AddBatchProductModal";
-import AddSupplierModal from "./components/Modal/AddSupplierModal";
-import AddDrugModal from "./components/Modal/AddDrugModal";
 import AddAccountStaffModal from "./components/Modal/AddAccountStaffModal";
+import AddBatchProductModal from "./components/Modal/AddBatchProductModal";
+import AddDrugModal from "./components/Modal/AddDrugModal";
 import AddPermissionModal from "./components/Modal/AddPermissionModal";
-import PatientModal from "./components/Modal/PatientModal";
+import AddPrescriptionModal from "./components/Modal/AddPrescriptionModal";
 import AddProductGroupsModal from "./components/Modal/AddProductGroupsModal";
+import AddScheduleModal from "./components/Modal/AddScheduleModal";
 import AddServiceModal from "./components/Modal/AddServiceModal";
 import AddTypeServiceGroupsModal from "./components/Modal/AddServiceModal/AddTypeServiceGroupsModal";
-import { refreshToken } from "./redux/actions/auth";
-import ReadQRCodeModal from "./components/Modal/ReadQRCodeModal";
-import AddPrescriptionModal from "./components/Modal/AddPrescriptionModal";
-import UpdateServiceCLS from "./components/Modal/UpdateServiceCLS";
-import ServicePaymentModal from "./components/Modal/ServicePaymentModal";
-import { SnackbarProvider } from "notistack";
+import AddSupplierModal from "./components/Modal/AddSupplierModal";
 import DetailedMedicalHistory from "./components/Modal/DetailedMedicalHistory";
+import OTPModal from "./components/Modal/OTPModal";
+import PatientModal from "./components/Modal/PatientModal";
+import PatientReceptionModal from "./components/Modal/PatientReceptionModal";
+import PrivateInformationModal from "./components/Modal/PrivateInfomationModal";
+import ReadQRCodeModal from "./components/Modal/ReadQRCodeModal";
+import ServicePaymentModal from "./components/Modal/ServicePaymentModal";
+import UpdateServiceCLS from "./components/Modal/UpdateServiceCLS";
+import Checkup from "./pages/Checkup";
+import ForgotPassword from "./pages/ForgotPassword";
+import Homepage from "./pages/HomePage";
+import Login from "./pages/Login";
+import ChangePasswordModal from "./components/Modal/ChangePasswordModal";
 function App() {
   const { user } = useSelector((state) => state.auth);
 
@@ -88,29 +87,30 @@ function App() {
   return (
     <SnackbarProvider
       maxSnack={6}
-      autoHideDuration={5000}
+      autoHideDuration={3000}
       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-      style={{ backgroundColor: "#00ff99" }}
     >
       <ThemeProvider theme={theme}>
         <HashRouter>
           <OTPModal />
-          <PatientReceptionModal />
-          <AddScheduleModal />
-          <AddBatchProductModal />
-          <AddSupplierModal />
-          <AddDrugModal />
-          <AddAccountStaffModal />
-          <AddPermissionModal />
-          <PatientModal />
-          <AddProductGroupsModal />
-          <AddServiceModal />
-          <AddTypeServiceGroupsModal />
-          <AddPrescriptionModal />
-          <ReadQRCodeModal />
-          <UpdateServiceCLS />
-          <ServicePaymentModal />
-          <DetailedMedicalHistory/>
+          {user && <PatientReceptionModal />}
+          {user && <AddScheduleModal />}
+          {user && <AddBatchProductModal />}
+          {user && <AddSupplierModal />}
+          {user && <AddDrugModal />}
+          {user && <AddAccountStaffModal />}
+          {user && <AddPermissionModal />}
+          {user && <PatientModal />}
+          {user && <AddProductGroupsModal />}
+          {user && <AddServiceModal />}
+          {user && <AddTypeServiceGroupsModal />}
+          {user && <AddPrescriptionModal />}
+          {user && <ReadQRCodeModal />}
+          {user && <UpdateServiceCLS />}
+          {user && <ServicePaymentModal />}
+          {user && <DetailedMedicalHistory/> }
+          {user && <PrivateInformationModal user={user}/>}
+          {user && <ChangePasswordModal user={user}/> }
           <Routes>
             <Route
               exact

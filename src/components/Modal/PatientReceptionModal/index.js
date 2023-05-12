@@ -193,7 +193,7 @@ function PatientReceptionModal() {
                   disable={type(typeOpenModal)}
                 />
                 <InputLabel
-                  disable={type(typeOpenModal)}
+                  disable={true}
                   label="Nhân viên tiếp đón"
                   require={true}
                   size={[3, 3]}
@@ -236,7 +236,6 @@ function PatientReceptionModal() {
                   name="doctor"
                   value={values.doctor}
                   label="Bác sĩ khám"
-                  require={true}
                   size={[3, 3]}
                 />
                 <InputLabel

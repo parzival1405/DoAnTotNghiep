@@ -18,6 +18,7 @@ import {
 } from "../../../utils/HeadCells";
 import { GLOBALTYPES } from "../../../redux/actionType";
 import TableRow from "../../TableRow/TableContextMenu";
+import Field from "../../TextShow/Field";
 
 const useStyle = makeStyles((theme) => ({
   mediaItem: {
@@ -305,24 +306,6 @@ function DetailedMedicalHistory() {
     </Fade>
   );
   return <BaseModal body={body} isShow={open} />;
-}
-
-function Field({ variant, label, value, size }) {
-  return (
-    <Grid item xs={size}>
-      <Typography
-        style={{
-          display: "inline-block",
-          maxWidth: "100%",
-          wordWrap: "break-word",
-        }}
-        variant={variant}
-        gutterBottom
-      >
-        {label} : {value}
-      </Typography>
-    </Grid>
-  );
 }
 
 export default React.memo(DetailedMedicalHistory);

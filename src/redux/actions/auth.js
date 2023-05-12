@@ -2,7 +2,7 @@ import * as api from "../../api";
 import { GLOBALTYPES } from "../actionType";
 const qs = require("qs");
 
-export const login = (formData, navigate) => async (dispatch) => {
+export const login = (formData, navigate,callback) => async (dispatch) => {
   try {
     dispatch({
       type: GLOBALTYPES.START_LOADING,
@@ -26,17 +26,17 @@ export const login = (formData, navigate) => async (dispatch) => {
     dispatch({
       type: GLOBALTYPES.END_LOADING,
     });
-    alert(error.response.data.message);
+    callback("Sai tài khoản hoặc mật khẩu")
   }
 };
 
-export const refreshToken = (navigate) => async (dispatch) => {
+export const refreshToken = (navigate,callback) => async (dispatch) => {
   const firstLogin = JSON.parse(localStorage.getItem("firstLogin"));
   const refreshToken = localStorage.getItem("refreshToken");
   if (firstLogin) {
     const formData = {
-      refreshToken : refreshToken
-    }
+      refreshToken: refreshToken,
+    };
     try {
       dispatch({
         type: GLOBALTYPES.START_LOADING,
@@ -59,7 +59,7 @@ export const refreshToken = (navigate) => async (dispatch) => {
       dispatch({
         type: GLOBALTYPES.END_LOADING,
       });
-      alert(err.response.data.message);
+      callback("Đăng nhập lại")
     }
   }
 };
@@ -114,7 +114,7 @@ export const saveStaff = (formData, fileAvatar) => async (dispatch) => {
         role: formData.role.id,
         avatar: url.data,
       };
-      
+
       const accountResponse = await api.register(formatData);
 
       dispatch({
@@ -127,39 +127,11 @@ export const saveStaff = (formData, fileAvatar) => async (dispatch) => {
   }
 };
 
-// export const refreshToken = () => async (dispatch) => {
-//   const firstLogin = JSON.parse(sessionStorage.getItem("firstLogin"));
-//   if (firstLogin) {
-//     try {
-//       const { data } = await api.refreshLogin();
-//       dispatch({
-//         type: GLOBALTYPES.AUTH,
-//         data,
-//       });
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   }
-// };
-
-// export const signup = (formData, navigate) => async (dispatch) => {
-//   try {
-//     const { data } = await api.signUp(formData);
-//     dispatch({ type: GLOBALTYPES.AUTH, data });
-//     navigate("/Homepage");
-//   } catch (error) {
-//     alert(error.response.data.message);
-//   }
-// };
-
-// export const updateProfile = (data) => async (dispatch) => {
-//   try {
-//     await api.updateProfile(data);
-//     dispatch({
-//       type: GLOBALTYPES.UPDATEPROFILE,
-//       data,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+export const changePassword = (phoneNumber,formData, callback) => async (dispatch) => {
+  try {
+    await api.changePassword(phoneNumber,formData);
+    callback("Đổi mật khẩu thành công",{ variant: "success" });
+  } catch (error) {
+    callback("Đổi mật khẩu thất bại",{ variant: "error" });
+  }
+};

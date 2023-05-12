@@ -45,7 +45,7 @@ export default (state = initState, action) => {
                 ...item,
                 result: action.payload.result,
                 status: action.payload.status,
-                images: action.payload.image,
+                images: action.payload.images,
               }
             : item
         ),

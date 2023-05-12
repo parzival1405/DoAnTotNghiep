@@ -199,6 +199,7 @@ function PatientReceptionSide({ item }) {
           style={{ overflowY: "scroll", height: "420px", display: "block" }}
         >
           {recordsAfterPagingAndSorting().map((item) => {
+            item.category = item.medicalExaminationDetailsResponses[0]
             return (
               <TableRow
                 handleDoubleClick={handleClick}
@@ -210,7 +211,6 @@ function PatientReceptionSide({ item }) {
                     title: "Sửa",
                     onClick: () => handleClickShowEditModal(item),
                   },
-                  { title: "Thanh toán" },
                   {
                     title: "Xem",
                     onClick: () => handleClickShowViewModal(item),

@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
-  InputAdornment,
-  IconButton,
   Box,
+  IconButton,
+  InputAdornment,
   Link as MuiLink,
 } from "@mui/material";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
 import { Form, Formik } from "formik";
+import { useSnackbar } from "notistack";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { validationLoginClinic } from "../utils/Validation";
 
-import { makeStyles } from "@mui/styles";
 import { Grid } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import Controls from "../components/Form/controls/Controls";
 import AuthLayout from "../components/Layout/AuthLayout";
-import { login, refreshToken } from "../redux/actions/auth";
 import Loading from "../components/Loading";
+import { login, refreshToken } from "../redux/actions/auth";
 // import { useForm, Form } from "../components/Form/useForm";
 
 const useStyles = makeStyles((theme) => ({
@@ -34,14 +35,19 @@ const useStyles = makeStyles((theme) => ({
 
 function Login() {
   const { isLoading } = useSelector((state) => state.loading);
-  const {user} = useSelector((state) => state.auth)
+  const { user } = useSelector((state) => state.auth);
   const classes = useStyles();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     if (!user) {
-      dispatch(refreshToken(navigate));
+      dispatch(
+        refreshToken(navigate, (text) =>
+          enqueueSnackbar(text, { variant: "error" })
+        )
+      );
     }
   }, [dispatch]);
 
@@ -54,15 +60,13 @@ function Login() {
   };
 
   const handleSubmitForm = async (values) => {
-    // const data = {
-    //   phone_number: values.phone_number,
-    //   password: values.password,
-    // };
     try {
-      dispatch(login(values, navigate));
-    } catch (error) {
-      alert("Sai mật khẩu");
-    }
+      dispatch(
+        login(values, navigate, (text) =>
+          enqueueSnackbar(text, { variant: "error" })
+        )
+      );
+    } catch (error) {}
   };
 
   return isLoading ? (
@@ -148,7 +152,11 @@ function Login() {
                 </Box>
 
                 <Box textAlign="center">
-                  <Controls.Button type="submit" disabled={isSubmitting} text="Đăng nhập" />
+                  <Controls.Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    text="Đăng nhập"
+                  />
                 </Box>
               </Grid>
             </Grid>

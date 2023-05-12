@@ -123,7 +123,6 @@ function UpdateServiceCLS() {
   const { DataGrid } = useDatagrid(bloodResultColumn);
 
   const handleSubmitForm = async (values) => {
-    console.log(values);
     const formData = new FormData();
     formData.append("status", "DONE");
     formData.append("conclusions",values.conclusions);

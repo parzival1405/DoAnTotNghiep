@@ -108,7 +108,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                       sx={{ color: "inherit" }}
                       onClick={(e) => handleChangeTime(e, true)}
                     >
-                      Month
+                      Tháng
                     </Button>
                     <Button
                       disableElevation
@@ -117,7 +117,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                       sx={{ color: "inherit" }}
                       onClick={(e) => handleChangeTime(e, false)}
                     >
-                      Year
+                      Năm
                     </Button>
                   </Grid>
                 </Grid>
@@ -137,7 +137,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                               mb: 0.75,
                             }}
                           >
-                            $108
+                            108
                           </Typography>
                         ) : (
                           <Typography
@@ -149,7 +149,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                               mb: 0.75,
                             }}
                           >
-                            $961
+                            961
                           </Typography>
                         )}
                       </Grid>
@@ -179,7 +179,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                             color: "#90caf9",
                           }}
                         >
-                          Total Order
+                          Số lượng phiếu khám
                         </Typography>
                       </Grid>
                     </Grid>

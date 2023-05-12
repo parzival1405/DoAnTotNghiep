@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Box,
   Link as MuiLink,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
 import { Form, Formik } from "formik";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { validationForgotPass } from "../utils/Validation";
 
-import { makeStyles } from "@mui/styles";
 import { Grid } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import Controls from "../components/Form/controls/Controls";
 import AuthLayout from "../components/Layout/AuthLayout";
 import { ShowOTP } from "../redux/actions/modal";
-import { firebase} from "../utils/Firebase";
+import { firebase } from "../utils/Firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,10 +47,10 @@ function ForgotPassword() {
   };
 
   const handleSendSms = (values) => {
-    console.log(values);
     configureCaptcha();
     const phone_number = "+84" + values.phone_number.slice(1);
     const appVerifier = window.recaptchaVerifier;
+
     firebase
       .auth()
       .signInWithPhoneNumber(phone_number, appVerifier)

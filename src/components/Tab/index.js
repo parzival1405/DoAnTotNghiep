@@ -59,6 +59,10 @@ function Tab() {
     setValue(newValue);
   };
 
+  const cancelExamination = () => {
+    navigate("/Homepage")
+  }
+
   const handleSubmit = () => {
     dispatch(updateMedicalExamination({ currentPatient, addOrDelete, addOrDeleteDrug,check },client,socket.current));
   };
@@ -153,6 +157,7 @@ function Tab() {
                 disableElevation
                 color="error"
                 startIcon={<Clear />}
+                onClick={cancelExamination}
               >
                 Hủy
               </Button>

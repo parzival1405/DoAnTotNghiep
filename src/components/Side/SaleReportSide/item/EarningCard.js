@@ -197,7 +197,7 @@ const EarningCard = ({ isLoading }) => {
                     color: "#b39ddb",
                   }}
                 >
-                  Total Earning
+                  Tổng doanh thu
                 </Typography>
               </Grid>
             </Grid>

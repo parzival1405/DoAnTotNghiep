@@ -1,20 +1,18 @@
-import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 // material-ui
-import { useTheme } from "@mui/material/styles";
 import { Grid, MenuItem, TextField, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 // third-party
 import ApexCharts from "apexcharts";
 import Chart from "react-apexcharts";
 
 // project imports
-import SkeletonTotalGrowthBarChart from "../ui-component/cards/Skeleton/TotalGrowthBarChart";
 import MainCard from "../ui-component/cards/MainCard";
+import SkeletonTotalGrowthBarChart from "../ui-component/cards/Skeleton/TotalGrowthBarChart";
 // chart data
-import chartData from "./chart-data/total-growth-bar-chart";
+import { chartData, chartData2, chartData3 } from "./chart-data/total-growth-bar-chart";
 const gridSpacing = 3;
 
 const status = [
@@ -50,7 +48,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
 
   useEffect(() => {
     const newChartData = {
-      ...chartData.options,
+      ...chartData2.options,
       colors: [primary200, primaryDark, secondaryMain, secondaryLight],
       xaxis: {
         labels: {
@@ -148,7 +146,13 @@ const TotalGrowthBarChart = ({ isLoading }) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              <Chart {...chartData} />
+              {value === "month" ? (
+                <Chart {...chartData2} />
+              ) : value === "year" ? (
+                <Chart {...chartData} />
+              ) : (
+                <Chart  {...chartData3} />
+              )}
             </Grid>
           </Grid>
         </MainCard>

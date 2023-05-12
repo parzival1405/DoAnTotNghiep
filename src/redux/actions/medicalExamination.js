@@ -31,6 +31,7 @@ export const saveExamination =
       const { data } = await api.saveExamination(sendData);
 
       if (data.doctor == null) {
+        console.log(client,formData.service.medicalDepartment.codeDepartment)
         client.publish({
           destination: `/queue/${formData.service.medicalDepartment.codeDepartment}`,
           body: JSON.stringify(data),
@@ -114,14 +115,13 @@ export const updateMedicalExamination =
         type: GLOBALTYPES.CLEAR_SERVICE_AND_DRUG,
       });
       if (addOrDelete) {
-        console.log(socket);
         socket.emit(
           "servicePayment",
           JSON.stringify({
             id: data.id,
             doctor: data.doctor,
             updatedDate: data.updatedDate,
-            patient: data.patient.fullname,
+            patient: data.patient,
             diagnose: data.diagnose,
             serviceAvailable: data.medicalExaminationDetailsResponses,
           })
@@ -158,3 +158,37 @@ export const buyMedicineMedicalExamination = (id) => async (dispatch) => {
     console.log(err);
   }
 };
+
+export const searchMedicalExamination = (filter,debouncedValue) => async (dispatch) => {
+  try {
+    const examinationResponse = await api.searchMedicalExamination(
+      filter,debouncedValue
+    );
+    //
+    dispatch({
+      type: GLOBALTYPES.ALL_EXAMINATION_ROLE_DOCTOR,
+      payload: examinationResponse.data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
+export const searchByDoctorRoom = (formData) => async (dispatch) => {
+  try {
+    const examinationResponse = await api.getExaminationsCurrentDayAndRoom(
+      formData
+    );
+    //
+    dispatch({
+      type: GLOBALTYPES.ALL_EXAMINATION_ROLE_DOCTOR,
+      payload: examinationResponse.data,
+    });
+    
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+

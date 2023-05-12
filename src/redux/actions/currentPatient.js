@@ -28,6 +28,7 @@ export const setCurrentPatient =
             (item, index) => ({
               ...item.drug,
               quantity: item.quantity,
+              purchaseQuantity: item.quantity,
               designate: item.designate,
             })
           ),
