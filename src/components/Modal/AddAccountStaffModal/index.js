@@ -87,14 +87,16 @@ const initialValues = {
   fullName: null,
   password: "password",
   dateOfBirth: null,
-  email:null,
+  email: null,
   address: null,
-  sex:null,
+  sex: null,
   role: null,
 };
 
 function AddAccountStaffModal() {
-  const isShowAddAccountStaffModal = useSelector((state) => state.modal.isShowAddAccountStaffModal);
+  const isShowAddAccountStaffModal = useSelector(
+    (state) => state.modal.isShowAddAccountStaffModal
+  );
   const { open, typeOpenModal } = isShowAddAccountStaffModal;
 
   const [valueOption, setValueOption] = useState([]);
@@ -107,7 +109,7 @@ function AddAccountStaffModal() {
 
   const handleSubmitForm = (values) => {
     console.log(avatarFile);
-    dispatch(saveStaff(values,avatarFile))
+    dispatch(saveStaff(values, avatarFile));
     handleHideModal();
   };
 
@@ -186,7 +188,15 @@ function AddAccountStaffModal() {
                   setFieldValue={setFieldValue}
                   value={values?.sex}
                 />
-                <DateLabel label="Ngày sinh" size={[2, 4]} />
+                <DateLabel
+                  disable={type(typeOpenModal)}
+                  require={true}
+                  label="Ngày sinh"
+                  name="dateOfBirth"
+                  value={values.dateOfBirth}
+                  onChange={(value) => setFieldValue("dateOfBirth", value)}
+                  size={[2, 4]}
+                />
                 <InputLabel
                   disable={type(typeOpenModal)}
                   require={true}

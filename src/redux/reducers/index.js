@@ -20,7 +20,9 @@ import staff from "./staff";
 import socket from "./socket";
 import prescription from "./prescription";
 import alert from "./alert";
+import chat from "./chat";
 export default combineReducers({
+  chat,
   alert,
   prescription,
   socket,

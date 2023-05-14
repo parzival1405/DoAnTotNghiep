@@ -37,6 +37,7 @@ function TableRow({
   handleDoubleClick,
   handleChangeTableCell,
 }) {
+  console.log(item);
   const classes = useStyles();
   const [contextMenu, setContextMenu] = useState(null);
   const handleRightClick = (event) => {

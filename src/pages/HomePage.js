@@ -21,81 +21,86 @@ function Main() {
   const { isLoading } = useSelector((state) => state.loading);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const { client : oldClient} = useSelector((state) => state.stomp);
   const socket = useRef();
   
-
   useEffect(() => {
     var client = null;
-    if (user) {
-      if (user.role == "DOCTOR") {
-        // bac si nhan phieu kham tu le tan
-        client = new Client({
-          brokerURL: `ws://${process.env.REACT_APP_URL_ACTIVE_MQ_PORT}:61614/ws`,
-          connectHeaders: {
-            login: "admin",
-            passcode: "admin",
-          },
-          onConnect: () => {
-            client.subscribe(
-              `/queue/${user.room.medicalDepartment.codeDepartment}`,
-              (message) =>
-                // chỉ trường hợp khi chưa có bác sĩ
-                dispatch(
-                  addExaminationRoleDoctor(JSON.parse(message.body), user.id)
-                )
-            );
-          },
-        });
-      } else if (user.role == "DRUG_DEALER") {
-        // ban thuoc
-        client = new Client({
-          brokerURL: `ws://${process.env.REACT_APP_URL_ACTIVE_MQ_PORT}:61614/ws`,
-          connectHeaders: {
-            login: "admin",
-            passcode: "admin",
-          },
-          onConnect: () => {
-            client.subscribe(`/queue/prescription`, (message) =>
-              dispatch(addOrUpdatePrescription(JSON.parse(message.body)))
-            );
-          },
-        });
-      } else if (user.role == "TEST") {
-        // nhan cls tu bac si
-        client = new Client({
-          brokerURL: `ws://${process.env.REACT_APP_URL_ACTIVE_MQ_PORT}:61614/ws`,
-          connectHeaders: {
-            login: "admin",
-            passcode: "admin",
-          },
-          onConnect: () => {
-            client.subscribe(`/queue/clinical_service`, (message) => {
-              dispatch(addOrUpdateServiceAvailable(JSON.parse(message.body)));
-            });
-          },
-        });
-      } else if (user.role == "RECEPTIONIST") {
-        client = new Client({
-          brokerURL: `ws://${process.env.REACT_APP_URL_ACTIVE_MQ_PORT}:61614/ws`,
-          connectHeaders: {
-            login: "admin",
-            passcode: "admin",
-          },
-        });
-      } else {
-        client = new Client({
-          brokerURL: `ws://${process.env.REACT_APP_URL_ACTIVE_MQ_PORT}:61614/ws`,
-          connectHeaders: {
-            login: "admin",
-            passcode: "admin",
-          },
-        });
+    if(oldClient === null) {
+      if (user) {
+        if (user.role == "DOCTOR") {
+          // bac si nhan phieu kham tu le tan
+          client = new Client({
+            brokerURL: `ws://${process.env.REACT_APP_URL_ACTIVE_MQ_PORT}:61614/ws`,
+            connectHeaders: {
+              login: "admin",
+              passcode: "admin",
+            },
+            onConnect: () => {
+              client.subscribe(
+                `/queue/${user.room.medicalDepartment.codeDepartment}`,
+                (message) =>
+                  // chỉ trường hợp khi chưa có bác sĩ
+                  dispatch(
+                    addExaminationRoleDoctor(JSON.parse(message.body), user.id)
+                  )
+              );
+            },
+          });
+        } else if (user.role == "DRUG_DEALER") {
+          // ban thuoc
+          client = new Client({
+            brokerURL: `ws://${process.env.REACT_APP_URL_ACTIVE_MQ_PORT}:61614/ws`,
+            connectHeaders: {
+              login: "admin",
+              passcode: "admin",
+            },
+            onConnect: () => {
+              client.subscribe(`/queue/prescription`, (message) =>
+                dispatch(addOrUpdatePrescription(JSON.parse(message.body)))
+              );
+            },
+          });
+        } else if (user.role == "TEST") {
+          // nhan cls tu bac si
+          client = new Client({
+            brokerURL: `ws://${process.env.REACT_APP_URL_ACTIVE_MQ_PORT}:61614/ws`,
+            connectHeaders: {
+              login: "admin",
+              passcode: "admin",
+            },
+            onConnect: () => {
+              client.subscribe(`/queue/clinical_service`, (message) => {
+                dispatch(addOrUpdateServiceAvailable(JSON.parse(message.body)));
+              });
+            },
+          });
+        } else if (user.role == "RECEPTIONIST") {
+          client = new Client({
+            brokerURL: `ws://${process.env.REACT_APP_URL_ACTIVE_MQ_PORT}:61614/ws`,
+            connectHeaders: {
+              login: "admin",
+              passcode: "admin",
+            },
+          });
+        } else {
+          client = new Client({
+            brokerURL: `ws://${process.env.REACT_APP_URL_ACTIVE_MQ_PORT}:61614/ws`,
+            connectHeaders: {
+              login: "admin",
+              passcode: "admin",
+            },
+          });
+        }
+        client.activate();
+        dispatch(initStomp(client));
       }
-      client.activate();
-      dispatch(initStomp(client));
+    }else{
+      oldClient.activate();
+      dispatch(initStomp(oldClient));
     }
 
-    // return () => client?.deactivate();
+    return () => client?.deactivate();
   }, [user, dispatch]);
 
   useEffect(() => {

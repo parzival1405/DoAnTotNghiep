@@ -18,6 +18,7 @@ import {
 } from "../../../redux/actions/medicalExamination";
 import { GLOBALTYPES } from "../../../redux/actionType";
 import { type } from "../../../utils/TypeOpen";
+import dayjs from "dayjs";
 const useStyle = makeStyles((theme) => ({
   paper: {
     width: "70%",
@@ -50,7 +51,7 @@ const useStyle = makeStyles((theme) => ({
 const initialValues = {
   patient: null,
   doctor: null,
-  diagnose: "",
+  clinicalSign: "",
   status: "WAIT",
   reception: null,
   description: "",
@@ -88,6 +89,7 @@ function PatientReceptionModal() {
   };
 
   const handleSubmitForm = (values) => {
+    // console.log(values)
     values.reception = user;
     if (typeOpenModal == GLOBALTYPES.ADD) {
       dispatch(saveExamination(values, client, socket.current));
@@ -188,7 +190,7 @@ function PatientReceptionModal() {
                   label="Tuổi"
                   onChange={(value) => handleChangeDate("patient.dateOfBirth",value, setFieldValue)}
                   name="patient.dateOfBirth"
-                  value={values["patient"]?.dateOfBirth}
+                  value={dayjs(new Date(values["patient"]?.dateOfBirth),"DD/MM/YYYY")}
                   size={[3, 3]}
                   disable={type(typeOpenModal)}
                 />
@@ -255,8 +257,8 @@ function PatientReceptionModal() {
                 <InputLabel
                   disable={type(typeOpenModal)}
                   label="Dấu hiệu lâm sàng"
-                  name="diagnose"
-                  value={values.diagnose}
+                  name="clinicalSign"
+                  value={values.clinicalSign}
                   onChange={handleChange}
                   size={[3, 9]}
                 />

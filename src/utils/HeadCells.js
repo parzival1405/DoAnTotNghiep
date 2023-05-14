@@ -293,7 +293,7 @@ export const headCellsAddProductSide = [
   { id: "id", numeric: false, label: "Số phiếu" },
   { id: "createdDate", numeric: false, label: "Ngày nhập", type: "date" },
   {
-    id: "supplierResponse.name",
+    id: "supplier.name",
     numeric: false,
     sizeCellWidth: 140,
     label: "Nhà cung cấp",
@@ -302,7 +302,7 @@ export const headCellsAddProductSide = [
   { id: "paidPrice", numeric: true, label: "Đã trả" },
   { id: "debt", numeric: true, label: "Công nợ" },
   { id: "description", numeric: false, label: "Ghi chú" },
-  { id: "state", numeric: false, label: "Trạng thái" },
+  // { id: "state", numeric: false, label: "Trạng thái" },
 ];
 
 export const headCellsPrescriptionSide = [

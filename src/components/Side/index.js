@@ -1,45 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { items } from "../../utils/Items";
-import AccountSide from "./AccountSide";
-import SettingSide from "./PrescriptionSide";
-import ScheduleSide from "./ScheduleSide";
-import ServiceListSide from "./ServiceListSide";
-import MedicalExaminationSide from "./MedicalExaminationSide";
-import ConfigSellingPriceSide from "./ConfigSellingPriceSide";
-import AddProductSide from "./AddProductSide";
-import InventorySide from "./InventorySide";
-import PatientReceptionSide from "./PatientReceptionSide";
-import Layout from "./Layout";
-import FileManagementSide from "./FileManagementSide";
-import PermissionSide from "./PermissionSide";
-import PatientSide from "./PatientSide";
-import ProductSide from "./ProductSide";
-import ProductGroupsSide from "./ProductGroupsSide";
-import AddServiceGroupsSide from "./AddServiceSide";
-import AddSupplierSide from "./AddSupplierSide";
-import Loading from "../Loading";
-import useStyle from "./styles";
+import { GLOBALTYPES } from "../../redux/actionType";
 import {
-  callAPIForPatientReceptionSide,
-  callAPIForPatientSide,
-  callAPIForScheduleSide,
-  callAPIForMedicalExaminationSide,
-  callAPIForProductSide,
-  getCategoryProductExamination,
-  callAPIForServiceListSide,
-  callAPIForAddSupplierSide,
-  callAPIForAddProductSide,
   callAPIForAccountSide,
   callAPIForAddPrescriptionSide,
+  callAPIForAddProductSide,
+  callAPIForAddSupplierSide,
+  callAPIForMedicalExaminationSide,
+  callAPIForPatientReceptionSide,
+  callAPIForPatientSide,
+  callAPIForProductSide,
+  callAPIForScheduleSide,
+  callAPIForServiceListSide,
   callAPIServicePaymentSide,
+  getCategoryProductExamination,
 } from "../../redux/actions/callAPI";
 import { getCurrentDateString } from "../../utils/Calc";
-import SaleReportSide from "./SaleReportSide";
+import { items } from "../../utils/Items";
+import Loading from "../Loading";
+import AccountSide from "./AccountSide";
+import AddProductSide from "./AddProductSide";
+import AddServiceGroupsSide from "./AddServiceSide";
+import AddSupplierSide from "./AddSupplierSide";
+import FileManagementSide from "./FileManagementSide";
+import InventorySide from "./InventorySide";
+import Layout from "./Layout";
+import MedicalExaminationSide from "./MedicalExaminationSide";
+import PatientReceptionSide from "./PatientReceptionSide";
+import PatientSide from "./PatientSide";
+import PermissionSide from "./PermissionSide";
 import PrescriptionSide from "./PrescriptionSide";
-import { GLOBALTYPES } from "../../redux/actionType";
-import { receiverExaminationLetterCurrentDate } from "../../redux/actions/medicalLetter";
+import ProductGroupsSide from "./ProductGroupsSide";
+import ProductSide from "./ProductSide";
+import SaleReportSide from "./SaleReportSide";
+import ScheduleSide from "./ScheduleSide";
+import ServiceListSide from "./ServiceListSide";
 import ServicePaymentSide from "./ServicePaymentSide";
+import AdviseSide from "./AdviseSide";
+import useStyle from "./styles";
 
 const permission = {
   admin: ["ADMIN"],
@@ -169,8 +167,33 @@ function Side() {
   }, [socket, dispatch]);
 
   useEffect(() => {
+    socket?.current.on("receiveMessage", (data) => {
+      console.log({
+        customerId: data.customerId,
+        name: data.name,
+        userId: user.id
+      });
+      dispatch({
+        type: GLOBALTYPES.CREATE_CONVERSATION,
+        payload: {
+          customerId: data.customerId,
+          name: data.name,
+          userId: user.id,
+        },
+      });
+
+      dispatch({
+        type: GLOBALTYPES.RECEIVE_MESSAGE,
+        payload: { ...data , userId: user.id,sendBy:data.customerId },
+      });
+    });
+
+    return () => socket?.current.off("receiveMessage");
+  }, [socket, dispatch]);
+
+  useEffect(() => {
     socket?.current.on("receiveDoneServiceCLS", (data) => {
-      console.log(data)
+      console.log(data);
       dispatch({
         type: GLOBALTYPES.UPDATE_DONE_SERVICE_CLS,
         payload: data,
@@ -179,10 +202,9 @@ function Side() {
 
     return () => socket?.current.off("receiveDoneServiceCLS");
   }, [socket, dispatch]);
-  
+
   useEffect(() => {
     socket?.current.on("receiveServicePayment", (data) => {
-      console.log(data);
       dispatch({
         type: GLOBALTYPES.UNPAID_SERVICE_CLS,
         payload: data,
@@ -216,7 +238,7 @@ function Side() {
         {item?.id == "THDT" && <SaleReportSide item={item} />}
         {item?.id == "DNT" && <PrescriptionSide item={item} />}
         {item?.id == "TTDV" && <ServicePaymentSide item={item} />}
-
+        {item?.id == "TUV" && <AdviseSide item={item} />}
         {/* 
         {item?.id == "CHGB" && <ConfigSellingPriceSide item={item} />}
          */}

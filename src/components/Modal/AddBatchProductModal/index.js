@@ -223,7 +223,7 @@ function AddBatchProductModal() {
     dispatch(updateNewProductInBatch(updatedRow));
     return updatedRow;
   };
-  
+
   const body = (
     <Fade in={open}>
       <Paper className={classes.paper} id="modal-patient-reception">
@@ -361,49 +361,51 @@ function AddBatchProductModal() {
                 />
               </Grid>
               <Divider />
-              <Grid
-                container
-                rowSpacing={1}
-                className={classes.gridCustomInput}
-                sx={{ mt: 1 }}
-              >
-                <SelectedLabel
-                  disable={type(typeOpenModal)}
-                  label="Tên thuốc"
-                  options={products}
-                  require={true}
-                  size={data ? [2, 6] : [2, 5]}
-                  accessField={"name"}
-                  setFieldValue={setFieldValue}
-                  name="products"
-                  onChange={(event, newValue) =>
-                    onSelectedDrug(event, newValue)
-                  }
-                />
-                {typeOpenModal == GLOBALTYPES.ADD && (
-                  <Grid item xs={1} className={classes.button}>
-                    <Controls.Button
-                      variant="contained"
-                      text="Thêm"
-                      color="primary"
-                      startIcon={<Add />}
-                      onClick={handleClickShowModalAddDrug}
-                    />
-                  </Grid>
-                )}
-                <SelectedLabel
-                  // label="Nhóm SP"
-                  options={category}
-                  size={[1, 3]}
-                  accessField={"name"}
-                  setFieldValue={setFieldValue}
-                  name="category"
-                  value={values?.category}
-                  // onChange={(event, newValue) =>
-                  //   onChangeCategory(event, newValue)
-                  // }
-                />
-              </Grid>
+              {typeOpenModal !== GLOBALTYPES.VIEW && (
+                <Grid
+                  container
+                  rowSpacing={1}
+                  className={classes.gridCustomInput}
+                  sx={{ mt: 1 }}
+                >
+                  <SelectedLabel
+                    disable={type(typeOpenModal)}
+                    label="Tên thuốc"
+                    options={products}
+                    require={true}
+                    size={data ? [2, 6] : [2, 5]}
+                    accessField={"name"}
+                    setFieldValue={setFieldValue}
+                    name="products"
+                    onChange={(event, newValue) =>
+                      onSelectedDrug(event, newValue)
+                    }
+                  />
+                  {typeOpenModal == GLOBALTYPES.ADD && (
+                    <Grid item xs={1} className={classes.button}>
+                      <Controls.Button
+                        variant="contained"
+                        text="Thêm"
+                        color="primary"
+                        startIcon={<Add />}
+                        onClick={handleClickShowModalAddDrug}
+                      />
+                    </Grid>
+                  )}
+                  <SelectedLabel
+                    // label="Nhóm SP"
+                    options={category}
+                    size={[1, 3]}
+                    accessField={"name"}
+                    setFieldValue={setFieldValue}
+                    name="category"
+                    value={values?.category}
+                    // onChange={(event, newValue) =>
+                    //   onChangeCategory(event, newValue)
+                    // }
+                  />
+                </Grid>
+              )}
               <Box style={{ height: "300px" }}>
                 <DataGrid
                   disable={data ? true : false}

@@ -28,6 +28,7 @@ import {
   MedicalInformation,
   Store,
   Paid,
+  HeadsetMic,
 } from "@mui/icons-material";
 import { ListItemAvatar } from "@mui/material";
 
@@ -237,6 +238,13 @@ export const items = [
       //   subMenu: [],
       // },
     ],
+  },
+  {
+    id: "TUV",
+    name: "Tư vấn",
+    icon: <HeadsetMic />,
+    role: ["RECEPTIONIST"],
+    subMenu: []
   },
   {
     id: "BC",

@@ -46,6 +46,9 @@ function DateLabel(props) {
   const [valueDate, setValueDate] = useState(
     currentDate ? new Date() : value ? value : null
   );
+
+  console.log(valueDate);
+
   return (
     <>
       <Grid item xs={size[0]}>
@@ -54,6 +57,7 @@ function DateLabel(props) {
       <Grid item xs={size[1]}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
+            inputFormat="DD/MM/YYYY" 
             disablePast={disablePast}
             disabled={disable}
             className={classes.dateSelected}
