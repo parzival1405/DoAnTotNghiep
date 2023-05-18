@@ -67,6 +67,7 @@ function ClinicalService() {
 
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(clinicalService, headCellsClinicalServiceCurrentPatient, filterFn);
+    
   const handleAddClinicalService = (event, service) => {
     setValue(null);
     if (service) {

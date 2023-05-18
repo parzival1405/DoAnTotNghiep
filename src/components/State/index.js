@@ -5,7 +5,7 @@ function State({ type, color }) {
   return (
     <Chip
       label={
-        type == "DONE" ? "Hoàn thoành" : type == "DOING" ? "Đang làm" :type ==  "WAIT" ? "Đang Đợi" : "status"
+        type == "DONE" ? "Hoàn thành" : type == "DOING" ? "Đang làm" :type ==  "WAIT" ? "Đang Đợi" : "status"
       }
       color={color}
     />

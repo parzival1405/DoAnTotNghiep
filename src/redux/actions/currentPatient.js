@@ -74,7 +74,7 @@ export const addClinicalService = (service) => async (dispatch) => {
   try {
     dispatch({
       type: GLOBALTYPES.ADD_PATIENT_CLINICAL_SERVICE,
-      payload: { service: service, state: "Đang làm" },
+      payload: { service: service, state: "DOING" },
     });
   } catch (err) {}
 };

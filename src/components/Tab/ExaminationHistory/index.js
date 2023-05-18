@@ -28,7 +28,6 @@ function ExaminationHistory() {
 
   const handleViewMedicalExaminationHistoryResult = (item) => {
     dispatch(ShowDetailedMedicalHistoryModal(GLOBALTYPES.ADD, item));
-    console.log(item);
   };
   return (
     <>

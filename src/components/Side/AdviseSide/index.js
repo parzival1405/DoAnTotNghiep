@@ -91,6 +91,12 @@ function AdviseSide() {
     dispatch(ChangeConversation(item));
   };
 
+  const demoSubmit = (event) => {
+    if (event.keyCode == 13) {
+      handleSendMessage();
+    }
+  };
+
   return (
     <Box>
       <Paper
@@ -155,11 +161,11 @@ function AdviseSide() {
                 size="small"
                 style={{ marginRight: "5px", flex: 1 }}
                 onChange={handleChangeText}
+                onKeyDown={demoSubmit}
               />
               <Button
                 color="primary"
                 variant="contained"
-                type="submit"
                 startIcon={<Send />}
                 onClick={handleSendMessage}
               >
