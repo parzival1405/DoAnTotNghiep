@@ -33,7 +33,7 @@ export const buyMedicineMedicalExamination = (id) =>
   API.put(`/api/medical_examinations/export/${id}`);
 export const getAllExamination = () => API.get("api/medical_examinations");
 export const getNumberOfPendingAllExamination = (formData) =>
-  API.get("api/medical_examinations/quantity",formData, {
+  API.post("api/medical_examinations/quantity",formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 export const getExaminationsCurrentDayAndRoom = (formData) =>

@@ -96,7 +96,7 @@ export const callAPIForMedicalExaminationSide =
         formData
       );
 
-      const numberOfPending = examinationResponse.filter(
+      const numberOfPending = examinationResponse.data.filter(
         (item) => item.status === "WAIT"
       ).length;
 
@@ -104,7 +104,7 @@ export const callAPIForMedicalExaminationSide =
         type: GLOBALTYPES.ALL_EXAMINATION_ROLE_DOCTOR,
         payload: examinationResponse.data,
       });
-      
+
       if (numberOfDoctorOnline > 1) {
         if (numberOfPending > numberOfPendingAll / numberOfDoctorOnline) {
           client.deactivate();
@@ -122,6 +122,7 @@ export const callAPIForMedicalExaminationSide =
         type: GLOBALTYPES.END_LOADING_CALL_API,
       });
     } catch (error) {
+      console.log(error)
       dispatch({
         type: GLOBALTYPES.END_LOADING_CALL_API,
       });

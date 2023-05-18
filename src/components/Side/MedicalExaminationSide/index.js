@@ -32,7 +32,6 @@ function MedicalExaminationSide() {
     },
   });
 
-  console.log(medicalExaminationsDoctorData)
   const { TblContainer, TblHead, TblPagination, recordsAfterPagingAndSorting } =
     useTable(
       medicalExaminationsDoctorData,

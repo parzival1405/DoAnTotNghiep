@@ -8,7 +8,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case GLOBALTYPES.ONLINE_DOCTOR:
       return {
-        numberOfOnline: action.payload,
+        numberOfDoctorOnline: action.payload,
       };
     default:
       return state;
