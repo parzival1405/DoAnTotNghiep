@@ -22,6 +22,7 @@ import AccountSide from "./AccountSide";
 import AddProductSide from "./AddProductSide";
 import AddServiceGroupsSide from "./AddServiceSide";
 import AddSupplierSide from "./AddSupplierSide";
+import AdviseSide from "./AdviseSide";
 import FileManagementSide from "./FileManagementSide";
 import InventorySide from "./InventorySide";
 import Layout from "./Layout";
@@ -36,7 +37,6 @@ import SaleReportSide from "./SaleReportSide";
 import ScheduleSide from "./ScheduleSide";
 import ServiceListSide from "./ServiceListSide";
 import ServicePaymentSide from "./ServicePaymentSide";
-import AdviseSide from "./AdviseSide";
 import useStyle from "./styles";
 
 const permission = {
@@ -52,8 +52,9 @@ function Side() {
   );
   const { socket } = useSelector((state) => state.socket);
   const { user } = useSelector((state) => state.auth);
+  const { client } = useSelector((state) => state.stomp);
+  const { numberOfDoctorOnline } = useSelector((state) => state.onlineDoctor);
   const classes = useStyle();
-
   const { isLoadingCallApi } = useSelector((state) => state.loading);
 
   const dispatch = useDispatch();
@@ -98,13 +99,18 @@ function Side() {
         dispatch(callAPIForServiceListSide(formData));
         break;
       case "HMB":
-        var date = getCurrentDateString();
-        var formData = new FormData();
         var currentDay = getCurrentDateString();
+
+        var formData = new FormData();
         formData.append("date", currentDay);
         formData.append("roomId", user.room.id);
         formData.append("doctorId", user.id);
-        dispatch(callAPIForMedicalExaminationSide(formData));
+
+        var formData2 = new FormData();
+        formData2.append("date", currentDay);
+        formData2.append("departmentId", user.room.medicalDepartment.id);
+        
+        dispatch(callAPIForMedicalExaminationSide(formData,formData2,numberOfDoctorOnline,client));
         break;
       case "NSP":
         dispatch(callAPIForAddProductSide());
@@ -171,7 +177,7 @@ function Side() {
       console.log({
         customerId: data.customerId,
         name: data.name,
-        userId: user.id
+        userId: user.id,
       });
       dispatch({
         type: GLOBALTYPES.CREATE_CONVERSATION,
@@ -184,7 +190,7 @@ function Side() {
 
       dispatch({
         type: GLOBALTYPES.RECEIVE_MESSAGE,
-        payload: { ...data , userId: user.id,sendBy:data.customerId },
+        payload: { ...data, userId: user.id, sendBy: data.customerId },
       });
     });
 
@@ -213,6 +219,43 @@ function Side() {
 
     return () => socket?.current.off("receiveServicePayment");
   }, [socket, dispatch]);
+
+  useEffect(() => {
+    socket?.current.emit("checkDoctorOnline", user.room.medicalDepartment.id);
+  }, [socket, user]);
+
+  useEffect(() => {
+    socket?.current.on("numberTofDoctorOnlineToMe", (data) => {
+      dispatch({
+        type: GLOBALTYPES.ONLINE_DOCTOR,
+        payload: data,
+      });
+    });
+
+    return () => socket?.current.off("numberTofDoctorOnlineToMe");
+  }, [socket, dispatch]);
+
+  useEffect(() => {
+    socket?.current.on("checkUserOnlineToClient", (data) => {
+      dispatch({
+        type: GLOBALTYPES.ONLINE_DOCTOR,
+        payload: data,
+      });
+    });
+
+    return () => socket?.current.off("checkUserOnlineToClient");
+  }, [socket, user]);
+
+  useEffect(() => {
+    socket?.current.on("CheckUserOfflineToClient", (data) => {
+      dispatch({
+        type: GLOBALTYPES.ONLINE_DOCTOR,
+        payload: data,
+      });
+    });
+
+    return () => socket?.current.off("CheckUserOfflineToClient");
+  }, [socket, user]);
 
   return isLoadingCallApi ? (
     <Loading className={classes.positionNone} />

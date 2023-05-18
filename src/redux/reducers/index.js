@@ -21,6 +21,7 @@ import socket from "./socket";
 import prescription from "./prescription";
 import alert from "./alert";
 import chat from "./chat";
+import onlineDoctor from "./onlineDoctor"
 export default combineReducers({
   chat,
   alert,
@@ -43,4 +44,5 @@ export default combineReducers({
   patient,
   medicalExamination,
   medicalLetter,
+  onlineDoctor
 });

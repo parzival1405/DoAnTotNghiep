@@ -109,6 +109,7 @@ function Main() {
         query: {
           id: user.id,
           role: user.role,
+          idDepartment: user.room.medicalDepartment.id,
         },
       });
       dispatch(initSocket({ socket: socket }));

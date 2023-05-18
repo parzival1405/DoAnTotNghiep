@@ -83,19 +83,40 @@ export const callAPIForScheduleSide = (data) => async (dispatch) => {
 };
 
 export const callAPIForMedicalExaminationSide =
-  (formData) => async (dispatch) => {
+  (formData,formData2, numberOfDoctorOnline, client) => async (dispatch) => {
     try {
       dispatch({
         type: GLOBALTYPES.START_LOADING_CALL_API,
       });
+
+      const {data} = await api.getNumberOfPendingAllExamination(formData2);
+      const numberOfPendingAll = data.quantity
+
       const examinationResponse = await api.getExaminationsCurrentDayAndRoom(
         formData
       );
-      //
+
+      const numberOfPending = examinationResponse.filter(
+        (item) => item.status === "WAIT"
+      ).length;
+
       dispatch({
         type: GLOBALTYPES.ALL_EXAMINATION_ROLE_DOCTOR,
         payload: examinationResponse.data,
       });
+      
+      if (numberOfDoctorOnline > 1) {
+        if (numberOfPending > numberOfPendingAll / numberOfDoctorOnline) {
+          client.deactivate();
+        } else {
+          client.activate();
+        }
+
+        dispatch({
+          type: GLOBALTYPES.INIT_STOMP,
+          payload: client,
+        });
+      }
 
       dispatch({
         type: GLOBALTYPES.END_LOADING_CALL_API,
