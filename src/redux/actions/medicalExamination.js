@@ -31,14 +31,18 @@ export const saveExamination =
       const { data } = await api.saveExamination(sendData);
 
       if (data.doctor == null) {
-        console.log(client,formData.service.medicalDepartment.codeDepartment)
+  
         client.publish({
           destination: `/queue/${formData.service.medicalDepartment.codeDepartment}`,
           body: JSON.stringify(data),
         });
+
       } else {
         socket.emit("newMedicalExamination", JSON.stringify(data));
       }
+
+      socket.emit("sendNewMedicalExaminationToAllDoctor",formData.service.medicalDepartment.id);
+
       dispatch({
         type: GLOBALTYPES.ADD_EXAMINATION,
         payload: data,
@@ -80,7 +84,6 @@ export const updateMedicalExamination =
       const sendData = {
         doctorId: currentPatient.doctor.id,
         diagnose: currentPatient.diagnose,
-        status: currentPatient.status,
         receptionId: currentPatient.receptionId,
         description: currentPatient.description,
         note: currentPatient.note,

@@ -18,6 +18,7 @@ import AddScheduleModal from "./components/Modal/AddScheduleModal";
 import AddServiceModal from "./components/Modal/AddServiceModal";
 import AddTypeServiceGroupsModal from "./components/Modal/AddServiceModal/AddTypeServiceGroupsModal";
 import AddSupplierModal from "./components/Modal/AddSupplierModal";
+import ChangePasswordModal from "./components/Modal/ChangePasswordModal";
 import DetailedMedicalHistory from "./components/Modal/DetailedMedicalHistory";
 import OTPModal from "./components/Modal/OTPModal";
 import PatientModal from "./components/Modal/PatientModal";
@@ -30,7 +31,6 @@ import Checkup from "./pages/Checkup";
 import ForgotPassword from "./pages/ForgotPassword";
 import Homepage from "./pages/HomePage";
 import Login from "./pages/Login";
-import ChangePasswordModal from "./components/Modal/ChangePasswordModal";
 function App() {
   const { user } = useSelector((state) => state.auth);
 

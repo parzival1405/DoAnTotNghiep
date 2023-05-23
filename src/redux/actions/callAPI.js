@@ -1,5 +1,5 @@
-import { GLOBALTYPES } from "../actionType";
 import * as api from "../../api";
+import { GLOBALTYPES } from "../actionType";
 
 export const callAPIForPatientReceptionSide =
   (formData) => async (dispatch) => {
@@ -83,14 +83,19 @@ export const callAPIForScheduleSide = (data) => async (dispatch) => {
 };
 
 export const callAPIForMedicalExaminationSide =
-  (formData,formData2, numberOfDoctorOnline, client) => async (dispatch) => {
+  (formData, formData2, numberOfDoctorOnline, client) => async (dispatch) => {
     try {
       dispatch({
         type: GLOBALTYPES.START_LOADING_CALL_API,
       });
 
-      const {data} = await api.getNumberOfPendingAllExamination(formData2);
-      const numberOfPendingAll = data.quantity
+      const { data } = await api.getNumberOfPendingAllExamination(formData2);
+      const numberOfPendingAll = data.quantity;
+
+      dispatch({
+        type: GLOBALTYPES.ALL_MEDICAL_EXAMINATION_PENDING,
+        payload: numberOfPendingAll,
+      });
 
       const examinationResponse = await api.getExaminationsCurrentDayAndRoom(
         formData
@@ -106,6 +111,7 @@ export const callAPIForMedicalExaminationSide =
       });
 
       if (numberOfDoctorOnline > 1) {
+        
         if (numberOfPending > numberOfPendingAll / numberOfDoctorOnline) {
           client.deactivate();
         } else {
@@ -116,13 +122,22 @@ export const callAPIForMedicalExaminationSide =
           type: GLOBALTYPES.INIT_STOMP,
           payload: client,
         });
+
+      } else if (numberOfDoctorOnline === 1) {
+
+        client.activate();
+        dispatch({
+          type: GLOBALTYPES.INIT_STOMP,
+          payload: client,
+        });
+
       }
 
       dispatch({
         type: GLOBALTYPES.END_LOADING_CALL_API,
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       dispatch({
         type: GLOBALTYPES.END_LOADING_CALL_API,
       });

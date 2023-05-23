@@ -22,8 +22,8 @@ function MedicalExaminationSide() {
   const { user } = useSelector(
     (state) => state.auth
   );
-  const { medicalExaminationsDoctorData } = useSelector(
-    (state) => state.medicalExamination
+  const medicalExaminationsDoctorData = useSelector(
+    (state) => state.medicalExamination.medicalExaminationsDoctorData
   );
   const [optionSelectedId, setOptionSelectedId] = useState(null);
   const [filterFn, setFilterFn] = useState({
