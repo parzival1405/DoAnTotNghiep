@@ -6,6 +6,7 @@ import {
   TableRow as MUITableRow,
   Select,
   FormControl,
+  Avatar,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
@@ -132,7 +133,21 @@ function TableRow({
                   </Select>
                 </FormControl>
               </MUITableCell>
-            ) : (
+            ) : 
+             itemhead.id === "avatar" ? (
+              <MUITableCell
+                key={itemhead.id}
+                style={{
+                  width: `${itemhead.sizeCellWidth}px`,
+                }}
+                component="th"
+                scope="row"
+                align={itemhead.numeric ? "right" : "left"}
+              >
+                <Avatar alt="Cindy Baker" src={resolve(item, itemhead.id)} />
+              </MUITableCell>)
+            :
+            (
               <MUITableCell
                 key={itemhead.id}
                 style={{

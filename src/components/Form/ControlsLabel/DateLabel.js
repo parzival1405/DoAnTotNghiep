@@ -47,8 +47,6 @@ function DateLabel(props) {
     currentDate ? new Date() : value ? value : null
   );
 
-  console.log(valueDate);
-
   return (
     <>
       <Grid item xs={size[0]}>

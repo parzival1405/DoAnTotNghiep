@@ -269,37 +269,41 @@ function AddPrescriptionModal() {
 
               {/* button -------------------- */}
               <div className={classes.action}>
-                <Controls.Button
-                  color="primary"
-                  variant="contained"
-                  // type="submit"
-                  disable={isSubmitting}
-                  onKeyPress={(e) => {
-                    console.log("here");
-                    e.which === 13 && e.preventDefault();
-                  }}
-                  onClick={() => handleSubmitForm(values)}
-                  text="Thanh toán"
-                  startIcon={<Save />}
-                  sx={{ mr: 1 }}
-                />
+                {typeOpenModal == GLOBALTYPES.PAYMENT && (
+                  <>
+                    <Controls.Button
+                      color="primary"
+                      variant="contained"
+                      // type="submit"
+                      disable={isSubmitting}
+                      onKeyPress={(e) => {
+                        console.log("here");
+                        e.which === 13 && e.preventDefault();
+                      }}
+                      onClick={() => handleSubmitForm(values)}
+                      text="Thanh toán"
+                      startIcon={<Save />}
+                      sx={{ mr: 1 }}
+                    />
 
-                <ReactToPrint
-                  trigger={() => {
-                    return (
-                      <Button
-                        variant="contained"
-                        disableElevation
-                        color="yellow"
-                        sx={{ mr: 1 }}
-                        startIcon={<Save />}
-                      >
-                        Thanh toán & in hóa đơn
-                      </Button>
-                    );
-                  }}
-                  content={() => componentRef.current}
-                />
+                    <ReactToPrint
+                      trigger={() => {
+                        return (
+                          <Button
+                            variant="contained"
+                            disableElevation
+                            color="yellow"
+                            sx={{ mr: 1 }}
+                            startIcon={<Save />}
+                          >
+                            Thanh toán & in hóa đơn
+                          </Button>
+                        );
+                      }}
+                      content={() => componentRef.current}
+                    />
+                  </>
+                )}
 
                 <Controls.Button
                   variant="contained"

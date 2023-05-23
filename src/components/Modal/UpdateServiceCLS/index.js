@@ -23,7 +23,7 @@ import { titleModal, type } from "../../../utils/TypeOpen";
 import useDatagrid from "../../../hooks/useDatagrid";
 import InputLabel from "../../Form/ControlsLabel/InputLabel";
 import { updateServiceAvailable } from "../../../redux/actions/serviceAvailable";
-import { bloodResult, bloodResultColumn } from "../../../utils/ResultCLS";
+import { bloodResult, bloodResultColumn, urineResult,urineResultColumn } from "../../../utils/ResultCLS";
 import ImageModal from "../ImageModal";
 
 const useStyle = makeStyles((theme) => ({

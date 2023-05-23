@@ -63,8 +63,8 @@ function PrescriptionSide({ item }) {
     dispatch(ShowAddPrescriptionModal(GLOBALTYPES.ADD));
   };
 
-  const handleClickShowEditModal = (item) => {
-    dispatch(ShowAddPrescriptionModal(GLOBALTYPES.EDIT, item));
+  const handleClickShowPaymentModal = (item) => {
+    dispatch(ShowAddPrescriptionModal(GLOBALTYPES.PAYMENT, item));
   };
 
   const handleClickShowViewModal = (item) => {
@@ -152,7 +152,7 @@ function PrescriptionSide({ item }) {
                 headCells={headCellsPrescriptionSide}
                 listItemMenu={[
                   { title: "Xem", onClick: () => handleClickShowViewModal(item) },
-                  { title: "Xuất đơn thuốc", onClick: () => handleClickShowEditModal(item) },
+                  { title: "Xuất đơn thuốc", onClick: () => handleClickShowPaymentModal(item) },
                 ]}
               />
             );

@@ -19,6 +19,7 @@ import {
 import { GLOBALTYPES } from "../../../redux/actionType";
 import { type } from "../../../utils/TypeOpen";
 import dayjs from "dayjs";
+import { validationPatientReception } from "../../../utils/Validation";
 const useStyle = makeStyles((theme) => ({
   paper: {
     width: "70%",
@@ -59,7 +60,6 @@ const initialValues = {
 };
 
 function PatientReceptionModal() {
-
   const isShowPatientReceptionModal = useSelector(
     (state) => state.modal.isShowPatientReceptionModal
   );
@@ -75,14 +75,18 @@ function PatientReceptionModal() {
 
   const classes = useStyle();
   const dispatch = useDispatch();
-  
+
   const doctorFilter = useMemo(() => {
-    if(serviceFilter){
-      return doctors.filter((item) => item?.room?.medicalDepartment?.id === serviceFilter.medicalDepartment.id)
-    }else{
-      return doctors
+    if (serviceFilter) {
+      return doctors.filter(
+        (item) =>
+          item?.room?.medicalDepartment?.id ===
+          serviceFilter.medicalDepartment.id
+      );
+    } else {
+      return doctors;
     }
-  } ,[serviceFilter])
+  }, [serviceFilter]);
 
   const handleHideModal = () => {
     dispatch(hideModal("isShowPatientReceptionModal"));
@@ -119,17 +123,17 @@ function PatientReceptionModal() {
     }
   };
 
-  const onSelectService = (e,name,value,setFieldValue) => {
-    if(data){
-      data.medicalExaminationDetailsResponses[0].service = value
+  const onSelectService = (e, name, value, setFieldValue) => {
+    if (data) {
+      data.medicalExaminationDetailsResponses[0].service = value;
     }
-    setFieldValue(name,value)
+    setFieldValue(name, value);
     setServiceFilter(value);
   };
 
-  const handleChangeDate = (name,value,setFieldValue) => {
-    setFieldValue(name,value)
-  }
+  const handleChangeDate = (name, value, setFieldValue) => {
+    setFieldValue(name, value);
+  };
 
   const body = (
     <Fade in={isShowPatientReceptionModal.open}>
@@ -139,7 +143,7 @@ function PatientReceptionModal() {
           initialValues={
             typeOpenModal == GLOBALTYPES.ADD ? initialValues : data
           }
-          //   validationSchema={validateionChangeGroupName}
+          validationSchema={validationPatientReception}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             handleSubmitForm(values);
             setSubmitting(true);
@@ -172,8 +176,10 @@ function PatientReceptionModal() {
                 <InputLabel
                   disable={type(typeOpenModal)}
                   label="Điện thoại"
+                  require={true}
                   size={[3, 3]}
                   name="patient.phoneNumber"
+                  error={touched.patient?.phoneNumber ? errors.patient?.phoneNumber : undefined}
                   value={values["patient"]?.phoneNumber}
                   onChange={(e) => changeSdt(e, handleChange, setFieldValue)}
                 />
@@ -182,15 +188,25 @@ function PatientReceptionModal() {
                   label="Tên bệnh nhân"
                   name="patient.fullName"
                   value={values["patient"]?.fullName}
+                  error={touched.patient?.fullName ? errors.patient?.fullName : undefined}
                   onChange={handleChange}
                   require={true}
                   size={[3, 3]}
                 />
                 <DateLabel
                   label="Tuổi"
-                  onChange={(value) => handleChangeDate("patient.dateOfBirth",value, setFieldValue)}
+                  onChange={(value) =>
+                    handleChangeDate(
+                      "patient.dateOfBirth",
+                      value,
+                      setFieldValue
+                    )
+                  }
                   name="patient.dateOfBirth"
-                  value={dayjs(new Date(values["patient"]?.dateOfBirth),"DD/MM/YYYY")}
+                  value={dayjs(
+                    new Date(values["patient"]?.dateOfBirth),
+                    "DD/MM/YYYY"
+                  )}
                   size={[3, 3]}
                   disable={type(typeOpenModal)}
                 />
@@ -208,7 +224,9 @@ function PatientReceptionModal() {
                   accessField={"name"}
                   setFieldValue={setFieldValue}
                   name="service"
-                  onChange={(event, newValue) => onSelectService(event,"service", newValue,setFieldValue)}
+                  onChange={(event, newValue) =>
+                    onSelectService(event, "service", newValue, setFieldValue)
+                  }
                   value={
                     data
                       ? services.find(

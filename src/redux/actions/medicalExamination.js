@@ -31,17 +31,18 @@ export const saveExamination =
       const { data } = await api.saveExamination(sendData);
 
       if (data.doctor == null) {
-  
         client.publish({
           destination: `/queue/${formData.service.medicalDepartment.codeDepartment}`,
           body: JSON.stringify(data),
         });
-
       } else {
         socket.emit("newMedicalExamination", JSON.stringify(data));
       }
 
-      socket.emit("sendNewMedicalExaminationToAllDoctor",formData.service.medicalDepartment.id);
+      socket.emit(
+        "sendNewMedicalExaminationToAllDoctor",
+        formData.service.medicalDepartment.id
+      );
 
       dispatch({
         type: GLOBALTYPES.ADD_EXAMINATION,
@@ -81,7 +82,7 @@ export const updateMedicalExamination =
     const { currentPatient, addOrDelete, addOrDeleteDrug, check } = formData;
 
     try {
-      const sendData = {
+      const sendData2 = {
         doctorId: currentPatient.doctor.id,
         diagnose: currentPatient.diagnose,
         receptionId: currentPatient.receptionId,
@@ -103,6 +104,11 @@ export const updateMedicalExamination =
         detailMedicineRequests: addOrDeleteDrug,
         status: check?.value ? check.value : "DOING",
       };
+
+      const sendData =
+        currentPatient.buyMedicine === true
+          ? sendData2
+          : { ...sendData2, buyMedicine: false };
 
       const { data } = await api.updateMedicalExamination(
         sendData,
@@ -162,21 +168,22 @@ export const buyMedicineMedicalExamination = (id) => async (dispatch) => {
   }
 };
 
-export const searchMedicalExamination = (filter,debouncedValue) => async (dispatch) => {
-  try {
-    const examinationResponse = await api.searchMedicalExamination(
-      filter,debouncedValue
-    );
-    //
-    dispatch({
-      type: GLOBALTYPES.ALL_EXAMINATION_ROLE_DOCTOR,
-      payload: examinationResponse.data,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
-
+export const searchMedicalExamination =
+  (filter, debouncedValue) => async (dispatch) => {
+    try {
+      const examinationResponse = await api.searchMedicalExamination(
+        filter,
+        debouncedValue
+      );
+      //
+      dispatch({
+        type: GLOBALTYPES.ALL_EXAMINATION_ROLE_DOCTOR,
+        payload: examinationResponse.data,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
 export const searchByDoctorRoom = (formData) => async (dispatch) => {
   try {
@@ -188,10 +195,7 @@ export const searchByDoctorRoom = (formData) => async (dispatch) => {
       type: GLOBALTYPES.ALL_EXAMINATION_ROLE_DOCTOR,
       payload: examinationResponse.data,
     });
-    
   } catch (err) {
     console.log(err);
   }
 };
-
-

@@ -24,7 +24,7 @@ export default (state = initState, action) => {
     case GLOBALTYPES.DOCTOR_RECEIVE_EXAMINATION:
       return {
         ...state,
-        medicalExaminationsDoctorData: [action.payload, ...state.medicalExaminationsDoctorData],
+        medicalExaminationsDoctorData: [...state.medicalExaminationsDoctorData,action.payload],
       };
     case GLOBALTYPES.UPDATE_DATA_CURRENT_EXAMINATION:
       const newDataExamination = action.payload;

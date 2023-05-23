@@ -34,6 +34,18 @@ const dispatch = useDispatch()
     return () => socket?.current.off("receiveDoneServiceCLS");
   }, [socket, dispatch]);
 
+  // useEffect(() => {
+  //   socket?.current.on("receiveDoneServiceCLS", (data) => {
+  //     console.log(data);
+  //     dispatch({
+  //       type: GLOBALTYPES.UPDATE_DONE_SERVICE_CLS,
+  //       payload: data,
+  //     });
+  //   });
+
+  //   return () => socket?.current.off("receiveDoneServiceCLS");
+  // }, [socket, dispatch]);
+
   return (
     <>
       <PageHeader

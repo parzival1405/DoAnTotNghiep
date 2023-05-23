@@ -18,7 +18,10 @@ export const titleModal = (typeOpenModal, title) => {
     ? `Thêm ${title} mới`
     : typeOpenModal == GLOBALTYPES.EDIT
     ? `Chỉnh sửa ${title}`
-    : typeOpenModal == GLOBALTYPES.VIEW || typeOpenModal == GLOBALTYPES.DOCTOR_VIEW 
+    : typeOpenModal == GLOBALTYPES.VIEW ||
+      typeOpenModal == GLOBALTYPES.DOCTOR_VIEW
     ? `Xem ${title}`
+    : typeOpenModal == GLOBALTYPES.PAYMENT
+    ? `Xuất ${title}`
     : false;
 };

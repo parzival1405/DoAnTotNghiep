@@ -198,18 +198,6 @@ function Side() {
   }, [socket, dispatch]);
 
   useEffect(() => {
-    socket?.current.on("receiveDoneServiceCLS", (data) => {
-      console.log(data);
-      dispatch({
-        type: GLOBALTYPES.UPDATE_DONE_SERVICE_CLS,
-        payload: data,
-      });
-    });
-
-    return () => socket?.current.off("receiveDoneServiceCLS");
-  }, [socket, dispatch]);
-
-  useEffect(() => {
     socket?.current.on("receiveServicePayment", (data) => {
       dispatch({
         type: GLOBALTYPES.UNPAID_SERVICE_CLS,
