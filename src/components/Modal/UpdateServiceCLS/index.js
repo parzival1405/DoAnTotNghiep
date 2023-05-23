@@ -107,10 +107,14 @@ function UpdateServiceCLS() {
   });
 
   useEffect(() => {
+    if(!data){
+      return
+    }
+
     if (data?.result?.length > 0) {
       setBloodResultData(data.result);
     } else {
-      setBloodResultData(bloodResult);
+      setBloodResultData(data.service.id === 4 ? urineResult : bloodResult);
     }
   }, [data, dispatch]);
 
@@ -120,7 +124,9 @@ function UpdateServiceCLS() {
     setBloodResultData([]);
   };
 
-  const { DataGrid } = useDatagrid(bloodResultColumn);
+  console.log(data);
+
+  const { DataGrid } = useDatagrid(data?.service.id === 4 ? urineResultColumn : bloodResultColumn);
 
   const handleSubmitForm = async (values) => {
     const formData = new FormData();
