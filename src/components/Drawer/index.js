@@ -45,20 +45,15 @@ function Drawer() {
         (item) => item.status === "WAIT"
       ).length;
 
-      console.log(medicalExaminationsDoctorData,numberOfDoctorOnline);
       if (numberOfDoctorOnline > 1) {
-        console.log(
-          numberOfPendingDoctor,
-          (numberOfPending + 1) / numberOfDoctorOnline
-        );
         if (
           numberOfPendingDoctor >
           (numberOfPending + 1) / numberOfDoctorOnline
         ) {
-          console.log("here1deactivate")
+          console.log("here1deactivate");
           client.deactivate();
         } else {
-          console.log("here2activate")
+          console.log("here2activate");
           client.activate();
         }
 
@@ -77,6 +72,94 @@ function Drawer() {
 
     return () => socket?.current.off("haveNewMedicalExamination");
   }, [socket, medicalExaminationsDoctorData, numberOfPending]);
+
+  useEffect(() => {
+    socket?.current.on("checkUserOnlineToClient", (data) => {
+      const numberOfPendingDoctor = medicalExaminationsDoctorData.filter(
+        (item) => item.status === "WAIT"
+      ).length;
+
+      if (data > 1) {
+        if (numberOfPendingDoctor > numberOfPending / data) {
+          console.log("here1deactivate");
+          client.deactivate();
+        } else {
+          console.log("here2activate");
+          client.activate();
+        }
+
+        dispatch({
+          type: GLOBALTYPES.INIT_STOMP,
+          payload: client,
+        });
+      } else if (data === 1) {
+        client.activate();
+        dispatch({
+          type: GLOBALTYPES.INIT_STOMP,
+          payload: client,
+        });
+      }
+
+      dispatch({
+        type: GLOBALTYPES.ONLINE_DOCTOR,
+        payload: data,
+      });
+    });
+
+    return () => socket?.current.off("checkUserOnlineToClient");
+  }, [socket, user, numberOfPending, medicalExaminationsDoctorData]);
+
+  useEffect(() => {
+    socket?.current.on("CheckUserOfflineToClient", (data) => {
+      const numberOfPendingDoctor = medicalExaminationsDoctorData.filter(
+        (item) => item.status === "WAIT"
+      ).length;
+
+      if (data > 1) {
+        if (numberOfPendingDoctor > numberOfPending / data) {
+          console.log("here1deactivate");
+          client.deactivate();
+        } else {
+          console.log("here2activate");
+          client.activate();
+        }
+
+        dispatch({
+          type: GLOBALTYPES.INIT_STOMP,
+          payload: client,
+        });
+      } else if (data === 1) {
+        console.log("here3activate");
+        client.activate();
+        dispatch({
+          type: GLOBALTYPES.INIT_STOMP,
+          payload: client,
+        });
+      }
+
+      dispatch({
+        type: GLOBALTYPES.ONLINE_DOCTOR,
+        payload: data,
+      });
+    });
+
+    return () => socket?.current.off("CheckUserOfflineToClient");
+  }, [socket, user, numberOfPending, medicalExaminationsDoctorData]);
+
+  useEffect(() => {
+    socket?.current.emit("checkDoctorOnline", user.room.medicalDepartment.id);
+  }, [socket, user]);
+
+  useEffect(() => {
+    socket?.current.on("numberTofDoctorOnlineToMe", (data) => {
+      dispatch({
+        type: GLOBALTYPES.ONLINE_DOCTOR,
+        payload: data,
+      });
+    });
+
+    return () => socket?.current.off("numberTofDoctorOnlineToMe");
+  }, [socket, dispatch]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>

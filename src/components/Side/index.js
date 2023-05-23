@@ -109,7 +109,7 @@ function Side() {
         var formData2 = new FormData();
         formData2.append("date", currentDay);
         formData2.append("departmentId", parseInt(user.room.medicalDepartment.id));
-   
+        console.log(numberOfDoctorOnline);
         dispatch(callAPIForMedicalExaminationSide(formData,formData2,numberOfDoctorOnline,client));
         break;
       case "NSP":
@@ -147,7 +147,7 @@ function Side() {
     }
 
     setItem(item);
-  }, [IDSelected,numberOfDoctorOnline]);
+  }, [IDSelected]);
 
   useEffect(() => {
     socket?.current.on("receiveMedicalExamination", (data) => {
@@ -207,45 +207,6 @@ function Side() {
 
     return () => socket?.current.off("receiveServicePayment");
   }, [socket, dispatch]);
-
-  
-  useEffect(() => {
-    socket?.current.emit("checkDoctorOnline", user.room.medicalDepartment.id);
-  }, [socket, user]);
-
-  useEffect(() => {
-    socket?.current.on("numberTofDoctorOnlineToMe", (data) => {
-      dispatch({
-        type: GLOBALTYPES.ONLINE_DOCTOR,
-        payload: data,
-      });
-    });
-
-    return () => socket?.current.off("numberTofDoctorOnlineToMe");
-  }, [socket, dispatch]);
-
-  useEffect(() => {
-    socket?.current.on("checkUserOnlineToClient", (data) => {
-      dispatch({
-        type: GLOBALTYPES.ONLINE_DOCTOR,
-        payload: data,
-      });
-    });
-
-    return () => socket?.current.off("checkUserOnlineToClient");
-  }, [socket, user]);
-
-  useEffect(() => {
-    socket?.current.on("CheckUserOfflineToClient", (data) => {
-      dispatch({
-        type: GLOBALTYPES.ONLINE_DOCTOR,
-        payload: data,
-      });
-    });
-
-    return () => socket?.current.off("CheckUserOfflineToClient");
-  }, [socket, user]);
-  
 
   return isLoadingCallApi ? (
     <Loading className={classes.positionNone} />

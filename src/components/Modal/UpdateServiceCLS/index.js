@@ -124,8 +124,6 @@ function UpdateServiceCLS() {
     setBloodResultData([]);
   };
 
-  console.log(data);
-
   const { DataGrid } = useDatagrid(data?.service.id === 4 ? urineResultColumn : bloodResultColumn);
 
   const handleSubmitForm = async (values) => {
