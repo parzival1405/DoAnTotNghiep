@@ -113,8 +113,10 @@ export const callAPIForMedicalExaminationSide =
       if (numberOfDoctorOnline > 1) {
         
         if (numberOfPending > numberOfPendingAll / numberOfDoctorOnline) {
+          console.log("here deactivate")
           client.deactivate();
         } else {
+          console.log("here activate")
           client.activate();
         }
 
@@ -124,7 +126,7 @@ export const callAPIForMedicalExaminationSide =
         });
 
       } else if (numberOfDoctorOnline === 1) {
-
+        console.log("activate")
         client.activate();
         dispatch({
           type: GLOBALTYPES.INIT_STOMP,

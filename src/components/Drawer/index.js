@@ -37,24 +37,28 @@ function Drawer() {
 
   useEffect(() => {
     socket?.current.on("haveNewMedicalExamination", () => {
-
       dispatch({
         type: GLOBALTYPES.ADD_ONE_MEDICAL_EXAMINATION_PENDING,
       });
 
       const numberOfPendingDoctor = medicalExaminationsDoctorData.filter(
         (item) => item.status === "WAIT"
-        ).length;
-        
-        console.log(medicalExaminationsDoctorData);
+      ).length;
+
+      console.log(medicalExaminationsDoctorData,numberOfDoctorOnline);
       if (numberOfDoctorOnline > 1) {
-        console.log(numberOfPendingDoctor,(numberOfPending + 1) / numberOfDoctorOnline)
+        console.log(
+          numberOfPendingDoctor,
+          (numberOfPending + 1) / numberOfDoctorOnline
+        );
         if (
           numberOfPendingDoctor >
           (numberOfPending + 1) / numberOfDoctorOnline
         ) {
+          console.log("here1deactivate")
           client.deactivate();
         } else {
+          console.log("here2activate")
           client.activate();
         }
 
@@ -72,46 +76,7 @@ function Drawer() {
     });
 
     return () => socket?.current.off("haveNewMedicalExamination");
-  }, [socket, medicalExaminationsDoctorData,numberOfPending]);
-
-  useEffect(() => {
-    socket?.current.emit("checkDoctorOnline", user.room.medicalDepartment.id);
-  }, [socket, user]);
-
-  useEffect(() => {
-    socket?.current.on("numberTofDoctorOnlineToMe", (data) => {
-      dispatch({
-        type: GLOBALTYPES.ONLINE_DOCTOR,
-        payload: data,
-      });
-    });
-
-    return () => socket?.current.off("numberTofDoctorOnlineToMe");
-  }, [socket, dispatch]);
-
-  useEffect(() => {
-    socket?.current.on("checkUserOnlineToClient", (data) => {
-      console.log(data);
-      dispatch({
-        type: GLOBALTYPES.ONLINE_DOCTOR,
-        payload: data,
-      });
-    });
-
-    return () => socket?.current.off("checkUserOnlineToClient");
-  }, [socket, user]);
-
-  useEffect(() => {
-    socket?.current.on("CheckUserOfflineToClient", (data) => {
-      console.log(data);
-      dispatch({
-        type: GLOBALTYPES.ONLINE_DOCTOR,
-        payload: data,
-      });
-    });
-
-    return () => socket?.current.off("CheckUserOfflineToClient");
-  }, [socket, user]);
+  }, [socket, medicalExaminationsDoctorData, numberOfPending]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>

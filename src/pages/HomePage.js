@@ -93,9 +93,11 @@ function Main() {
           });
         }
         client.activate();
+        console.log("here3 activate")
         dispatch(initStomp(client));
       }
     }else{
+      console.log("here4 activate")
       oldClient.activate();
       dispatch(initStomp(oldClient));
     }
